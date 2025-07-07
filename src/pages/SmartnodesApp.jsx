@@ -356,17 +356,18 @@ const SmartnodesApp = () => {
   };
   
   return (
-    <section className={`bg-slate-100 dark:bg-gray-950 xs:px-5 md:px-10 px-10 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
-                          border-b border-b-black dark:border-b-white xs:-ml-5 sm:-ml-0 -ml-10 xs:-mr-0 -mr-4`}>
-        <div className="text-red-500 text-middle bg-gray-200 w-screen text-center md:-mr-0 -mr-5 border border-b-gray-700">
-          {userAddress === '-' ? (
-            <p className="p-2 underline text-lg">
-              Connect Web Wallet to Access Dashboard
-            </p>
-          ) : (
-            <div></div>
-          )}
-        </div>
+    <section className={`bg-gray-300 dark:bg-zinc-800 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
+                          border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
+      <div className="text-red-500 text-middle bg-gray-200 w-screen text-center md:-mr-0 -mr-5">
+        {userAddress === '-' ? (
+          <p className="p-2 underline text-lg">
+            Connect Web Wallet to Access Dashboard
+          </p>
+        ) : (
+          <div></div>
+        )}
+      </div>
+
       <div className="w-full flex flex-col items-end mt-5 md:mt-10">
         <div className="flex space-x-4">
         <ConnectWalletButton 
@@ -378,12 +379,21 @@ const SmartnodesApp = () => {
         </div>
       </div>
 
-      <div className="max-w-[1280px] items-center w-full flex-wrap">
-        <h1 className={`${styles.subheading} text-left xs:ml-4 sm:ml-0 px-3 xs:px-0 mt-10 md:mt-0 max-w-[1280px] mb-5`}>
-          Smartnodes <span className="font-normal text-gray-400">(testnet)</span> Dashboard
+      <div className="max-w-[1380px] items-center w-full flex-wrap">
+        <h1 className={`${styles.subheading} bg-stone-200 rounded-xl dark:bg-zinc-700 border dark:border-white border-black p-3 text-left px-6 mt-10 md:mt-0 max-w-[830px] mb-6`}>
+          Smartnodes <span className="font-normal text-gray-400" style={{color: "#f7a6a0"}}>(testnet)</span> Dashboard
         </h1>
+        
+        <div className="flex mb-3 pt-2 ml-2 flex-wrap justify-start max-w-[1280px]">   
+          <h1 className={`${styles.subheading2} text-left sm:px-10 md:px-0 xs:px-0 max-w-[1280px] text-black dark:text-[#8587de]`}>
+            Token Info
+          </h1> 
+        </div>
+        {/* <div className="border border-white dark:border-gray-400 max-w-[110px]">
+          <h2 className={`font-semibold text-2xl p-1 pl-3 bg-zinc-200 dark:bg-zinc-500 text-black dark:text-gray-50`}>Supply</h2>
+        </div> */}
 
-        <div className="bg-slate-200 dark:bg-gray-700 -mr-3 ss:-mr-0 dark:text-gray-200 rounded-xl max-w-[700px] p-4 xs:p-7 pt-7 m-3 mb-3 overflow-x-scroll mt-5 border border-gray-400">
+        <div className="bg-gray-200 dark:bg-gray-600 mb-3 -mr-3 ss:-mr-0 rounded-xl dark:text-gray-200 p-4 xs:p-7 pt-7 overflow-x-scroll border border-black dark:border-gray-400 max-w-[750px]">
           <div className="mb-5 px-1 mt-2 xs:mt-3">
             <h2 className={`font-bold text-xl text-gray-400`}>Account</h2>
             <p className="text-lg xs:text-2xl overflow-auto font-semibold">{userAddress ? userAddress : "No address connected"}</p>
@@ -418,16 +428,17 @@ const SmartnodesApp = () => {
 
         <SupplyStatsCard supplyStats={supplyStats}/>
     
-        {/* 
-        <div className="flex my-8 pt-2 flex-wrap justify-start max-w-[1280px] border-t border-t-black dark:border-t-white">   
-        <h1 className={`${styles.subheading} text-left sm:px-10 md:px-0 xs:px-0 mt-10 max-w-[1280px]`}>
-          Networks
-        </h1>    
-        </div> */}
+        <div className="flex mb-3 pt-8 ml-2 flex-wrap justify-start max-w-[1280px]">
+          <h1 
+            className={`${styles.subheading2} text-left sm:px-10 md:px-0 xs:px-0 max-w-[1280px] text-black dark:text-[#cbbcf6]`}
+          >
+            Network Info
+          </h1>    
+        </div>
 
-        <div className="flex flex-wrap m-2 justify-start gap-1 items-center w-full mb-4 xs:ml-2 ml-5">
+        <div className="flex flex-wrap justify-start gap-1 items-center w-full mb-4">
           {networkStats.map((item, index) => (
-            <div key={index} className="flex flex-row bg-slate-200 dark:bg-slate-800 h-30 dark:text-gray-200 dark:bg-secondary-dark-bg min-w-[245px] max-w-[90%] p-4 pt-7 rounded-2xl m-1 border border-gray-600 mr-3">
+            <div key={index} className="flex flex-row bg-slate-200 dark:bg-slate-600 h-30 dark:text-gray-200 dark:bg-secondary-dark-bg min-w-[245px] max-w-[90%] p-4 pt-7 rounded-2xl m-1 border border-gray-600 mr-3">
               <button
                 type="button"
                 style={{ color: item.iconColor, backgroundColor: item.iconBg }}

@@ -45,8 +45,7 @@ const Example = () => {
           {/* Subtitle */}
           <div className="mt-6 max-w-2xl">
             <p className={`${styles.landingText} text-gray-700 dark:text-gray-300 text-center xs:text-left text-lg`}>
-              Empowering users with cutting-edge tools for rapid, scalable, distributed model deployment in PyTorch. Unleash the potential 
-              of larger, more powerful AI models with Tensorlink.
+              Tensorlink is a Python library and computational platform that provides powerful tools and APIs for large-scale neural network inference and fine-tuning in PyTorch.
             </p>
             
             <div className="mt-8 flex flex-wrap items-center gap-4">

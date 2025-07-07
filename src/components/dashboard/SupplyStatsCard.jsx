@@ -2,10 +2,29 @@ import React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import CircularProgress from '@mui/material/CircularProgress';
 import { useMediaQuery } from "react-responsive"; // Install react-responsive if needed
+import { LineChart } from '@mui/x-charts/LineChart';
+import Button from '@mui/material/IconButton';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz'; // swap icon
+import { useState } from 'react';
 
 const SupplyStatsCard = ({ supplyStats }) => {
-  const isSmallScreen = useMediaQuery({ maxWidth: 640 }); // Tailwind's 'sm' breakpoint
+  const emissionsData = [
+    { date: new Date("2025-09-01"), validator: 0, worker: 0, dao: 0 },
+    { date: new Date("2026-09-01"), validator: 4917375, worker: 41797687.5, dao: 2458687.5 },
+    { date: new Date("2027-09-01"), validator: 7867800, worker: 66876300, dao: 3933900 },
+    { date: new Date("2028-09-01"), validator: 9638055, worker: 81923467.5, dao: 4819027.5 },
+    { date: new Date("2029-09-01"), validator: 10700208, worker: 90951768, dao: 5350104},
+    { date: new Date("2030-09-01"), validator: 11337499.8, worker: 96368748.3, dao: 5668749.9},
+    { date: new Date("2031-09-01"), validator: 11719525.2, worker: 99615964.2, dao: 5859762.6},
+    { date: new Date("2032-09-01"), validator: 12101550.6, worker: 102863180.1, dao: 6050775.3},
+  ];
+  const dates = emissionsData.map(d => d.date);
+  const validatorData = emissionsData.map(d => d.validator);
+  const workerData = emissionsData.map(d => d.worker);
+  const daoData = emissionsData.map(d => d.dao);
 
+  const isSmallScreen = useMediaQuery({ maxWidth: 640 }); // Tailwind's 'sm' breakpoint
+  const [showEmissionsChart, setShowEmissionsChart] = useState(false);
   
   // Check if data is still loading
   const isLoading = !supplyStats || supplyStats.length < 3 || 
@@ -50,7 +69,7 @@ const SupplyStatsCard = ({ supplyStats }) => {
       id: 1, 
       value: unclaimed, 
       label: "Unclaimed", 
-      color: "#fe2e1e",
+      color: "#f7a6a0",
       subcategories: [
         { name: "Amount", value: formatNumber(unclaimed) + " SNO" },
         { name: "Percentage", value: formatPercentage(unclaimed) },
@@ -61,7 +80,7 @@ const SupplyStatsCard = ({ supplyStats }) => {
       id: 2, 
       value: circulatingSupply, 
       label: "Circulating", 
-      color: "#2ef743",
+      color: "#aaf7b6",
       subcategories: [
         { name: "Amount", value: formatNumber(circulatingSupply) + " SNO" },
         { name: "Percentage", value: formatPercentage(circulatingSupply) },
@@ -77,7 +96,7 @@ const SupplyStatsCard = ({ supplyStats }) => {
 
   return (
     <div className="flex md:flex-row flex-col">
-      <div className="bg-gray-200 max-w-[690px] dark:bg-slate-800 dark:text-gray-200 dark:bg-secondary-dark-bg rounded-xl w-full p-8 pt-10 ss:pt-14 -mr-4 xs:-mr-0 m-3 border border-gray-600 md:mr-5">
+      <div className="bg-neutral-200 dark:bg-slate-700 rounded-xl mr-3 dark:text-gray-200 dark:bg-secondary-dark-bg w-full p-8 pt-10 ss:pt-14 border dark:border-gray-400 border-black">
         {/* Display "Current Supply" on top */}
         {supplyStats.map((item, index) => (
           item.title === "Total Supply" && (
@@ -111,11 +130,83 @@ const SupplyStatsCard = ({ supplyStats }) => {
       </div>
 
       {/* Right: Pie Chart (only show on md+ screens) */}
-      <div className="flex flex-col items-center rounded-xl justify-center md:bg-gray-300 md:dark:bg-gray-900 md:rounded-xl md:w-auto md:h-auto my-3 min-w-[275px] sm:min-w-[420px] border border-gray-600 -mr-6 sm:-mr-0">
-        <p className="text-xl font-bold text-gray-700 dark:text-gray-200 mt-4">Supply Distribution</p>
-        
+      <div className="flex flex-col items-center justify-center md:mt-0 mt-3 bg-slate-300 dark:bg-neutral-400 min-w-[220px] sm:min-w-[500px] rounded-xl border dark:border-gray-300 border-black">
+        <div className="w-full flex justify-between items-center px-4">
+          <p className="text-xl font-semibold text-gray-900 mt-4">
+            {showEmissionsChart ? "Projected Emissions" : "Supply Distribution"}
+          </p>
+          <button
+            aria-label="Toggle chart"
+            onClick={() => setShowEmissionsChart(!showEmissionsChart)}
+            className="mt-4"
+          >
+            <SwapHorizIcon className="text-gray-600 dark:text-gray-200" />
+          </button>
+        </div>
+
         {isLoading ? (
           <LoadingSpinner />
+        ) : showEmissionsChart ? (
+          <LineChart
+            className="my-2"
+            xAxis={[{
+              scaleType: 'time',
+              data: dates,
+              valueFormatter: (date) =>
+                date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' }),
+              min: dates[0],
+              max: dates[dates.length - 1],
+              tickMinStep: 1000 * 60 * 60 * 24 * 365, // 1 year in milliseconds
+            }]}
+            margin={{ top: isSmallScreen ? -10 : 40, bottom: 40, left: isSmallScreen ? 0 : 100, right: 10 }}
+            slotProps={{
+              legend: {
+                direction: 'row',
+                position: { vertical: 'top', horizontal: 'middle' },
+                itemMarkWidth: isSmallScreen ? 4 : 6,
+                itemMarkHeight: isSmallScreen ? 4 : 6,
+                markGap: isSmallScreen ? 2 : 4,
+                itemGap: isSmallScreen ? 6 : 10,
+                labelStyle: {
+                  fontSize: isSmallScreen ? 12 : 14,
+                  fill: 'black',
+                  maxWidth: isSmallScreen ? 60 : 80,
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                },
+              },
+            }}
+            series={[
+              {
+                id: 'dao',
+                label: 'DAO',
+                data: daoData,
+                color: '#f7a6a0',
+                stack: 'emissions',
+                area: true,
+              },
+              {
+                id: 'worker',
+                label: 'Workers',
+                data: workerData,
+                color: '#85deca',
+                stack: 'emissions',
+                area: true,
+              },
+              {
+                id: 'validator',
+                label: 'Validators',
+                data: validatorData,
+                color: '#aaf7b6',
+                stack: 'emissions',
+                area: true,
+              },
+            ]}
+            width={isSmallScreen ? 350 : 500}
+            height={isSmallScreen ? 220 : 300}
+          />
+
         ) : (
           <PieChart
             series={[{
@@ -140,7 +231,7 @@ const SupplyStatsCard = ({ supplyStats }) => {
                 itemGap: isSmallScreen ? 6 : 10,
                 labelStyle: {
                   fontSize: isSmallScreen ? 12 : 15,
-                  fill: 'gray',
+                  fill: 'black',
                   maxWidth: isSmallScreen ? 60 : 80,
                   overflow: 'hidden',
                   whiteSpace: 'nowrap',

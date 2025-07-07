@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Send, RefreshCw, Menu, X, Github, ArrowLeft, AlertCircle, Copy, CheckCheck, Settings } from "lucide-react";
 import { useStateContext } from "../contexts/contextProvider";
+import { Link } from "react-router-dom";
 
 const LocalhostGPT = () => {
   const [messages, setMessages] = useState([]);
@@ -119,7 +120,7 @@ const LocalhostGPT = () => {
     
     try {
       // Use the current model parameters for the API request
-      const response = await fetch('https://smartnodes-lab.ddns.net/tensorlink-api/generate', {
+      const response = await fetch('https://smartnodes.ddns.net/tensorlink-api/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -340,13 +341,13 @@ const LocalhostGPT = () => {
                     <Github size={16} />
                     <span>GitHub Repository</span>
                   </a>
-                  <a 
-                    href="tensorlink" 
+                  <Link 
+                    to="/tensorlink"
                     className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg text-sm flex items-center gap-2 shadow-md"
                   >
                     <ArrowLeft size={16} />
                     <span>Back to Home</span>
-                  </a>
+                  </Link>
                 </div>
                 
                 {/* Mobile-only close button */}

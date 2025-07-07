@@ -127,18 +127,18 @@ export const navLinks = [
 export const features = [
   {
     id: "1",
-    title: "Plug-and-Play Integration",
-    content: "Easily tap into distributed computational resources for training and inference in PyTorch. Tensorlink provides wrappers that integrate with existing torch workflows, along with APIs to connect your applications to advanced AI models."
+    title: "Plug-and-Play",
+    content: "Easily tap into distributed computational resources through model wrappers that integrate with existing torch workflows."
   },
   {
     id: "2",
-    title: "Distributed Execution Engine",
-    content: "Scale effortlessly across a decentralized mesh of worker nodes. Tensorlink shards and distributes workloads to handle larger models, reduce training time, and adapt dynamically to node availability."
+    title: "On-demand Inference",
+    content: "Free and paid APIs for instant access to popular Hugging Face models in your applications."
   },
   {
     id: "3",
-    title: "Autonomous Coordination",
-    content: "Validator nodes coordinate and verify job execution across worker nodes. A rotating network state management system promotes reliable validator behavior and ensures decentralized oversight."
+    title: "Model Distribution",
+    content: "Automatically shards oversized models across multiple devices, enabling large-scale inference and privacy-enhancing execution."
   }
   
   

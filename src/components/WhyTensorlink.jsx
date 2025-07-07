@@ -9,7 +9,7 @@ const WhyTensorlink = () => {
     {
       id: 'simplicity',
       title: "Simplicity",
-      description: "Unlike existing distributed computing solutions, which require extensive workflow customization and setup, Tensorlink offers a simple, plug-and-play solution integrated with PyTorch, enabling straightforward acceleration of neural network training.",
+      description: "Tensorlink provides a seamless interface for accessing compute in PyTorch. Whether you're tapping into shared resources or remotely connecting to your own infrastructure, lightweight node scripts make setup, deployment, and compute contribution effortless.",
       color: "bg-purple-500",
       hoverColor: "hover:bg-purple-600",
       icon: Zap
@@ -17,7 +17,7 @@ const WhyTensorlink = () => {
     {
       id: 'cost',
       title: "Cost",
-      description: "Through on-chain reward mechanisms, workers are incentivized to complete jobs, reducing costs and making cutting-edge models more accessible to researchers, startups, and individual developers.",
+      description: "Powered by smart contracts, Tensorlink rewards contributors for supplying compute. This incentive model dramatically lowers the cost of inference and training, making cutting-edge models more accessible to researchers and individual developers.",
       color: "bg-red-400",
       hoverColor: "hover:bg-red-500",
       icon: DollarSign
@@ -25,7 +25,7 @@ const WhyTensorlink = () => {
     {
       id: 'power',
       title: "Power",
-      description: "We aim to deliver and aggregate computational resources that rival even the most powerful supercomputers. With Tensorlink, you can tap into a vast network of computing power at your fingertips.",
+      description: "Tensorlink connects a diverse network of nodes to dynamically allocate resources based on model size and demand. It intelligently distributes workloads to scale compute as needed while balancing energy usage for more sustainable AI.",
       color: "bg-blue-500",
       hoverColor: "hover:bg-blue-600",
       icon: Cpu
