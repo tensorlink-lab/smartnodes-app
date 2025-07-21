@@ -5,7 +5,7 @@ import { overview } from "../constants";
 import AnimatedLottie from "./animations/AnimatedLottie";
 
 const MainHero = () => {
-  const words = ["Resource Sharing", "Consumer Hardware", "Idle Systems"];
+  const words = ["Resource Sharing", "Global Collaboration", "Idle Hardware", "Edge Computing", "IoT Devices"];
   const animationDuration = 900; // Adjust the duration for typing and pause
   const [currentWord, setCurrentWord] = useState(" ");
   const [isTyping, setIsTyping] = useState(false);
@@ -63,13 +63,14 @@ const MainHero = () => {
 
   return (
     <section className={`${styles.section}`}>
-      <div className={`items-center lg:px-0 px-20 rounded-md mt-10 ${styles.content}`}>
+      <div className={`items-center lg:px-0 px-20 rounded-md mt-10 ${styles.content} `}>
         <div className={`${styles.contentBox} flex-row mt-2 mb-2`}>
           <div className="min-w-[305px] mr-10 hidden md:block">
             <AnimatedLottie animationData={data} loop={true} />
           </div>
-          <div className="max-w-[310px] xs:max-w-2xl justify-center items-center" style={{ zIndex: 10000 }}>
-            <div className="py-10 justify-items-left bg-gray-200 dark:bg-zinc-950 px-8 xs:px-14 rounded-xl border border-gray-300 dark:border-black">
+          <div className="max-w-[310px] xs:max-w-2xl justify-center items-center" style={{ zIndex: 10 }}>
+
+            <div className="py-10 justify-items-left bg-gradient-to-bl from-gray-50 to-gray-100 dark:from-zinc-900 dark:to-zinc-950 px-8 xs:px-14 rounded-xl border border-gray-300 dark:border-gray-800 backdrop-blur-sm dark:shadow-black shadow-indigo-950 shadow-md">
               {/* Title */}
               <h2 className="text-[24px] ss:text-[32px] md:text-[40px] font-extrabold text-gray-800 dark:text-gray-200 leading-tight">
                 Unlocking  
@@ -85,17 +86,17 @@ const MainHero = () => {
               </div>
 
               {/* Paragraph */}
-              <p className="text-gray-600 dark:text-gray-400 text-md md:text-lg leading-relaxed py-2">
+              <p className="text-gray-800 dark:text-gray-200 text-md md:text-lg leading-relaxed py-2">
                 {overview.info}
               </p>
 
               {/* Call to Action */}
-              <a
-                href="#tools"
-                className="mt-5 inline-block px-6 py-3 text-white bg-blue-500 hover:bg-blue-600 rounded-md text-sm md:text-base font-semibold transition duration-300 ease-in-out"
+              {/* <a
+                href="/app"
+                className="mt-5 inline-block px-4 py-3 text-white bg-orange-600 border border-gray-700 hover:bg-blue-600 rounded-md text-sm md:text-base font-semibold transition duration-300 ease-in-out"
               >
-                Learn More
-              </a>
+                Network Dashboard
+              </a> */}
             </div>
           </div>
         </div>

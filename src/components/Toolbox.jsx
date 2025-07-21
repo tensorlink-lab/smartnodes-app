@@ -27,7 +27,7 @@ const Testimonials = () => {
               Toolbox.
             </div>
           </h2>
-            <div className="my-6 sm:mb-8 mt-8 md:mb-10 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 xs:p-7 shadow-md border border-gray-200 dark:border-gray-700">
+            <div className="my-6 sm:mb-8 mt-8 md:mb-10 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 xs:p-7 shadow-lg border border-gray-400 dark:border-gray-700">
               <p className="text-gray-700 dark:text-gray-300 text-sm xs:text-md sm:text-lg leading-relaxed">
               Smartnodes equips developers with cutting-edge tools designed to simplify and accelerate data acquisition and computation, broadening the accessibility of 
               resources across a wide range of scientific and research domains. These powerful functionalities are encapsulated in dedicated networks 

@@ -9,7 +9,7 @@ import { sideLinks } from "../constants";
 
 const Sidebar = ({ open, close }) => {
     const { activeMenu, setActiveMenu } = useStateContext();
-    const [openMenuId, setOpenMenuId] = useState("tensorlink/docs");  // Track which menu is open
+    const [openMenuId, setOpenMenuId] = useState(null);  // Track which menu is open
     const navigate = useNavigate();
 
     const toggleMenu = (id) => {
@@ -55,9 +55,12 @@ const Sidebar = ({ open, close }) => {
                                 }}                                
                             >
                                 <div className="flex items-center">
-                                    <span className="ml-5 font-poppins font-xl dark:text-gray-300 text-gray-900">
-                                        {link.name}
-                                    </span>
+                                    <div className="flex items-center gap-3 ml-5">
+                                        <span className="font-poppins font-xl dark:text-gray-300 text-gray-900">
+                                            {link.name}
+                                        </span>
+                                    </div>
+
                                     {link.sublinks && (
                                         <FaChevronDown
                                             className={`ml-2 text-gray-500 transition-transform duration-200 ${

@@ -28,9 +28,13 @@ import ConnectWalletButton from "./dashboard/ConnectWallet";
 import LocalhostGPT from "./LocalhostGPT";
 import Mining from "./docs/tensorlink/Mining";
 import Community from "./docs/tensorlink/Community";
-import SmartnodesOverview from "./docs/smartnodes/SmartnodesOverview"
+import SmartnodesOverview from "./docs/smartnodes/SmartnodesOverview";
+import NetworkDashboard from "./dashboard/NetworkDashboard";
+import NetworkSummary from "./dashboard/NetworkSummary";
 
 export {
+  NetworkDashboard,
+  NetworkSummary,
   SmartnodesOverview,
   ApiExample,
   Mining,
@@ -61,5 +65,5 @@ export {
   ParticleBackground,
   ConnectWalletButton,
   SupplyStatsCard,
-  Community
+  Community,
 };

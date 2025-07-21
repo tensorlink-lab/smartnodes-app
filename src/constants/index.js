@@ -1,9 +1,24 @@
-import { ai, reddit, job, telescope, blocks , community, linkedin, twitter, airbnb, binance, discord, coinbase, dropbox } from "../assets";
+import {
+  ai,
+  reddit,
+  job,
+  telescope,
+  blocks,
+  community,
+  linkedin,
+  twitter,
+  airbnb,
+  binance,
+  discord,
+  coinbase,
+  dropbox,
+} from "../assets";
 import { MdHome } from "react-icons/md";
 
 export const overview = {
-  info: "Smartnodes fuels distributed networks and tools designed to parallelize workflows and aggregate resources, seamlessly merging the capabilities of smaller devices into much more powerful data processors. The result is a suite of cost-effective, user-friendly tools tailored for advanced computational and data-intensive tasks, including machine learning, computational physics, and much more."
-}
+  // info: "Share your unused computing power, earn rewards, and help users and researchers tackle challenges in AI, science, and beyond. Smartnodes enables the creation of volunteer data processing networks by transforming idle hardware into collaborative compute nodes, building inclusive, scalable infrastructure capable of achieving what was previously out of reach.",
+  info: "Smartnodes turns global hardware into composable infrastructure, establishing a diverse web of tools that enable scalable data processing and scientific computation. Developers can stream, process, and analyze large datasets across a decentralized network using APIs and lightweight libraries.",
+};
 
 export const portals = [
   {
@@ -25,8 +40,8 @@ export const portals = [
     title: "Join the Community",
     link: "tensorlink/docs/community",
     img: community,
-  }
-]
+  },
+];
 
 export const sideLinks = [
   {
@@ -35,11 +50,12 @@ export const sideLinks = [
       {
         name: "Home",
         id: "",
-        icon: MdHome
+        icon: MdHome,
       },
       {
         name: "Dashboard",
         id: "app",
+        icon: MdHome,
       },
       // {
       //   name: "Documentation",
@@ -49,7 +65,7 @@ export const sideLinks = [
       //     { id: "overview", name: "Overview"}
       //   ]
       // }
-    ]
+    ],
   },
   {
     title: "tensorlink",
@@ -60,44 +76,47 @@ export const sideLinks = [
         icon: MdHome,
       },
       {
-        name: "localhostGPT",
-        id: "tensorlink/localhostGPT",
-        icon: MdHome
-      },
-      {
         name: "Documentation",
         id: "tensorlink/docs",
         icon: MdHome,
         sublinks: [
-          { id: "overview", name: "Overview"},
-          { id: "install", name: "Installation"},
-          { id: "model", name: "Distributed Models"},
-          { id: "api", name: "Inference APIs"},
-          { id: "nodes", name: "Nodes"},
-          { id: "mining", name: "Mining"},
+          { id: "overview", name: "Overview" },
+          { id: "install", name: "Installation" },
+          { id: "model", name: "Distributed Models" },
+          { id: "api", name: "Inference APIs" },
+          { id: "nodes", name: "Nodes" },
+          { id: "mining", name: "Mining" },
           // { id: "wallet", name: "Wallet Config"},
-        ]
+        ],
       },
-    ]
+      {
+        name: "localhostGPT",
+        id: "tensorlink/localhostGPT",
+        icon: MdHome,
+      },
+    ],
   },
   {
     title: "Links",
     links: [
       {
         name: "GitHub",
-        id: "https://github.com/smartnodes-lab"
+        id: "https://github.com/smartnodes-lab",
+        icon: MdHome,
       },
       {
         name: "X",
-        id: "https://x.com/smartnodes_lab"
+        id: "https://x.com/smartnodes_lab",
+        icon: MdHome,
       },
       {
         name: "Discord",
-        id: "https://discord.gg/aCW2kTNzJ2"
-      }
-    ]
-  }
-]
+        id: "https://discord.gg/aCW2kTNzJ2",
+        icon: MdHome,
+      },
+    ],
+  },
+];
 
 export const navLinks = [
   {
@@ -110,38 +129,40 @@ export const navLinks = [
     networks: [
       {
         network: "Tensorlink",
-        link: "tensorlink"
-      }
-    ]
+        link: "tensorlink",
+      },
+    ],
   },
   {
     id: "app",
-    title: "Dashboard"
+    title: "Dashboard",
   },
   {
     id: "docs",
     title: "Docs",
-  }
+  },
 ];
 
 export const features = [
   {
     id: "1",
     title: "Plug-and-Play",
-    content: "Easily tap into distributed computational resources through model wrappers that integrate with existing torch workflows."
+    content:
+      "Easily tap into distributed computational resources through model wrappers that integrate with existing PyTorch workflows.",
   },
   {
     id: "2",
     title: "On-demand Inference",
-    content: "Free and paid APIs for instant access to popular Hugging Face models in your applications."
+    content:
+      "Free and paid APIs for instant access to popular Hugging Face models, enhance your applications with powerful AI.",
   },
   {
     id: "3",
     title: "Model Distribution",
-    content: "Automatically shards oversized models across multiple devices, enabling large-scale inference and privacy-enhancing execution."
-  }
-  
-  
+    content:
+      "Automatically shards oversized models across multiple devices, enabling large-scale inference and privacy-enhancing execution.",
+  },
+
   // {
   //   id: "",
   //   title: "Accessibility",
@@ -156,31 +177,31 @@ export const features = [
   //       via API calls.",
   //       "Potential use-cases for moderating decentralized apps (e.g. social media, insurance, etc), \
   //       optimizing AI models, and much more!",
-  ];
+];
 
 export const feedback = [
   {
     id: "feedback-1",
     content:
-      "Optimize your machine learning workflows with Tensorlink, our cutting-edge solution for PyTorch model offloading. Seamlessly distribute training and inference tasks to maximize model scalability while significantly reducing costs.",
-    name: "Distributed PyTorch Models",
+      "Tensorlink optimizes workflows by distributing training and inference tasks, maximizing scalability and reducing costs.",
+    name: "Distributed AI Infrastructure",
     title: "Tensorlink",
     img: blocks,
     blur: false,
-    link: "/tensorlink"
+    link: "/tensorlink",
   },
   {
     id: "feedback-2",
     content: "",
     name: "",
     title: "",
-    // content: 
-    //   "Explore the depths of space with StarNet, a groundbreaking distributed radio telescope array positioned to be the world's largest and highest-resolution radio telescope, capturing unparalleled imaging and even potential transmission capabilities. (In Progress)",
+    // content:
+    //   "Explore the depths of space with Deepfield, a groundbreaking distributed radio telescope array positioned to be the world's largest and highest-resolution radio telescope, capturing unparalleled imaging and even potential transmission capabilities. (In Progress)",
     // name: "The Distributed Radio Telescope",
-    // title: "Starnet",
+    // title: "Deepfield",
     img: telescope,
     blur: true,
-    link: ""
+    link: "",
   },
   {
     id: "feedback-3",
@@ -193,7 +214,7 @@ export const feedback = [
     // title: "Collective Intelligence",
     img: job,
     blur: true,
-    link: ""
+    link: "",
   },
   // {
   //   id: "feedback-3",
@@ -238,7 +259,7 @@ export const footerLinks = [
       {
         name: "GitHub",
         icon: linkedin,
-        link: "https://github.com/smartnodes-lab"
+        link: "https://github.com/smartnodes-lab",
       },
       // {
       //   name: "Create",
@@ -272,14 +293,14 @@ export const footerLinks = [
       //   icon: linkedin,
       //   link: "https://www.linkedin.com/company/smartnodes-lab",
       // }
-    ]
+    ],
   },
   {
     title: "Donate",
     links: [
       {
         name: "Buy us a Coffee",
-        link: "https://buymeacoffee.com/smartnodes"
+        link: "https://buymeacoffee.com/smartnodes",
       },
       {
         name: "Bitcoin: bc1qg6klkt3z77wdlgusz5lujulr5ezayvqsw8m4r5",
@@ -290,8 +311,8 @@ export const footerLinks = [
         link: "0x1Bc3a15dfFa205AA24F6386D959334ac1BF27336",
       },
       {
-        name: "Solana: 3urnEem9JcdYB7t5ysVpk62fh2M8cU6RsmM9PoJaDiJV"
-      }
+        name: "Solana: 3urnEem9JcdYB7t5ysVpk62fh2M8cU6RsmM9PoJaDiJV",
+      },
     ],
   },
 ];

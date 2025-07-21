@@ -242,12 +242,12 @@ body.dark {
 }
 
 .white__gradient {
-  background: rgba(217, 217, 217, 0.278);
-  filter: blur(750px);
+  background: rgba(0, 0, 0, 0.3);
+  filter: blur(550px);
 }
 
 .black__gradient {
-  background: rgba(122, 10, 132, 0.575);
+  background: rgba(217, 217, 217, 0.22);
   filter: blur(750px);
 }
 

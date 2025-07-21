@@ -4,7 +4,7 @@ const defaultTheme = "dark";
 
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
-  darkMode: 'class',
+  darkMode: "class",
   mode: "jit",
   theme: {
     extend: {
@@ -25,7 +25,7 @@ module.exports = {
       ss: "550px",
       sm: "670px",
       md: "860px",
-      lg: "1250px",
+      lg: "1150px",
       xl: "1500px",
       xxl: "1900px",
       veryshort: { raw: "(max-height: 750px)" },
@@ -36,7 +36,7 @@ module.exports = {
   plugins: [],
   variants: {
     extend: {
-      display: ["responsive"]
+      display: ["responsive"],
     },
   },
 };

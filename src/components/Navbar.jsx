@@ -5,6 +5,7 @@ import { close, logo, menu, dark_logo, logo_small, logo_dark_small } from "../as
 import { navLinks } from "../constants";
 import { HiOutlineMenu } from "react-icons/hi";
 import { useStateContext } from "../contexts/contextProvider";
+import { motion } from "framer-motion";
 
 const Navbar = () => {
   const [active, setActive] = useState(false);
@@ -28,7 +29,7 @@ const Navbar = () => {
   const handleActiveMenu = () => setActiveMenu(!activeMenu);
 
   return (
-    <nav className="w-full flex z-20 pt-5 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}>
+    <motion.nav className="w-full flex z-20 pt-5 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}>
       {/* Logo and menu for desktop */}
       {!activeMenu ? (
         <div
@@ -151,7 +152,7 @@ const Navbar = () => {
           </ul>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 };
 

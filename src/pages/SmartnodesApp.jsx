@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { MdOutlineSupervisorAccount, MdOutlineSettings, MdVerifiedUser, MdBusinessCenter, MdPerson } from 'react-icons/md';
+import { MdDescription, MdLanguage, MdLink } from 'react-icons/md';
 import abiArtifact from "../assets/SmartnodesCore.json";
 import multisigAbiArtifact from '../assets/SmartnodesMultiSig.json';
 import styles, { layout } from "../style";
-import { Button, TensorlinkDashboard, SmartnodesDashboard, SupplyStatsCard, ConnectWalletButton } from "../components";
+import { NetworkDashboard, Button, SmartnodesDashboard, SupplyStatsCard, ConnectWalletButton } from "../components";
 import { ethers } from 'ethers';
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
-import { PieChart } from "@mui/x-charts/PieChart";
 
 const SmartnodesApp = () => {
   function round(num, decimals) {
@@ -14,8 +13,18 @@ const SmartnodesApp = () => {
     return Math.round(num * factor) / factor;
   }
 
+  // Dashboard types - add new ones here as needed
+  const DASHBOARD_TYPES = {
+    SUPPLY_STATS: 'supply_stats',
+    NETWORK: 'network',
+    // SMARTNODES: 'smartnodes',
+    // Add more dashboard types here in the future
+    // ANALYTICS: 'analytics',
+    // GOVERNANCE: 'governance',
+  };
+
   // State variables
-  const [activeDashboard, setActiveDashboard] = useState(null);
+  const [activeDashboard, setActiveDashboard] = useState(DASHBOARD_TYPES.NETWORK );
   const [status, setStatus] = useState('Loading network stats...');
   const [contract, setContract] = useState(null);
   const [multisig, setMultisig] = useState(null);
@@ -27,12 +36,6 @@ const SmartnodesApp = () => {
   const [userUnclaimed, setUserUnclaimed] = useState("-");
   const [error, setError] = useState('');
   const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [networkStats, setNetworkStats] = useState([
-    { title: "Jobs Completed", amount: "-", iconColor: "black", iconBg: "red", icon: <MdBusinessCenter /> },
-    { title: "Active Validators", amount: "-", iconColor: "black", iconBg: "lightBlue", icon: <MdVerifiedUser/> },
-    { title: "Active Workers", amount: "-", iconColor: "black", iconBg: "grey", icon: <MdOutlineSettings/> },
-    { title: "Users", amount: "-", iconColor: "black", iconBg: "violet", icon: <MdOutlineSupervisorAccount/> },
-  ]);
   const [supplyStats, setSupplyStats] = useState([
     { title: "Total Supply", amount: "-" },
     { title: "Locked", amount: "-" },
@@ -40,10 +43,11 @@ const SmartnodesApp = () => {
     { title: "State Reward", amount: "-" },
     { title: "State Time (s)", amount: "-" }
   ]);
-
-  const dashboardOptions = [
-    { title: "Tensorlink Dashboard", icon: <MdPerson style={{ color: "violet" }}/>, endpoint: "node", component: <TensorlinkDashboard /> },
-  ];
+  const [networkStats, setNetworkStats] = useState([
+    { title: "Total Jobs", amount: "-",
+      title: "Active Validators", amount: "-"
+    }
+  ]);
 
   const RPC_ENDPOINT = "https://sepolia.base.org";
   const BASE_NETWORK_ID = 84532;
@@ -55,6 +59,104 @@ const SmartnodesApp = () => {
   const sdk = new CoinbaseWalletSDK({
     appName: 'Smartnodes'
   });
+
+  // Dashboard configuration - add new dashboards here
+  const dashboardConfig = [
+    {
+      id: DASHBOARD_TYPES.NETWORK,
+      name: 'Peer-to-peer',
+      icon: <MdLanguage />
+    },
+    {
+      id: DASHBOARD_TYPES.SUPPLY_STATS,
+      name: 'Blockchain',
+      icon: <MdLink />
+    },
+    // {
+    //   id: DASHBOARD_TYPES.SMARTNODES,
+    //   name: 'Smartnodes',
+    //   icon: <MdOutlineSettings />
+    // },
+    // Add more dashboard configurations here
+    // {
+    //   id: DASHBOARD_TYPES.ANALYTICS,
+    //   name: 'Analytics',
+    //   icon: <MdAnalytics />
+    // },
+  ];
+
+  // Dashboard switcher component
+  const DashboardSwitcher = () => (
+    <div className="flex flex-wrap justify-start gap-2 mb-6">
+      {dashboardConfig.map((dashboard) => (
+        <button
+          key={dashboard.id}
+          onClick={() => setActiveDashboard(dashboard.id)}
+          className={`
+            min-w-[160px] ml-1
+            flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
+            ${activeDashboard === dashboard.id
+              ? 'bg-blue-500 text-white shadow-lg xs:scale-105'
+              : 'bg-stone-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-stone-300 dark:hover:bg-zinc-600'
+            }
+            border border-gray-500 dark:border-neutral-300
+          `}
+        >
+          {dashboard.icon}
+          <span>{dashboard.name}</span>
+        </button>
+      ))}
+    </div>
+  );
+
+  // Function to render active dashboard
+  const renderActiveDashboard = () => {
+    switch (activeDashboard) {
+      case DASHBOARD_TYPES.SUPPLY_STATS:
+        return (
+          <SupplyStatsCard 
+            supplyStats={supplyStats}
+            userAddress={userAddress}
+            userBalance={userBalance}
+            userLocked={userLocked}
+            userUnclaimed={userUnclaimed}
+            claimRewards={claimRewards}
+            connectToContract={connectToContract}
+            connectToCoinbaseWallet={connectToCoinbaseWallet}
+            contract={contract}
+            ConnectWalletButton={ConnectWalletButton}
+            styles={styles}
+            contractAddress={contractAddress}
+            multisigAddress={multisigAddress}
+          />
+        );
+      case DASHBOARD_TYPES.NETWORK:
+        return <NetworkDashboard />;
+      case DASHBOARD_TYPES.SMARTNODES:
+        return <SmartnodesDashboard contract={contract} multisig={multisig}/>;
+      // Add more dashboard cases here
+      // case DASHBOARD_TYPES.ANALYTICS:
+      //   return <AnalyticsDashboard />;
+      default:
+        return (
+          <SupplyStatsCard 
+            supplyStats={supplyStats}
+            userAddress={userAddress}
+            userBalance={userBalance}
+            userLocked={userLocked}
+            userUnclaimed={userUnclaimed}
+            claimRewards={claimRewards}
+            connectToContract={connectToContract}
+            connectToCoinbaseWallet={connectToCoinbaseWallet}
+            contract={contract}
+            ConnectWalletButton={ConnectWalletButton}
+            styles={styles}
+            contractAddress={contractAddress}
+            multisigAddress={multisigAddress}
+          />
+        );
+    }
+  };
 
   // Initialize read-only provider on component mount
   useEffect(() => {
@@ -81,12 +183,12 @@ const SmartnodesApp = () => {
   // Fetch public network stats when read-only contract is available
   useEffect(() => {
     if (readOnlyContract) {
-      getPublicNetworkStats();
+      getSmartContractStats();
     }
   }, [readOnlyContract]);
 
   // Function to fetch public network stats using read-only provider
-  const getPublicNetworkStats = async () => {
+  const getSmartContractStats = async () => {
     if (readOnlyContract) {
       try {
         setStatus('Loading network stats...');
@@ -137,13 +239,6 @@ const SmartnodesApp = () => {
         }
         
         // Set network stats and supply stats based on contract data
-        setNetworkStats([
-          { title: "Jobs Completed", amount: totalJobs, iconColor: "black", iconBg: "red", icon: <MdBusinessCenter /> },
-          { title: "Active Validators", amount: activeValidators, iconColor: "black", iconBg: "lightBlue", icon: <MdVerifiedUser /> },
-          { title: "Active Workers", amount: activeWorkers, iconColor: "black", iconBg: "grey", icon: <MdOutlineSettings /> },
-          { title: "Users", amount: users, iconColor: "black", iconBg: "violet", icon: <MdOutlineSupervisorAccount /> },
-        ]);
-
         setSupplyStats([
           { title: "Total Supply", amount: supply + unclaimed },
           { title: "Circulating Supply", amount: supply - locked },
@@ -152,6 +247,13 @@ const SmartnodesApp = () => {
           { title: "State Reward", amount: emissionRate },
           { title: "State Time (mins)", amount: 60 },
         ]);
+
+        setNetworkStats([
+          { 
+            title: "Total Jobs", amount: totalJobs,
+            title: "Active Validators", amount: activeValidators
+          }
+        ])
 
         setStatus(isWalletConnected 
           ? 'Network stats updated. Your wallet is connected.' 
@@ -325,7 +427,7 @@ const SmartnodesApp = () => {
       const signer = await provider.getSigner();
       const contractWithSigner = contract.connect(signer);
       const tx = await contractWithSigner.claimRewards();
-      await tx.wait();
+      await tx.wait(); 
 
       setStatus('Rewards claimed successfully!');
       
@@ -343,7 +445,7 @@ const SmartnodesApp = () => {
       setStatus('Refreshing data...');
       
       // Always refresh public network stats
-      await getPublicNetworkStats();
+      await getSmartContractStats();
       
       // If wallet is connected, refresh user-specific data
       if (contract && userAddress !== '-') {
@@ -356,163 +458,21 @@ const SmartnodesApp = () => {
   };
   
   return (
-    <section className={`bg-gray-300 dark:bg-zinc-800 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
+    <section className={`bg-gray-300 dark:bg-zinc-900 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
                           border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
-      <div className="text-red-500 text-middle bg-gray-200 w-screen text-center md:-mr-0 -mr-5">
-        {userAddress === '-' ? (
-          <p className="p-2 underline text-lg">
-            Connect Web Wallet to Access Dashboard
-          </p>
-        ) : (
-          <div></div>
-        )}
-      </div>
-
-      <div className="w-full flex flex-col items-end mt-5 md:mt-10">
-        <div className="flex space-x-4">
-        <ConnectWalletButton 
-          connectToContract={connectToContract} 
-          connectToCoinbaseWallet={connectToCoinbaseWallet} 
-          contract={contract} 
-        />
-
-        </div>
-      </div>
-
-      <div className="max-w-[1380px] items-center w-full flex-wrap">
-        <h1 className={`${styles.subheading} bg-stone-200 rounded-xl dark:bg-zinc-700 border dark:border-white border-black p-3 text-left px-6 mt-10 md:mt-0 max-w-[830px] mb-6`}>
+      <div className="mt-5 max-w-[1380px] items-center w-full flex-wrap">
+        <h1 className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-stone-200 rounded-xl dark:bg-zinc-700 border dark:border-white border-black p-3 text-left px-6 md:mt-2 max-w-[830px] mb-5`}>
           Smartnodes <span className="font-normal text-gray-400" style={{color: "#f7a6a0"}}>(testnet)</span> Dashboard
         </h1>
-        
-        <div className="flex mb-3 pt-2 ml-2 flex-wrap justify-start max-w-[1280px]">   
-          <h1 className={`${styles.subheading2} text-left sm:px-10 md:px-0 xs:px-0 max-w-[1280px] text-black dark:text-[#8587de]`}>
-            Token Info
-          </h1> 
-        </div>
-        {/* <div className="border border-white dark:border-gray-400 max-w-[110px]">
-          <h2 className={`font-semibold text-2xl p-1 pl-3 bg-zinc-200 dark:bg-zinc-500 text-black dark:text-gray-50`}>Supply</h2>
-        </div> */}
 
-        <div className="bg-gray-200 dark:bg-gray-600 mb-3 -mr-3 ss:-mr-0 rounded-xl dark:text-gray-200 p-4 xs:p-7 pt-7 overflow-x-scroll border border-black dark:border-gray-400 max-w-[750px]">
-          <div className="mb-5 px-1 mt-2 xs:mt-3">
-            <h2 className={`font-bold text-xl text-gray-400`}>Account</h2>
-            <p className="text-lg xs:text-2xl overflow-auto font-semibold">{userAddress ? userAddress : "No address connected"}</p>
-          </div>  
-          <div className="flex flex-wrap px-1 mb-3">
-            <div className="mt-1 pr-20">
-              <p className="font-bold text-xl text-gray-400">Balance</p>
-              <p className="text-xl xs:text-2xl">
-                {(isNaN(Number(userBalance)) ? '-' : Number(userBalance).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 }))}
-              </p>
-            </div>  
-            <div className="pr-20 mt-1">
-              <p className="font-bold text-xl text-gray-400">Locked</p>
-              <p className="text-xl xs:text-2xl">
-                {(isNaN(Number(userLocked)) ? '-' : Number(userLocked).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 }))}
-              </p>
-            </div>  
-            <div className="pr-5 mt-1">
-              <p className="font-bold text-xl text-gray-400">Unclaimed Rewards</p>
-              <p className="text-xl xs:text-2xl">
-                {(isNaN(Number(userUnclaimed)) ? '-' : Number(userUnclaimed).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 }))}
-              </p>
-            </div>  
-            <a
-              onClick={claimRewards}
-              className="mt-7 inline-block px-6 py-3 text-white bg-blue-500 hover:bg-blue-600 rounded-md text-sm md:text-base font-semibold cursor-pointer"
-            >
-              Claim Rewards
-            </a>
-          </div>
-        </div>
+        {/* Dashboard Switcher */}
+        <DashboardSwitcher />
 
-        <SupplyStatsCard supplyStats={supplyStats}/>
-    
-        <div className="flex mb-3 pt-8 ml-2 flex-wrap justify-start max-w-[1280px]">
-          <h1 
-            className={`${styles.subheading2} text-left sm:px-10 md:px-0 xs:px-0 max-w-[1280px] text-black dark:text-[#cbbcf6]`}
-          >
-            Network Info
-          </h1>    
-        </div>
+        {/* Render Active Dashboard */}
+        {renderActiveDashboard()}
 
-        <div className="flex flex-wrap justify-start gap-1 items-center w-full mb-4">
-          {networkStats.map((item, index) => (
-            <div key={index} className="flex flex-row bg-slate-200 dark:bg-slate-600 h-30 dark:text-gray-200 dark:bg-secondary-dark-bg min-w-[245px] max-w-[90%] p-4 pt-7 rounded-2xl m-1 border border-gray-600 mr-3">
-              <button
-                type="button"
-                style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-                className="text-3xl opacity-0.9 rounded-full max-h-[55px] p-3 border border-gray-300 hover:drop-shadow-xl xs:-ml-0 -ml-0"
-              >
-                {item.icon}
-              </button>
-              <div className="xs:ml-5 ml-1 my-1">
-                <p>
-                  <span className="text-2xl font-semibold">{item.amount}</span>
-                </p>
-                <p className="text-md text-gray-400 mt-1">{item.title}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <SmartnodesDashboard contract={contract} multisig={multisig}/>
-        
-        {/* <TensorlinkDashboard /> */}
-          {/* <div className="flex flex-wrap sm:m-3 pt-0 justify-start gap-1 items-center w-full">
-            {dashboardOptions.map((item, index) => (
-              <button 
-                key={index} 
-                onClick={async () => {
-                  if (index === 0) {
-                    const flaskRunning = await checkFlaskInstance(item.endpoint);
-                    console.log(item.endpoint);
-                    setActiveDashboard(item.component)
-                  }
-                }}
-                disabled={index !== 0}
-                className={`flex bg-gray-200 dark:bg-slate-600 h-[60px] dark:text-gray-200 dark:bg-secondary-dark-bg
-                  max-w-[285px] min-w-[245px] p-3 sm:pt-1 mt-4 rounded-2xl mr-5 ${index === 0 
-                  ? "dark:hover:border-white hover:border-black" : ""}`}
-              >
-                <div
-                  type="button"
-                  style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-                  className="flex text-3xl opacity-0.9 sm:p-2 border-gray-300">
-                  <div className="text-[1.75rem] opacity-0.9 rounded-full p-[0.2rem] border border-gray-300">
-                    {item.icon}
-                  </div>
-                  <p className="mt-[0.3rem] ml-3 text-lg font-bold text-gray-400">{item.title}</p>
-                </div>
-              </button>
-            ))}
-          </div> */}
-        {/* {activeDashboard && (
-          <div className="mt-10 w-full p-5 bg-white dark:bg-slate-800 rounded-xl shadow-sm">
-            <div className="space-x-3">
-              <Button
-                color="black"
-                bgColor="lightGrey"
-                text="Create User"
-                borderRadius="10px"
-                onClick={createUser}
-              />
-              <Button
-                color="black"
-                bgColor="lightGrey"
-                text="Create Job"
-                borderRadius="10px"
-                onClick={requestJob}
-              />
-              <input type="text"/>
-              
-            </div>
-            {activeDashboard}
-            {checkFlaskInstance && (
-              <div/>
-            )}
-          </div>
-        )} */}
+      </div>
+      <div className="md:mt-1 mt-5 flex-col">
       </div>
     </section>
   );

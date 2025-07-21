@@ -9,9 +9,9 @@ const FeedbackCard = ({ content, name, title, img, blur, link }) => {
   // Determine background color based on title (to create variety like in WhyTensorlink)
   const getBackgroundColor = () => {
     if (title.toLowerCase().includes("tensor") || title.toLowerCase().includes("train")) {
-      return isHovered ? "bg-purple-800" : "bg-pink-700";
+      return isHovered ? "bg-neutral-500 dark:bg-neutral-900" : "bg-blue-900";
     } else if (title.toLowerCase().includes("data") || title.toLowerCase().includes("smart")) {
-      return isHovered ? "bg-red-500" : "bg-red-400";
+      return isHovered ? "bg-red-100" : "bg-red-100";
     } else {
       return isHovered ? "bg-blue-600" : "bg-blue-500";
     }
@@ -25,7 +25,7 @@ const FeedbackCard = ({ content, name, title, img, blur, link }) => {
       onMouseLeave={() => setIsHovered(false)}
     > 
       <div 
-        className={`relative rounded-lg p-3 xs:p-5 transition-all duration-300 border border-gray-200 dark:border-gray-700 h-full 
+        className={`relative rounded-lg p-3 xs:p-5 transition-all duration-300 border border-gray-400 dark:border-gray-700 h-full shadow-lg
           ${blur ? 'opacity-50' : ''} 
           ${isHovered ? 'shadow-lg transform -translate-y-1' : 'bg-zinc-100 dark:bg-gray-800 hover:shadow-md'}
           ${blur ? 'bg-gray-200 dark:bg-gray-700' : isHovered ? getBackgroundColor() : 'bg-white dark:bg-gray-800'}
@@ -64,7 +64,7 @@ const FeedbackCard = ({ content, name, title, img, blur, link }) => {
               className={`px-2 sm:px-3 py-1 rounded-lg transition-all text-xs font-medium 
                 ${isHovered 
                   ? 'bg-white text-gray-900 hover:bg-gray-100' 
-                  : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white'
+                  : 'bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-400 hover:to-blue-600 text-white'
                 }`}
             >
               Learn More
