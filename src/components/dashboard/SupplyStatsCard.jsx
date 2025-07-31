@@ -30,20 +30,33 @@ ChartJS.register(
 );
 
 const SupplyStatsCard = ({ 
-  supplyStats = [], 
+  supplyStats, 
   userAddress, 
   userBalance, 
   userLocked, 
   userUnclaimed, 
   claimRewards,
-  connectToContract,
-  connectToCoinbaseWallet,
   contract,
   ConnectWalletButton,
-  styles,
   contractAddress,
   multisigAddress
 }) => {
+  const [isDarkMode, setIsDarkMode] = useState(
+    document.documentElement.classList.contains('dark')
+  );
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark');
+      setIsDarkMode(isDark); // trigger re-render
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
   const emissionsData = [
     { date: "Sep 2025", validator: 0, worker: 0, dao: 0 },
     { date: "Sep 2026", validator: 4917375, worker: 41797687.5, dao: 2458687.5 },
@@ -61,7 +74,7 @@ const SupplyStatsCard = ({
   const [showEmissionsChart, setShowEmissionsChart] = useState(false);
   
   // Check if data is still loading
-  const isLoading = !supplyStats || supplyStats.length < 3 || 
+  let isLoading = !supplyStats || supplyStats.length < 3 || 
                     supplyStats.some(item => item.amount === "-" || isNaN(Number(item.amount)));
 
   // Extract necessary amounts
@@ -137,7 +150,7 @@ const SupplyStatsCard = ({
       legend: {
         position: isSmallScreen ? 'bottom' : 'left',
         labels: {
-          color: 'white',
+          color: isDarkMode ? "white" : "black",
           font: {
             family: 'Inter, system-ui, sans-serif',
             size: isSmallScreen ? 11 : 13,
@@ -179,19 +192,19 @@ const SupplyStatsCard = ({
       x: {
         stacked: true,
         ticks: {
-          color: '#dddddd',
+          color: isDarkMode ? "white" : "black",
           font: {
             size: isSmallScreen ? 10 : 12,
           },
         },
         grid: {
-          color: 'black',
+          color: isDarkMode ? "white" : "black",
         },
       },
       y: {
         stacked: true,
         ticks: {
-          color: '#dddddd',
+          color: isDarkMode ? "white" : "black",
           font: {
             size: isSmallScreen ? 10 : 12,
           },
@@ -200,7 +213,7 @@ const SupplyStatsCard = ({
           }
         },
         grid: {
-          color: 'black',
+          color: isDarkMode ? "white" : "black",
         },
       },
     },
@@ -208,7 +221,7 @@ const SupplyStatsCard = ({
       legend: {
         position: 'top',
         labels: {
-          color: '#ffffff',
+          color: isDarkMode ? "white" : "black",
           font: {
             family: 'Inter, system-ui, sans-serif',
             size: isSmallScreen ? 12 : 14,
@@ -261,59 +274,6 @@ const SupplyStatsCard = ({
 
   return (
     <div className="max-w-[1380px] w-full">
-      {/* Account Info Section */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="bg-gray-200 mb-2 dark:bg-gray-600 rounded-xl dark:text-gray-200 p-4 sm:pt-6 overflow-x-scroll border border-black dark:border-gray-400 max-w-[700px]"
-      >
-        <h1 className="font-extrabold text-xl md:text-2xl mb-2 dark:text-white">Account</h1>
-        <div className="mb-4 px-1 mt-2 xs:mt-3">
-          <h2 className="font-bold text-xl text-gray-400">Address</h2>
-          <p className="text-lg xs:text-2xl overflow-auto font-semibold">
-            {userAddress ? userAddress : "No address connected"}
-          </p>
-        </div>  
-        
-        <div className="flex flex-wrap px-1 mb-2">
-          <div className="pr-20">
-            <p className="font-bold text-xl text-gray-400">Balance</p>
-            <p className="text-xl xs:text-2xl">
-              {(isNaN(Number(userBalance)) ? '-' : Number(userBalance).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 }))}
-            </p>
-          </div>  
-          <div className="pr-20">
-            <p className="font-bold text-xl text-gray-400">Locked</p>
-            <p className="text-xl xs:text-2xl">
-              {(isNaN(Number(userLocked)) ? '-' : Number(userLocked).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 }))}
-            </p>
-          </div>  
-          <div className="pr-5">
-            <p className="font-bold text-xl text-gray-400">Unclaimed Rewards</p>
-            <p className="text-xl xs:text-2xl">
-              {(isNaN(Number(userUnclaimed)) ? '-' : Number(userUnclaimed).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 }))}
-            </p>
-          </div>  
-        </div>
-        
-        <div className="flex flex-wrap gap-3 items-center mt-5 px-1">
-          <a
-            onClick={claimRewards}
-            className="border border-black inline-block px-6 py-3 text-white bg-blue-500 hover:bg-blue-600 rounded-md text-sm md:text-base font-semibold cursor-pointer"
-          >
-            Claim Rewards
-          </a>
-          <div>
-            <ConnectWalletButton 
-              connectToContract={connectToContract} 
-              connectToCoinbaseWallet={connectToCoinbaseWallet} 
-              contract={contract} 
-            />
-          </div>
-        </div>
-      </motion.div>
-
       {/* Main Supply Stats and Chart Row */}
       <div className="flex md:flex-row flex-col mb-2">
          {/* Left: Chart */}
@@ -321,7 +281,7 @@ const SupplyStatsCard = ({
           initial={{ opacity: 0, x: 0 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className={`flex flex-col items-center justify-center bg-neutral-400 dark:bg-neutral-900 rounded-xl border border-white transition-all duration-500 
+          className={`flex flex-col items-center justify-center bg-neutral-200 dark:bg-neutral-900 rounded-xl border border-white transition-all duration-500 
             ${showEmissionsChart ? 'md:max-w-[800px]' : 'sm:max-w-[400px] md:max-w-[450px] max-w-[480px]'} 
             w-full`}
         >
@@ -330,7 +290,7 @@ const SupplyStatsCard = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-xl sm:text-2xl font-extrabold text-neutral-50 dark:text-white mt-3"
+              className="text-xl sm:text-2xl font-extrabold text-neutral-800 dark:text-white mt-3"
             >
               {showEmissionsChart ? "Projected Emissions" : "Supply Distribution"}
             </motion.p>
@@ -344,7 +304,7 @@ const SupplyStatsCard = ({
               onClick={() => setShowEmissionsChart(!showEmissionsChart)}
               className="mt-4 p-2 rounded-full hover:bg-gray-400 transition-colors"
             >
-              <svg className="w-6 h-6 text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
             </motion.button>

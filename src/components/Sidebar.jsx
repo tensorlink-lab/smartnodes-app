@@ -18,32 +18,32 @@ const Sidebar = ({ open, close }) => {
 
     return (
         <div
-            className="h-screen ml-3 lg:overflow-hidden border-r border-black dark:border-gray-500 overflow-auto md:hover:overflow-auto pb-10"
+            className="fixed inset-y-0 left-0 w-[265px] bg-zinc-200 dark:bg-zinc-700 overflow-y-auto overflow-x-hidden"
             style={{ zIndex: 1000000 }}
         >
-            <div className="flex justify-between items-center">
-                <Link to="/" className="bg-gray-400 rounded-xl ml-2 mt-4 px-3">
+            <div className="flex justify-between items-center p-3">
+                <Link to="/" className="bg-gray-400 rounded-xl px-3 py-2">
                     <img className="w-40" src={logo} alt="Logo" />
                 </Link>
 
                 <button
                     onClick={() => setActiveMenu(!activeMenu)}
-                    className="rounded-full px-3 mt-10 mr-3 sm:mt-4 p-6 cursor-pointer"
+                    className="rounded-full p-2 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                 >
-                    <MdOutlineCancel size={20} color="grey" /> {/* Increased from default to 36px */}
+                    <MdOutlineCancel size={20} color="grey" />
                 </button>
-
             </div>
-            <div className="mt-10">
+            
+            <div className="px-3 pb-10 ml-1">
                 {sideLinks.map((item) => (
-                    <div key={item.title} className="mb-20 ml-1">
-                        <p className="text-gray-400 font-poppins text-lg dark:text-gray-300 m-3 mt-4 uppercase">
+                    <div key={item.title} className="mb-8">
+                        <p className="text-gray-400 font-poppins text-lg dark:text-gray-300 px-2 py-2 uppercase font-medium">
                             {item.title}
                         </p>
                         {item.links.map((link) => (
                             <div
                                 key={link.id}
-                                className="mt-5 cursor-pointer"
+                                className="mt-2 cursor-pointer"
                                 onClick={() => {
                                     if (link.sublinks && link.sublinks.length > 0) {
                                         toggleMenu(link.id);
@@ -54,36 +54,39 @@ const Sidebar = ({ open, close }) => {
                                     }
                                 }}                                
                             >
-                                <div className="flex items-center">
-                                    <div className="flex items-center gap-3 ml-5">
-                                        <span className="font-poppins font-xl dark:text-gray-300 text-gray-900">
-                                            {link.name}
-                                        </span>
-                                    </div>
+                                <div className="flex items-center justify-between px-4 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
+                                    <span className="font-poppins text-base dark:text-gray-300 text-gray-900">
+                                        {link.name}
+                                    </span>
 
                                     {link.sublinks && (
                                         <FaChevronDown
-                                            className={`ml-2 text-gray-500 transition-transform duration-200 ${
+                                            className={`text-gray-500 transition-transform duration-200 ${
                                                 openMenuId === link.id ? "rotate-180" : ""
                                             }`}
+                                            size={14}
                                         />
                                     )}
                                 </div>
-                                {link.sublinks && openMenuId === link.id && (
+                                
+                                {link.sublinks && (
                                     <div
-                                        className="ml-6"
-                                        onClick={(e) => e.stopPropagation()} // Prevent collapse when clicking sublinks
+                                        className={`
+                                        ml-4 mt-1 overflow-hidden transform origin-top transition-all duration-500 ease-in-out
+                                        ${openMenuId === link.id ? "max-h-96 opacity-100 scale-y-100" : "max-h-0 opacity-0 scale-y-95"}
+                                        `}
+                                        onClick={(e) => e.stopPropagation()}
                                     >
                                         {link.sublinks.map((subLink) => (
-                                            <Link
-                                                key={subLink.id}
-                                                to={`${link.id}/${subLink.id}`}
-                                                className="block mt-5"
-                                            >
-                                                <span className="ml-5 font-poppins font-xl dark:text-gray-400 text-gray-900">
-                                                    {subLink.name}
-                                                </span>
-                                            </Link>
+                                        <Link
+                                            key={subLink.id}
+                                            to={`${link.id}/${subLink.id}`}
+                                            className="block px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                                        >
+                                            <span className="font-poppins text-sm dark:text-gray-400 text-gray-700">
+                                            {subLink.name}
+                                            </span>
+                                        </Link>
                                         ))}
                                     </div>
                                 )}

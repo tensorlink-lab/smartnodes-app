@@ -107,7 +107,7 @@ const ParticleBackground = () => {
                             enable: true,
                             area: 1200,   
                         },
-                        value: 75,        
+                        value: 50,        
                     },
                     shape: {
                         type: "circle",

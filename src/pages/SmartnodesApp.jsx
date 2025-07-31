@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { MdDescription, MdLanguage, MdLink } from 'react-icons/md';
 import abiArtifact from "../assets/SmartnodesCore.json";
 import multisigAbiArtifact from '../assets/SmartnodesMultiSig.json';
+import { motion } from "framer-motion";
 import styles, { layout } from "../style";
-import { NetworkDashboard, Button, SmartnodesDashboard, SupplyStatsCard, ConnectWalletButton } from "../components";
+import { Button, SmartnodesDashboard } from "../components";
 import { ethers } from 'ethers';
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 
@@ -13,42 +13,27 @@ const SmartnodesApp = () => {
     return Math.round(num * factor) / factor;
   }
 
-  // Dashboard types - add new ones here as needed
-  const DASHBOARD_TYPES = {
-    SUPPLY_STATS: 'supply_stats',
-    NETWORK: 'network',
-    // SMARTNODES: 'smartnodes',
-    // Add more dashboard types here in the future
-    // ANALYTICS: 'analytics',
-    // GOVERNANCE: 'governance',
-  };
-
   // State variables
-  const [activeDashboard, setActiveDashboard] = useState(DASHBOARD_TYPES.NETWORK );
   const [status, setStatus] = useState('Loading network stats...');
   const [contract, setContract] = useState(null);
   const [multisig, setMultisig] = useState(null);
-  const [readOnlyProvider, setReadOnlyProvider] = useState(null);
   const [readOnlyContract, setReadOnlyContract] = useState(null);
+  const [readOnlyProvider, setReadOnlyProvider] = useState(null);
   const [userAddress, setUserAddress] = useState('-');
   const [userBalance, setUserBalance] = useState("-");
   const [userLocked, setUserLocked] = useState("-");
   const [userUnclaimed, setUserUnclaimed] = useState("-");
-  const [error, setError] = useState('');
-  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [error, setError] = useState('');    
   const [supplyStats, setSupplyStats] = useState([
-    { title: "Total Supply", amount: "-" },
-    { title: "Locked", amount: "-" },
-    { title: "Unclaimed Rewards", amount: "-" },
-    { title: "State Reward", amount: "-" },
-    { title: "State Time (s)", amount: "-" }
-  ]);
-  const [networkStats, setNetworkStats] = useState([
-    { title: "Total Jobs", amount: "-",
-      title: "Active Validators", amount: "-"
-    }
-  ]);
+        { title: "Total Supply", amount: "-" },
+        { title: "Locked", amount: "-" },
+        { title: "Unclaimed Rewards", amount: "-" },
+        { title: "State Reward", amount: "-" },
+        { title: "State Time (s)", amount: "-" }
+    ]);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
 
+  const API_BASE_URL = "https://smartnodes.ddns.net/tensorlink-api";
   const RPC_ENDPOINT = "https://sepolia.base.org";
   const BASE_NETWORK_ID = 84532;
   const contractAddress = '0x64eC74C9370F684783cBf606eEDdd4Ba7fDFc338';
@@ -60,105 +45,13 @@ const SmartnodesApp = () => {
     appName: 'Smartnodes'
   });
 
-  // Dashboard configuration - add new dashboards here
-  const dashboardConfig = [
-    {
-      id: DASHBOARD_TYPES.NETWORK,
-      name: 'Peer-to-peer',
-      icon: <MdLanguage />
-    },
-    {
-      id: DASHBOARD_TYPES.SUPPLY_STATS,
-      name: 'Blockchain',
-      icon: <MdLink />
-    },
-    // {
-    //   id: DASHBOARD_TYPES.SMARTNODES,
-    //   name: 'Smartnodes',
-    //   icon: <MdOutlineSettings />
-    // },
-    // Add more dashboard configurations here
-    // {
-    //   id: DASHBOARD_TYPES.ANALYTICS,
-    //   name: 'Analytics',
-    //   icon: <MdAnalytics />
-    // },
-  ];
-
-  // Dashboard switcher component
-  const DashboardSwitcher = () => (
-    <div className="flex flex-wrap justify-start gap-2 mb-6">
-      {dashboardConfig.map((dashboard) => (
-        <button
-          key={dashboard.id}
-          onClick={() => setActiveDashboard(dashboard.id)}
-          className={`
-            min-w-[160px] ml-1
-            flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200
-            ${activeDashboard === dashboard.id
-              ? 'bg-blue-500 text-white shadow-lg xs:scale-105'
-              : 'bg-stone-200 dark:bg-zinc-700 text-gray-700 dark:text-gray-300 hover:bg-stone-300 dark:hover:bg-zinc-600'
-            }
-            border border-gray-500 dark:border-neutral-300
-          `}
-        >
-          {dashboard.icon}
-          <span>{dashboard.name}</span>
-        </button>
-      ))}
-    </div>
-  );
-
-  // Function to render active dashboard
-  const renderActiveDashboard = () => {
-    switch (activeDashboard) {
-      case DASHBOARD_TYPES.SUPPLY_STATS:
-        return (
-          <SupplyStatsCard 
-            supplyStats={supplyStats}
-            userAddress={userAddress}
-            userBalance={userBalance}
-            userLocked={userLocked}
-            userUnclaimed={userUnclaimed}
-            claimRewards={claimRewards}
-            connectToContract={connectToContract}
-            connectToCoinbaseWallet={connectToCoinbaseWallet}
-            contract={contract}
-            ConnectWalletButton={ConnectWalletButton}
-            styles={styles}
-            contractAddress={contractAddress}
-            multisigAddress={multisigAddress}
-          />
-        );
-      case DASHBOARD_TYPES.NETWORK:
-        return <NetworkDashboard />;
-      case DASHBOARD_TYPES.SMARTNODES:
-        return <SmartnodesDashboard contract={contract} multisig={multisig}/>;
-      // Add more dashboard cases here
-      // case DASHBOARD_TYPES.ANALYTICS:
-      //   return <AnalyticsDashboard />;
-      default:
-        return (
-          <SupplyStatsCard 
-            supplyStats={supplyStats}
-            userAddress={userAddress}
-            userBalance={userBalance}
-            userLocked={userLocked}
-            userUnclaimed={userUnclaimed}
-            claimRewards={claimRewards}
-            connectToContract={connectToContract}
-            connectToCoinbaseWallet={connectToCoinbaseWallet}
-            contract={contract}
-            ConnectWalletButton={ConnectWalletButton}
-            styles={styles}
-            contractAddress={contractAddress}
-            multisigAddress={multisigAddress}
-          />
-        );
+  // Fetch public network stats when read-only contract is available
+  useEffect(() => {
+    if (readOnlyContract) {
+      getSmartContractStats();
     }
-  };
+  }, [readOnlyContract]);
 
-  // Initialize read-only provider on component mount
   useEffect(() => {
     const initReadOnlyProvider = async () => {
       try {
@@ -179,13 +72,6 @@ const SmartnodesApp = () => {
     
     initReadOnlyProvider();
   }, []);
-
-  // Fetch public network stats when read-only contract is available
-  useEffect(() => {
-    if (readOnlyContract) {
-      getSmartContractStats();
-    }
-  }, [readOnlyContract]);
 
   // Function to fetch public network stats using read-only provider
   const getSmartContractStats = async () => {
@@ -248,12 +134,7 @@ const SmartnodesApp = () => {
           { title: "State Time (mins)", amount: 60 },
         ]);
 
-        setNetworkStats([
-          { 
-            title: "Total Jobs", amount: totalJobs,
-            title: "Active Validators", amount: activeValidators
-          }
-        ])
+        console.log('supplyStats in parent:', supplyStats);
 
         setStatus(isWalletConnected 
           ? 'Network stats updated. Your wallet is connected.' 
@@ -439,42 +320,35 @@ const SmartnodesApp = () => {
     }
   };
 
-  // Function to refresh all data
-  const refreshData = async () => {
-    try {
-      setStatus('Refreshing data...');
-      
-      // Always refresh public network stats
-      await getSmartContractStats();
-      
-      // If wallet is connected, refresh user-specific data
-      if (contract && userAddress !== '-') {
-        await getUserData(contract, userAddress);
-      }
-    } catch (error) {
-      console.error('Error refreshing data:', error);
-      setStatus('Error refreshing data.');
+  const handleActionClick = (actionId) => {
+    switch (actionId) {
+      case 'request-job':
+        // Handle job request
+        break;
+      case 'create-user':
+        // Handle user creation
+        break;
+      case 'create-validator':
+        // Handle validator creation
+        break;
     }
   };
   
   return (
-    <section className={`bg-gray-300 dark:bg-zinc-900 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
-                          border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
-      <div className="mt-5 max-w-[1380px] items-center w-full flex-wrap">
-        <h1 className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-stone-200 rounded-xl dark:bg-zinc-700 border dark:border-white border-black p-3 text-left px-6 md:mt-2 max-w-[830px] mb-5`}>
-          Smartnodes <span className="font-normal text-gray-400" style={{color: "#f7a6a0"}}>(testnet)</span> Dashboard
-        </h1>
-
-        {/* Dashboard Switcher */}
-        <DashboardSwitcher />
-
-        {/* Render Active Dashboard */}
-        {renderActiveDashboard()}
-
-      </div>
-      <div className="md:mt-1 mt-5 flex-col">
-      </div>
-    </section>
+    <SmartnodesDashboard 
+      supplyStats={supplyStats}
+      userAddress={userAddress}
+      userBalance={userBalance}
+      userLocked={userLocked}
+      userUnclaimed={userUnclaimed}
+      claimRewards={claimRewards}
+      handleActionClick={handleActionClick}
+      contract={contract}
+      contractAddress={contractAddress}
+      multisigAddress={multisigAddress}
+      connectToContract={connectToContract}
+      connectToCoinbaseWallet={connectToCoinbaseWallet}
+    />
   );
 };
 

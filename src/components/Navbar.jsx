@@ -7,11 +7,12 @@ import { HiOutlineMenu } from "react-icons/hi";
 import { useStateContext } from "../contexts/contextProvider";
 import { motion } from "framer-motion";
 
+
 const Navbar = () => {
   const [active, setActive] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
-  const [networksOpen, setNetworksOpen] = useState(false); // Track networks dropdown
+  const [networksOpen, setNetworksOpen] = useState(false);
   const { activeMenu, setActiveMenu } = useStateContext();
 
   useEffect(() => {
@@ -66,21 +67,40 @@ const Navbar = () => {
                   onClick={() => setNetworksOpen(!networksOpen)}
                 >
                   Networks
-                  <FaChevronDown className={`ml-2 transition-transform duration-200 ${networksOpen ? "rotate-180" : ""}`}/>
+                  <FaChevronDown className={`ml-2 transition-transform duration-300 ease-in-out ${networksOpen ? "rotate-180" : ""}`}/>
                 </button>
-                {networksOpen && (
-                  <ul className="absolute top-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg px-2 py-2 transition-transform duration-1000">
-                    {nav.networks.map((networkObj) => (
-                      <a
+                
+                {/* Enhanced Desktop Networks Dropdown */}
+                <div className={`
+                  absolute top-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden
+                  transform origin-top transition-all duration-300 ease-out
+                  ${networksOpen 
+                    ? "scale-y-100 opacity-100 translate-y-0 pointer-events-auto" 
+                    : "scale-y-0 opacity-0 -translate-y-2 pointer-events-none"
+                  }
+                `}>
+                  <ul className="px-2 py-2">
+                    {nav.networks.map((networkObj, idx) => (
+                      <li
                         key={networkObj.link}
-                        href={`/${networkObj.link}`}
-                        className="block px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        className={`
+                          transform transition-all duration-200 ease-out
+                          ${networksOpen ? `translate-x-0 opacity-100` : `translate-x-2 opacity-0`}
+                        `}
+                        style={{ 
+                          transitionDelay: networksOpen ? `${idx * 50}ms` : '0ms' 
+                        }}
                       >
-                        {networkObj.network}
-                      </a>
+                        <a
+                          href={`/${networkObj.link}`}
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-150"
+                        >
+                          {networkObj.network}
+                        </a>
+                      </li>
                     ))}
                   </ul>
-                )}
+                </div>
               </div>
             ) : (
               <a href={`/${nav.id}`}>{nav.title}</a>
@@ -93,18 +113,21 @@ const Navbar = () => {
       </ul>
 
       {/* Mobile menu */}
-      <div className="md:hidden flex flex-1 px-5 justify-end items-center" style={{ zIndex: 40 }}>
+      <div className="md:hidden flex flex-1 px-5 justify-end items-center" style={{ zIndex: 1000000 }}>
         <img
           src={toggle ? close : menu}
           alt="menu"
           className="w-[28px] h-[28px] object-contain cursor-pointer"
           onClick={() => setToggle(!toggle)}
         />
-
         <div
-          className={`${
-            !toggle ? "hidden" : "flex"
-          } p-6 bg-slate-500 absolute z-10 top-20 right-0 mx-4 mt-10 min-w-[140px] rounded-xl sidebar`}
+          className={`
+            absolute top-16 right-0 mx-4 mt-4 min-w-[140px]
+            border border-gray-300 p-6 dark:bg-slate-500 bg-slate-200
+            rounded-xl shadow-xl z-30
+            transform origin-top transition-all duration-300 ease-out
+            ${toggle ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0 pointer-events-none"}
+          `}
         >
           <ul className="list-none flex flex-col items-start">
             <div className="mb-3" style={{ zIndex: 100000 }}>
@@ -115,7 +138,7 @@ const Navbar = () => {
               <li
                 key={nav.id}
                 className={`font-poppins font-medium cursor-pointer text-[16px] ${
-                  active === nav.title ? "text-white" : "text-dimWhite"
+                  active === nav.title ? "dark:text-white" : "dark:text-dimWhite"
                 } mb-4 z-50`}
                 onClick={() => setActive(nav.title)}
               >
@@ -128,21 +151,43 @@ const Navbar = () => {
                       onClick={() => setNetworksOpen(!networksOpen)}
                     >
                       Networks
-                      <FaChevronDown className={`ml-2 transition-transform duration-200 ${networksOpen ? "rotate-180" : ""}`}/>
+                      <FaChevronDown className={`ml-2 transition-transform duration-300 ease-in-out ${networksOpen ? "rotate-180" : ""}`}/>
                     </button>
-                    {networksOpen && (
-                      <ul className="ml-4 mt-2 bg-gray-800 rounded shadow-lg">
-                        {nav.networks.map((networkObj) => (
-                          <a
+                    
+                    {/* Enhanced Mobile Networks Dropdown */}
+                    <div className={`
+                      ml-4 mt-2 bg-gray-800 rounded-lg shadow-lg overflow-hidden
+                      transform origin-top transition-all duration-300 ease-out
+                      ${networksOpen 
+                        ? "scale-y-100 opacity-100 max-h-96 pointer-events-auto" 
+                        : "scale-y-0 opacity-0 max-h-0 pointer-events-none"
+                      }
+                    `}>
+                      <ul >
+                        {nav.networks.map((networkObj, idx) => (
+                          <li
                             key={networkObj.link}
-                            href={`/${networkObj.link}`}
-                            className="block px-4 py-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+                            className={`
+                              transform transition-all duration-200 ease-out
+                              ${networksOpen 
+                                ? `translate-x-0 opacity-100` 
+                                : `translate-x-4 opacity-0`
+                              }
+                            `}
+                            style={{ 
+                              transitionDelay: networksOpen ? `${idx * 75}ms` : '0ms' 
+                            }}
                           >
-                            {networkObj.network}
-                          </a>
+                            <a
+                              href={`/${networkObj.link}`}
+                              className="block px-4 py-2 hover:bg-gray-700 rounded-md text-white transition-colors duration-150"
+                            >
+                              {networkObj.network}
+                            </a>
+                          </li>
                         ))}
                       </ul>
-                    )}
+                    </div>
                   </div>
                 ) : (
                   <a href={`/${nav.id}`}>{nav.title}</a>

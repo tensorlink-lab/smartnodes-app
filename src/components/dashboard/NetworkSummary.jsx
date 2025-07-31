@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { MdNetworkCheck, MdVerifiedUser, MdOutlineSettings, MdAccountBalanceWallet, MdAssessment } from "react-icons/md";
 import { motion } from 'framer-motion';
 
-const API_BASE_URL = "https://smartnodes.ddns.net/tensorlink-api";
-
 const formatBytes = (bytes) => {
   if (bytes === 0) return '0 Bytes';
   const k = 1024;
@@ -81,34 +79,11 @@ const NetworkSummary = ({ networkStats, currentJobs }) => {
   }
 
   if (!stats) {
-    return <div className="mt-4 text-sm text-gray-500">Loading network summary...</div>;
+    return <div className="my-10 text-sm text-gray-500">Loading network summary...</div>;
   }
 
   return (
-    // <div className="flex flex-wrap justify-start gap-1 items-center w-full mb-4">
-    //   {summaryCards.map((item, index) => (
-    //     <motion.div
-    //       key={index}
-    //       initial={{ opacity: 0, x: -20 }}
-    //       animate={{ opacity: 1, x: 0 }}
-    //       transition={{ duration: 0.4, delay: index * 0.1 }}
-    //       className="flex xs:pl-1 xs:flex-col pb-1 bg-neutral-100 dark:bg-slate-600 xs:h-[92px] dark:text-gray-200 dark:bg-secondary-dark-bg min-w-[200px] xs:min-w-[155px] rounded-2xl m-1 border border-gray-400 dark:border-neutral-300"
-    //     >
-    //       <div className="px-3 flex items-center mt-1 xs:mt-3">
-    //         <button
-    //           type="button"
-    //           style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-    //           className="text-2xl opacity-0.9 rounded-full max-h-[55px] p-2 border border-gray-300 hover:drop-shadow-xl xs:ml-1 -ml-1"
-    //         >
-    //           {item.icon}
-    //         </button>
-    //         <span className="text-xl xs:text-2xl xs:ml-5 ml-3 font-semibold">{item.amount}</span>
-    //       </div>
-    //       <p className="text-md dark:text-gray-200 xs:mt-0 xs:mr-0 my-2 pt-1 mr-4 xs:ml-3">{item.title}</p>
-    //     </motion.div>
-    //   ))}
-    // </div>
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 w-full mb-4">
+    <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2 w-full mb-4">
       {summaryCards.map((item, index) => (
         <motion.div
           key={index}
@@ -121,18 +96,18 @@ const NetworkSummary = ({ networkStats, currentJobs }) => {
           <div className="flex items-center justify-between p-2 pb-1">
             <div
               style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-              className="flex items-center justify-center w-8 h-8 xs:w-9 xs:h-9 rounded-full shadow-sm border border-white"
+              className="flex items-center justify-center w-6 h-6 xs:w-9 xs:h-9 rounded-full shadow-sm border border-white"
             >
               <span className="text-sm">{item.icon}</span>
             </div>
-            <span className="text-lg font-semibold text-gray-900 dark:text-white">
+            <span className="text-md xs:text-lg font-semibold text-gray-900 dark:text-white">
               {item.amount}
             </span>
           </div>
           
           {/* Title section */}
           <div className="px-1.5 pb-2">
-            <p className="text-xs text-gray-600 dark:text-gray-300 font-bold">
+            <p className="text-xs xs:text-sm text-gray-600 dark:text-gray-300 font-bold">
               {item.title}
             </p>
           </div>

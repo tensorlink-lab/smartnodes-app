@@ -9,6 +9,8 @@ const styles = {
     "font-poppins font-bold text-[24px] xs:text-[30px] md:text-[40px] lg:text-[45px] text-gray-700 dark:text-white w-full ",
   subheading2:
     "font-poppins font-bold text-[18px] xs:text-[24px] sm:text-[28px] lg:text-[32px] text-gray-700 dark:text-white w-full ",
+  subheading3:
+    "font-poppins font-bold text-[16px] xs:text-[22px] lg:text-[26px] text-gray-700 dark:text-white w-full ",
   paragraph:
     "font-poppins font-normal dark:text-white text-gray-900 sm:text-[16px] md:text-[18px] leading-[30.8px]",
 

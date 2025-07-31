@@ -31,8 +31,16 @@ import Community from "./docs/tensorlink/Community";
 import SmartnodesOverview from "./docs/smartnodes/SmartnodesOverview";
 import NetworkDashboard from "./dashboard/NetworkDashboard";
 import NetworkSummary from "./dashboard/NetworkSummary";
+import ActionMenu from "./dashboard/ActionMenu";
+import NodeDashboard from "./dashboard/NodeDashboard";
+import Account from "./dashboard/Account";
+import DashboardSwitcher from "./dashboard/DashboardSwitcher";
 
 export {
+  DashboardSwitcher,
+  Account,
+  ActionMenu,
+  NodeDashboard,
   NetworkDashboard,
   NetworkSummary,
   SmartnodesOverview,

@@ -19,7 +19,7 @@ const MainHero = () => {
             </span>
             <br/>
             <span className="inline">for </span>
-            <span className="inline bg-gradient-to-r from-indigo-600 to-indigo-800 bg-clip-text text-transparent">
+            <span className="inline bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
               Big Problems
             </span>
           </h1>
