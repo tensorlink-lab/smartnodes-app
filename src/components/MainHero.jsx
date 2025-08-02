@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const MainHero = () => {
   return (
-    <section id="home" className={`${styles.section} rounded-md xs:px-7 px-12`}>
+    <section id="home" className={`${styles.section} rounded-md xs:px-5 px-12 lg:mx-20`}>
       <div className="dark:bg-gradient-to-br dark:from-zinc-900 dark:to-slate-900 bg-gradient-to-br from-zinc-50 to-gray-100 rounded-xl px-5 flex sm:mx-10 md:flex-row flex-col z-20 border border-gray-300 dark:border-gray-800 backdrop-blur-sm dark:shadow-black shadow-indigo-950 shadow-lg">
         {/* Left Column - Title & Description */}
         <div className="flex-1 w-full flex-col items-center max-w-xl sm:min-w-[350px] z-0 mx-3 sm:mx-5 md:mx-10 md:py-10 py-6 mb-5">

@@ -5,10 +5,10 @@ const ConnectWalletButton = ({ connectToContract, connectToCoinbaseWallet, contr
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="relative" style={{ zIndex: 10000000000 }}>
+    <div className="relative" style={{ zIndex: 10000000 }}>
       {/* Main Button */}
       <button
-        className="flex items-center px-3 py-2 border border-gray-400 rounded-lg shadow hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 font-semibold text-md dark:text-gray-50 text-gray-800"
+        className="flex items-center px-3 py-2 border border-gray-400 rounded-lg shadow hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 font-semibold text-sm xs:text-md dark:text-gray-50 text-gray-800"
         onClick={() => setIsOpen((prev) => !prev)}
       >
 
@@ -34,7 +34,7 @@ const ConnectWalletButton = ({ connectToContract, connectToCoinbaseWallet, contr
         <ul>
           <li>
             <button
-              className="font-semibold text-md dark:text-gray-100 text-gray-500 block w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="font-semibold text-sm xs:text-md dark:text-gray-100 text-gray-500 block w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={() => {
                 connectToContract();
                 setIsOpen(false);
@@ -45,7 +45,7 @@ const ConnectWalletButton = ({ connectToContract, connectToCoinbaseWallet, contr
           </li>
           <li>
             <button
-              className="font-semibold text-md dark:text-gray-100 text-gray-500 block w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="font-semibold text-sm xs:text-md dark:text-gray-100 text-gray-500 block w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={() => {
                 connectToCoinbaseWallet();
                 setIsOpen(false);

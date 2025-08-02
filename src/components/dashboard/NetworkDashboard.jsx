@@ -248,11 +248,6 @@ const NetworkDashboard = ({
             return formatBytes(value);
           }
         },
-        title: {
-          display: true,
-          text: 'Capacity',
-          color: isDarkMode ? "white" : "black"
-        }
       }
     },
     elements: {
@@ -370,16 +365,16 @@ const NetworkDashboard = ({
                     transition={{ duration: 0.6, delay: 0.2 }}
                     className="bg-zinc-200 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-200 dark:border-neutral-400"
                     >
-                    <div className="flex items-center mb-2">
-                    <MdCircle className="text-green-500 text-xs mr-2" />
-                    <span className="text-xs text-green-600 dark:text-green-400 font-medium">Tensorlink Network Capacity</span>
-                    </div>
-                    <div className="h-80 xl:h-96">
-                        <Line data={capacityChartData} options={capacityChartOptions} />
-                    </div>
+                      <div className="flex items-center mb-2">
+                        <MdCircle className="text-green-500 text-xs mr-2" />
+                        <span className="text-xs text-green-600 dark:text-green-400 font-medium">Tensorlink Network Capacity</span>
+                      </div>
+                      <div className="h-80 xl:h-96">
+                          <Line data={capacityChartData} options={capacityChartOptions} />
+                      </div>
                     </motion.div>
                 )}
-                </motion.div>
+              </motion.div>
             </div>
           
             {/* {networkStats?.models && (

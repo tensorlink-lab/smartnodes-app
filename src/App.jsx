@@ -7,7 +7,7 @@ import { useStateContext } from "./contexts/contextProvider";
 const useWindowSizeHandler = (setActiveMenu) => {
   useEffect(() => {
     const handleResize = () => {
-      setActiveMenu(window.innerWidth >= 1424);
+      setActiveMenu(window.innerWidth >= 1440);
     };
 
     // Set initial state

@@ -4,7 +4,7 @@ import Spline from "@splinetool/react-spline";
 const Opportunity = () => (
   <section 
     id="product" 
-    className={`${layout.section} mt-0 px-20 sm:px-5 relative overflow-hidden bg-gradient-to-b from-transparent to-slate-300 dark:to-zinc-900`} // Ensure no horizontal scroll
+    className={`${layout.section} mt-0 xs:px-5 relative overflow-hidden bg-gradient-to-b from-transparent to-slate-300 dark:to-zinc-900`} // Ensure no horizontal scroll
   >
     <div className="flex justify-between space-x-4 z-40 pt-20 sm:px-0 px-10">
       {/* Text content section */}

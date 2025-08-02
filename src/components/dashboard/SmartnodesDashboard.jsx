@@ -1,6 +1,5 @@
 import { MdDescription, MdLanguage, MdLink } from 'react-icons/md';
-import { NetworkDashboard, DashboardSwitcher, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ActionMenu, ConnectWalletButton } from "..";
-import { motion } from "framer-motion";
+import { NetworkDashboard, DashboardSwitcher, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton } from "..";
 import styles, { layout } from "../../style";
 import { useState, useEffect } from "react";
 
@@ -9,6 +8,7 @@ const dummyNetworkStats = {
   validators: 1,
   workers: 1,
   users: 0,
+  jobs: 4,
   proposal: 1839,
   available_capacity: 9565387824,
   used_capacity: 15231271888,
@@ -100,17 +100,11 @@ const SmartnodesDashboard = ({
     connectToCoinbaseWallet
  }) => {
     const DASHBOARD_TYPES = {
-        NODE: 'node',
         SUPPLY_STATS: 'supply_stats',
         NETWORK: 'network',
         GOVERNANCE: 'governance',
     };
     const dashboardConfig = [
-        {
-            id: DASHBOARD_TYPES.NODE,
-            name: 'My Nodes',
-            icon: <MdLink />
-        },
         {
             id: DASHBOARD_TYPES.NETWORK,
             name: 'Active Networks',
@@ -122,8 +116,10 @@ const SmartnodesDashboard = ({
             icon: <MdDescription />
         },
     ];
+
     // Function to render active dashboard
     const renderActiveDashboard = () => {
+        // If wallet is connected and user is on Network dashboard, show Node dashboard instead        
         switch (activeDashboard) {
             case DASHBOARD_TYPES.SUPPLY_STATS:
                 return (
@@ -148,13 +144,6 @@ const SmartnodesDashboard = ({
                     networkHistory={networkHistory}
                     error={error}
                 />;
-            case DASHBOARD_TYPES.NODE:
-                return <NodeDashboard 
-                    userAddress={userAddress}
-                    contract={contract}
-                    connectToContract={connectToContract}
-                    connectToCoinbaseWallet={connectToCoinbaseWallet}
-                />
         }
     };
 
@@ -218,11 +207,27 @@ const SmartnodesDashboard = ({
         <section className={`bg-gray-300 dark:bg-zinc-900 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
                                 border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
             <div className="mt-5 max-w-[1380px] items-center w-full flex-wrap">
-                <h1 className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-700 border dark:border-white border-black p-5 text-left px-6 md:mt-2 max-w-[830px] mb-5`}>
+                <h1 className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-700 border dark:border-white border-black p-5 text-left px-6 md:mt-2 max-w-[830px] mb-6`}>
                     Smartnodes <span className="font-normal text-gray-400" style={{color: "#f7a6a0"}}>(testnet)</span> Dashboard
                 </h1>
 
                 <NetworkSummary networkStats={networkStats} />
+
+                <h1 className={`${styles.subheading3} text-neutral-800 dark:text-neutral-50 py-2`}>
+                    {/* Toggle Panel */}
+                </h1>
+                
+                {/* Dashboard Switcher */}
+                <DashboardSwitcher 
+                    dashboardConfig={dashboardConfig} 
+                    activeDashboard={activeDashboard}
+                    setActiveDashboard={setActiveDashboard}
+                />
+
+                {/* Render Active Dashboard */}
+                {renderActiveDashboard()}
+                
+                <div className="border-t mb-6 mx-10"/>
 
                 <Account 
                     handleActionClick={handleActionClick}
@@ -236,19 +241,12 @@ const SmartnodesDashboard = ({
                     contract={contract} 
                 />
 
-                <h1 className={`${styles.subheading3} text-neutral-800 dark:text-neutral-50 py-3`}>
-                    Toggle Panel
-                </h1>
-                
-                {/* Dashboard Switcher */}
-                <DashboardSwitcher 
-                    dashboardConfig={dashboardConfig} 
-                    activeDashboard={activeDashboard}
-                    setActiveDashboard={setActiveDashboard}
+                <NodeDashboard 
+                    userAddress={userAddress}
+                    contract={contract}
+                    connectToContract={connectToContract}
+                    connectToCoinbaseWallet={connectToCoinbaseWallet}
                 />
-
-                {/* Render Active Dashboard */}
-                {renderActiveDashboard()}
             </div>
         </section>
     );

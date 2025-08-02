@@ -50,7 +50,7 @@ const ActionMenu = () => {
   };
 
   return (
-    <div className="">
+    <div className="ml-2 xs:ml-4" style={{ zIndex: 100000000 }}>
       {/* Action Items in circular arrangement */}
       <div className="relative z-50">
         {actions.map((action, index) => {

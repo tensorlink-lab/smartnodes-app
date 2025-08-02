@@ -29,7 +29,7 @@ const styles = {
   marginY: "sm:my-16 my-6",
 
   section:
-    "sm:mt-10 px-2 md:px-5 flex md:flex-row flex-col items-center justify-center",
+    "sm:mt-10 px-2 md:px-5 flex md:flex-row flex-col items-center justify-center py-3",
   section2:
     "sm:py-16 py-15 px-10 flex md:flex-row flex-col items-center justify-center bg-black-gradient rounded-xl z-0 max-w-[1250px] mx-auto",
   animatedIcon: "flex h-full w-full hidden xs:block block",

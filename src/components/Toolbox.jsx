@@ -10,7 +10,7 @@ const Testimonials = () => {
   const [activeSection, setActiveSection] = useState(null);
   
   return (
-    <section id="tools" className="w-full relative z-20 pt-20 overflow-hidden py-8 px-3 sm:px-4 md:px-6 lg:px-10 bg-slate-300 dark:bg-zinc-900 pb-24">
+    <section id="tools" className="relative z-20 pt-20 overflow-hidden py-8 px-3 sm:px-4 md:px-6 lg:px-10 w-screen bg-slate-300 dark:bg-zinc-900 pb-24">
       {/* Enhanced background with gradient and pattern - matching WhyTensorlink */}
       <div className="w-full mx-auto relative z-20 max-w-[240px] xs:max-w-6xl">
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8 lg:gap-12 mb-6 md:mb-10">

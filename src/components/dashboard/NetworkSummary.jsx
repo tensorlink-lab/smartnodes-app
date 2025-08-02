@@ -26,16 +26,12 @@ function toSignificantDigits(num, digits) {
 
 const NetworkSummary = ({ networkStats, currentJobs }) => {
   const [stats, setStats] = useState(null);
-  const [jobs, setJobs] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     setStats(networkStats);
   }, [networkStats]);
-  useEffect(() => {
-    setJobs(currentJobs);
-  }, [currentJobs]);
-
+  
   const summaryCards = stats && [
     {
       title: 'Active Networks',
@@ -60,7 +56,7 @@ const NetworkSummary = ({ networkStats, currentJobs }) => {
     },
     {
       title: 'Jobs Today',
-      amount: 4,
+      amount: stats.jobs,
       icon: <MdAccountBalanceWallet />,
       iconColor: '#ffffff',
       iconBg: '#1f1f1f',
