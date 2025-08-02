@@ -25,7 +25,7 @@ module.exports = {
       ss: "550px",
       sm: "670px",
       md: "860px",
-      lg: "1150px",
+      lg: "1200px",
       xl: "1500px",
       xxl: "1900px",
       veryshort: { raw: "(max-height: 750px)" },

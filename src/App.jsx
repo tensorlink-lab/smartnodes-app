@@ -4,6 +4,25 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useStateContext } from "./contexts/contextProvider";
 
+const useWindowSizeHandler = (setActiveMenu) => {
+  useEffect(() => {
+    const handleResize = () => {
+      setActiveMenu(window.innerWidth >= 1440);
+    };
+
+    // Set initial state
+    handleResize();
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [setActiveMenu]);
+};
+
 const App = () => {
   const { activeMenu, setActiveMenu } = useStateContext();
   const [id, setId] = useState(() => {
@@ -22,25 +41,21 @@ const App = () => {
   }, [location.pathname]);
 
   // Set activeMenu to true for desktop on initial load
-  useEffect(() => {
-    if (window.innerWidth >= 824) {
-      setActiveMenu(true); // Show menu by default on large screens
-    }
-  }, [setActiveMenu]);
+  useWindowSizeHandler(setActiveMenu);
 
   return (
-    <div className="relative flex min-h-screen bg-gray-300 dark:bg-zinc-900 overflow-x-hidden">
+    <div className="relative flex min-h-screen bg-gray-300 dark:bg-zinc-900">
       <BrowserRouter>
-        {activeMenu && (
-          <div className="fixed inset-y-0 left-0 z-50 w-[265px] bg-zinc-200 dark:bg-zinc-700">
-            <Sidebar />
-          </div>      
-        )}
-        <div className={`flex flex-col min-h-screen w-full ${activeMenu ? "md:pl-[265px]" : ""}`}>
-          <div className="sticky top-0 z-50 w-full">
+        {/* Sidebar - now properly fixed */}
+        {activeMenu && <Sidebar />}
+        
+        {/* Main content area */}
+        <div className={`flex flex-col min-h-screen w-full ${activeMenu ? "pl-[265px]" : ""} transition-all duration-300 ease-out`}>
+          <div className="z-40 w-full">
             <Navbar />
           </div>
-          <div className="flex-1 w-full">
+          
+          <main className="flex-1 w-full overflow-x-hidden">
             <Routes>
               <Route index element={<Smartnodes />} />
               
@@ -69,7 +84,8 @@ const App = () => {
               <Route path="app" element={<SmartnodesApp />} />
               <Route path="*" element={<Smartnodes />} />
             </Routes>
-          </div>
+          </main>
+          
           <Footer />
         </div>
       </BrowserRouter>

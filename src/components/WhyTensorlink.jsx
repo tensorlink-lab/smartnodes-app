@@ -60,7 +60,7 @@ const WhyTensorlink = () => {
             </p>
             
             <div className="mt-12">
-              <a href="docs">
+              <a href="tensorlink/docs">
                 <button className="px-8 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-medium rounded-lg transition-all shadow-lg hover:shadow-xl">
                   Learn More
                 </button>

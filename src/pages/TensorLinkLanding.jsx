@@ -11,7 +11,7 @@ const TensorLinkLanding = () => {
       <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}>
         <ParticleBackground />
       </div>
-      <div className="z-10 mt-5 sm:mt-10 flex-col min-w-full">
+      <div className="z-10 mt-5 sm:mt-0 flex-col min-w-full">
         <Example />
         <WhyTensorlink />
         {/* <WelcomeTensorlink /> */}

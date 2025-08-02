@@ -78,10 +78,14 @@ const MainHero = () => {
               </h2>
 
               {/* Typing Animation */}
-              <div className="text-[24px] ss:text-[32px] md:text-[40px] font-bold text-orange-500 mb-2">
-                <span className={`typing ${isTyping ? "animate-typing" : ""}`}>
-                  {currentWord}
-                  <span className="animate-pulse font-light leading-tight">|</span>
+              <div className="text-[24px] ss:text-[32px] md:text-[40px] font-bold mb-2">
+                <span className="bg-gradient-to-r from-orange-500 to-gray-300 bg-clip-text text-transparent">
+                  <span className={`typing ${isTyping ? "animate-typing" : ""}`}>
+                    {currentWord}
+                  </span>
+                </span>
+                <span className="animate-pulse font-light leading-tight text-gray-400">
+                  |
                 </span>
               </div>
 

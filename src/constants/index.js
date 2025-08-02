@@ -17,7 +17,7 @@ import { MdHome } from "react-icons/md";
 
 export const overview = {
   // info: "Share your unused computing power, earn rewards, and help users and researchers tackle challenges in AI, science, and beyond. Smartnodes enables the creation of volunteer data processing networks by transforming idle hardware into collaborative compute nodes, building inclusive, scalable infrastructure capable of achieving what was previously out of reach.",
-  info: "Smartnodes turns global hardware into composable infrastructure, establishing a diverse web of tools that enable scalable data processing and scientific computation. Developers can stream, process, and analyze large datasets across a decentralized network using APIs and lightweight libraries.",
+  info: "Smartnodes transforms globally distributed hardware into a programmable, composable layer for big data and compute. By exposing resources through APIs and Python libraries, developers can stream, process, and analyze data across a secure peer-to-peer network, unlocking scalable and collaborative infrastructure for machine learning and scientific computing.",
 };
 
 export const portals = [
@@ -148,19 +148,19 @@ export const features = [
     id: "1",
     title: "Plug-and-Play",
     content:
-      "Easily tap into distributed computational resources through model wrappers that integrate with existing PyTorch workflows.",
+      "Easily tap into distributed computational resources through model wrappers that integrate with existing PyTorch workflows, offloading model compute behind the scenes.",
   },
   {
     id: "2",
     title: "On-demand Inference",
     content:
-      "Free and paid APIs for instant access to popular Hugging Face models, enhance your applications with powerful AI.",
+      "Access free and paid APIs for inference with pre-trained Hugging Face models, or deploy your own models and expose them as live API endpoints.",
   },
   {
     id: "3",
-    title: "Model Distribution",
+    title: "Scale & Privacy",
     content:
-      "Automatically shards oversized models across multiple devices, enabling large-scale inference and privacy-enhancing execution.",
+      "Automatically shards oversized models across multiple devices, enabling large-scale inference and options for privacy-enhanced inference pipelines.",
   },
 
   // {
@@ -183,7 +183,7 @@ export const feedback = [
   {
     id: "feedback-1",
     content:
-      "Tensorlink optimizes workflows by distributing training and inference tasks, maximizing scalability and reducing costs.",
+      "Tensorlink optimizes AI workflows in PyTorch by offloading model compute behind the scenes, while also providing API infrastructure for pre-trained HuggingFace models.",
     name: "Distributed AI Infrastructure",
     title: "Tensorlink",
     img: blocks,
