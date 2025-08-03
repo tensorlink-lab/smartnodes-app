@@ -290,7 +290,7 @@ const SupplyStatsCard = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-xl sm:text-2xl font-extrabold text-neutral-800 dark:text-white mt-3"
+              className="text-xl xs:text-2xl font-extrabold text-neutral-800 dark:text-white mt-3"
             >
               {showEmissionsChart ? "Projected Emissions" : "Supply Distribution"}
             </motion.p>

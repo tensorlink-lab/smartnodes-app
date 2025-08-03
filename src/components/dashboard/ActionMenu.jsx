@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   MdAdd, 
   MdWork, 
@@ -10,6 +10,7 @@ import {
 const ActionMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const menuRef = useRef(null);
 
   const actions = [
     {
@@ -35,6 +36,23 @@ const ActionMenu = () => {
     }
   ];
 
+  // Handle click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
   const handleActionClick = (actionId) => {
     console.log(`Action clicked: ${actionId}`);
     setIsOpen(false);
@@ -50,7 +68,7 @@ const ActionMenu = () => {
   };
 
   return (
-    <div className="ml-2 xs:ml-4" style={{ zIndex: 100000000 }}>
+    <div ref={menuRef} className="ml-2 xs:ml-4" style={{ zIndex: 100000000 }}>
       {/* Action Items in circular arrangement */}
       <div className="relative z-50">
         {actions.map((action, index) => {

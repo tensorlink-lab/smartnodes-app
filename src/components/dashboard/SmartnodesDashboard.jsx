@@ -1,4 +1,4 @@
-import { MdDescription, MdLanguage, MdLink } from 'react-icons/md';
+import { MdDescription, MdLanguage, MdCheckCircle } from 'react-icons/md';
 import { NetworkDashboard, DashboardSwitcher, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton } from "..";
 import styles, { layout } from "../../style";
 import { useState, useEffect } from "react";
@@ -115,6 +115,11 @@ const SmartnodesDashboard = ({
             name: 'Contract Info',
             icon: <MdDescription />
         },
+        {
+            id: DASHBOARD_TYPES.GOVERNANCE,
+            name: 'Governance',
+            icon: <MdCheckCircle />
+        },
     ];
 
     // Function to render active dashboard
@@ -151,7 +156,7 @@ const SmartnodesDashboard = ({
     const [networkStats, setNetworkStats] = useState(null);
     const [networkHistory, setNetworkHistory] = useState(null);
     const [activeDashboard, setActiveDashboard] = useState(DASHBOARD_TYPES.NETWORK);
-    const [useLocalData, setUseLocalData] = useState(false); // Toggle for local testing
+    const [useLocalData, setUseLocalData] = useState(true); // Toggle for local testing
     const [error, setError] = useState(null);
 
     const API_BASE_URL = "https://smartnodes.ddns.net/tensorlink-api";
