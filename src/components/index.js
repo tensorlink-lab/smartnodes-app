@@ -35,8 +35,10 @@ import ActionMenu from "./dashboard/ActionMenu";
 import NodeDashboard from "./dashboard/NodeDashboard";
 import Account from "./dashboard/Account";
 import DashboardSwitcher from "./dashboard/DashboardSwitcher";
+import DAODashboard from "./dashboard/DAODashboard";
 
 export {
+  DAODashboard,
   DashboardSwitcher,
   Account,
   ActionMenu,

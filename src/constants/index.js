@@ -57,14 +57,12 @@ export const sideLinks = [
         id: "app",
         icon: MdHome,
       },
-      // {
-      //   name: "Documentation",
-      //   id: "docs",
-      //   icon: MdHome,
-      //   sublinks: [
-      //     { id: "overview", name: "Overview"}
-      //   ]
-      // }
+      {
+        name: "Documentation",
+        id: "docs",
+        icon: MdHome,
+        sublinks: [{ id: "overview", name: "Overview" }],
+      },
     ],
   },
   {

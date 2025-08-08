@@ -15,6 +15,7 @@ import {
 import { MdOutlineSupervisorAccount, MdCircle, MdStorage, MdAssessment, MdOutlineSettings, MdVerifiedUser, MdDescription, MdBusinessCenter, MdNetworkCheck } from "react-icons/md";
 import { Line } from 'react-chartjs-2';
 import { NetworkSummary } from "../../components";
+import styles from "../../style.js";
 
 // Register Chart.js components
 ChartJS.register(
@@ -28,12 +29,6 @@ ChartJS.register(
   Title,
   Filler
 );
-
-// Mock styles object for demonstration
-const styles = {
-  subheading: "text-2xl font-bold",
-  subheading2: "text-2xl font-bold"
-};
 
 const NetworkDashboard = ({
   loading,
@@ -290,7 +285,7 @@ const NetworkDashboard = ({
     <div className="w-full mt-2 max-w-[1380px] space-y-2">
       <div className="mb-6">
 
-        <h1 className={`${styles.subheading2} dark:text-white py-3`}>
+        <h1 className={`${styles.subheading3} dark:text-white py-3`}>
           Active Networks
         </h1>
         
@@ -378,24 +373,24 @@ const NetworkDashboard = ({
             </div>
           
             {/* {networkStats?.models && (
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
-            >
-                <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">Available Models (API)</h3>
-                <div className="flex flex-wrap gap-2">
-                {networkStats.models.map((model, index) => (
-                    <span
-                    key={index}
-                    className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
-                    >
-                    {model}
-                    </span>
-                ))}
-                </div>
-            </motion.div>
+              <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
+              >
+                  <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">Available Models (API)</h3>
+                  <div className="flex flex-wrap gap-2">
+                  {networkStats.models.map((model, index) => (
+                      <span
+                      key={index}
+                      className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
+                      >
+                      {model}
+                      </span>
+                  ))}
+                  </div>
+              </motion.div>
             )} */}
         </div>
 

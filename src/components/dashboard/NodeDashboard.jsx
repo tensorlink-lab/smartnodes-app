@@ -22,8 +22,6 @@ import { ConnectWalletButton, ActionMenu } from "..";
 const NodeDashboard = ({ 
   userAddress,
   contract,
-  connectToContract,
-  connectToCoinbaseWallet
 }) => {
   const [activeNodes, setActiveNodes] = useState([]);
   const [userJobs, setUserJobs] = useState([]);
@@ -63,14 +61,14 @@ const NodeDashboard = ({
     },
   ];
 
-  useEffect(() => {
-    // Simulate loading nodes and user status
-    setActiveNodes(mockActiveNodes);
-    setIsUserRegistered(Math.random() > 0.5);
-    if (Math.random() > 0.3) {
-      setUserJobs(mockUserJobs);
-    }
-  }, []);
+  // useEffect(() => {
+  //   // Simulate loading nodes and user status
+  //   setActiveNodes(mockActiveNodes);
+  //   setIsUserRegistered(Math.random() > 0.5);
+  //   if (Math.random() > 0.3) {
+  //     setUserJobs(mockUserJobs);
+  //   }
+  // }, []);
 
   const handleCreateJob = async () => {
     if (!newJobType.trim() || !newJobDescription.trim()) {
@@ -188,7 +186,7 @@ const NodeDashboard = ({
               ))}
             </div>
           ) : userAddress !== "-" ? (
-            <div className="text-center py-24 bg-gray-100 dark:bg-gray-700 rounded-lg">
+            <div className="text-center py-10 bg-gray-100 dark:bg-gray-700 rounded-lg">
               <MdComputer className="text-6xl text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 dark:text-gray-400">No active nodes found.</p>
               <p className="text-gray-500 dark:text-gray-400">Visit the <a href="tensorlink/docs/mining" className="text-blue-400 hover:underline">documentation</a> to start up a node.</p>
@@ -245,7 +243,7 @@ const NodeDashboard = ({
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20">
+              <div className="text-center py-10">
                 <MdAssignment className="text-6xl text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">
                   {!isUserRegistered 

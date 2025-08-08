@@ -1,5 +1,5 @@
 import { MdDescription, MdLanguage, MdCheckCircle } from 'react-icons/md';
-import { NetworkDashboard, DashboardSwitcher, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton } from "..";
+import { NetworkDashboard, DashboardSwitcher, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton, DAODashboard } from "..";
 import styles, { layout } from "../../style";
 import { useState, useEffect } from "react";
 
@@ -92,9 +92,8 @@ const SmartnodesDashboard = ({
     userLocked, 
     userUnclaimed,
     claimRewards,
-    handleActionClick,
     contract,
-    contractAddress,
+    tokenAddress,
     multisigAddress,
     connectToContract,
     connectToCoinbaseWallet
@@ -137,7 +136,7 @@ const SmartnodesDashboard = ({
                         claimRewards={claimRewards}
                         contract={contract}
                         ConnectWalletButton={ConnectWalletButton}
-                        contractAddress={contractAddress}
+                        tokenAddress={tokenAddress}
                         multisigAddress={multisigAddress}
                     />
                 );
@@ -149,6 +148,15 @@ const SmartnodesDashboard = ({
                     networkHistory={networkHistory}
                     error={error}
                 />;
+            
+            case DASHBOARD_TYPES.GOVERNANCE:
+                return <DAODashboard 
+                    loading={loading}
+                    fetchNetworkData={fetchNetworkData}
+                    networkStats={networkStats}
+                    networkHistory={networkHistory}
+                    error={error}
+                />
         }
     };
 
@@ -200,6 +208,20 @@ const SmartnodesDashboard = ({
         }
     };
 
+    const handleActionClick = (actionId) => {
+        switch (actionId) {
+          case 'request-job':
+            // Handle job request
+            break;
+          case 'create-user':
+            // Handle user creation
+            break;
+          case 'create-validator':
+            // Handle validator creation
+            break;
+        }
+    };
+
     useEffect(() => {
         fetchNetworkData();
         
@@ -218,22 +240,6 @@ const SmartnodesDashboard = ({
 
                 <NetworkSummary networkStats={networkStats} />
 
-                <h1 className={`${styles.subheading3} text-neutral-800 dark:text-neutral-50 py-2`}>
-                    {/* Toggle Panel */}
-                </h1>
-                
-                {/* Dashboard Switcher */}
-                <DashboardSwitcher 
-                    dashboardConfig={dashboardConfig} 
-                    activeDashboard={activeDashboard}
-                    setActiveDashboard={setActiveDashboard}
-                />
-
-                {/* Render Active Dashboard */}
-                {renderActiveDashboard()}
-                
-                <div className="border-t mb-6 mx-10"/>
-
                 <Account 
                     handleActionClick={handleActionClick}
                     userAddress={userAddress}
@@ -249,9 +255,22 @@ const SmartnodesDashboard = ({
                 <NodeDashboard 
                     userAddress={userAddress}
                     contract={contract}
-                    connectToContract={connectToContract}
-                    connectToCoinbaseWallet={connectToCoinbaseWallet}
                 />
+
+                <h1 className={`${styles.subheading2} text-neutral-800 dark:text-neutral-50 py-3 border-t mt-7`}>
+                    {/* Toggle Panel */}
+                    Network Statistics                    
+                </h1>
+                
+                {/* Dashboard Switcher */}
+                <DashboardSwitcher 
+                    dashboardConfig={dashboardConfig} 
+                    activeDashboard={activeDashboard}
+                    setActiveDashboard={setActiveDashboard}
+                />
+
+                {/* Render Active Dashboard */}
+                {renderActiveDashboard()}
             </div>
         </section>
     );
