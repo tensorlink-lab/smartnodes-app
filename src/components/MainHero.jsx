@@ -27,7 +27,7 @@ const MainHero = () => {
           {/* Subtitle */}
           <div className="mt-6 mr-2">
             <p className="text-gray-700 dark:text-gray-300 text-md xs:text-lg leading-relaxed max-w-lg">
-              Smartnodes connects devices around the world into collaborative peer-to-peer compute and data collection networks, powering science, AI, and research with global collaboration.
+              Smartnodes connects devices around the world into collaborative peer-to-peer compute and data processing networks, powering science, AI, and research with global collaboration.
             </p>
           </div>
 

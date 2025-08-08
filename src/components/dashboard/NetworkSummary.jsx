@@ -38,21 +38,21 @@ const NetworkSummary = ({ networkStats, currentJobs }) => {
       amount: 1,
       icon: <MdNetworkCheck />,
       iconColor: '#ffffff',
-      iconBg: '#85deca',
+      iconBg: '#a16eca',
     },
     {
       title: 'Active Validators',
       amount: stats.validators,
       icon: <MdVerifiedUser />,
       iconColor: '#ffffff',
-      iconBg: '#03C9D7',
+      iconBg: '#aaaaaa',
     },
     {
       title: 'Active Workers',
       amount: stats.workers,
       icon: <MdOutlineSettings />,
       iconColor: '#ffffff',
-      iconBg: '#f7a6a0',
+      iconBg: '#2a6aa0',
     },
     {
       title: 'Jobs Today',
@@ -66,7 +66,7 @@ const NetworkSummary = ({ networkStats, currentJobs }) => {
       amount: formatBytes(toSignificantDigits(stats.available_capacity + stats.used_capacity, 3)),
       icon: <MdAssessment />,
       iconColor: '#ffffff',
-      iconBg: '#8BC34A',
+      iconBg: '#5BC34A',
     }
   ];
 

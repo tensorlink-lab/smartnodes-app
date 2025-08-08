@@ -22,8 +22,6 @@ import { ConnectWalletButton, ActionMenu } from "..";
 const NodeDashboard = ({ 
   userAddress,
   contract,
-  connectToContract,
-  connectToCoinbaseWallet
 }) => {
   const [activeNodes, setActiveNodes] = useState([]);
   const [userJobs, setUserJobs] = useState([]);
@@ -39,45 +37,15 @@ const NodeDashboard = ({
     {
       id: 'node_001',
       type: 'validator',
-      name: 'Validator Node Alpha',
-      status: 'online',
-      uptime: '99.2%',
-      performance: {
-        blocksValidated: 1247,
-        rewards: '152.4 SNO',
-        peers: 8
-      },
-      lastActivity: '2 minutes ago'
-    },
-    {
-      id: 'node_002', 
-      type: 'worker',
-      name: 'Worker Node Beta',
-      status: 'online',
-      uptime: '97.8%',
-      performance: {
-        jobsCompleted: 89,
-        jobsActive: 3,
-        earnings: '45.7 SNO',
-        cpuUsage: '67%',
-        gpuUsage: '84%'
-      },
-      lastActivity: '5 minutes ago'
-    },
-    {
-      id: 'node_003',
-      type: 'worker', 
-      name: 'Worker Node Gamma',
+      name: '-',
       status: 'offline',
-      uptime: '89.1%',
+      uptime: '0%',
       performance: {
-        jobsCompleted: 156,
-        jobsActive: 0,
-        earnings: '78.3 SNO',
-        cpuUsage: '0%',
-        gpuUsage: '0%'
+        blocksValidated: 0,
+        rewards: '- tSNO',
+        peers: 0
       },
-      lastActivity: '2 hours ago'
+      lastActivity: '-'
     }
   ];
 
@@ -91,15 +59,6 @@ const NodeDashboard = ({
       cost: '12.5 SNO',
       description: 'Training neural network for image classification'
     },
-    {
-      id: 'job_002', 
-      type: 'Inference',
-      status: 'completed',
-      progress: 100,
-      started: '1 day ago',
-      cost: '3.2 SNO',
-      description: 'Running inference on dataset batch'
-    }
   ];
 
   // useEffect(() => {
@@ -227,7 +186,7 @@ const NodeDashboard = ({
               ))}
             </div>
           ) : userAddress !== "-" ? (
-            <div className="text-center py-24 bg-gray-100 dark:bg-gray-700 rounded-lg">
+            <div className="text-center py-10 bg-gray-100 dark:bg-gray-700 rounded-lg">
               <MdComputer className="text-6xl text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 dark:text-gray-400">No active nodes found.</p>
               <p className="text-gray-500 dark:text-gray-400">Visit the <a href="tensorlink/docs/mining" className="text-blue-400 hover:underline">documentation</a> to start up a node.</p>
@@ -284,7 +243,7 @@ const NodeDashboard = ({
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20">
+              <div className="text-center py-10">
                 <MdAssignment className="text-6xl text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">
                   {!isUserRegistered 

@@ -13,15 +13,15 @@ const SmartnodesLanding = () => {
 
   return (
     <div className={`min-h-screen flex-col ${styles.flexCenter} w-full`}>
-      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}>
+      {/* <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}>
         <ParticleBackground />
-      </div>
+      </div> */}
       <div className="md:mt-1 mt-5 flex-col">
         <MainHero />
         <MainHero2 />
         <Opportunity />
         <Testimonials style={{ zIndex: 0 }} />
-        {/* <LaunchApp /> */}
+        <LaunchApp />
       </div>
     </div>
   )

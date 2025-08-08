@@ -38,7 +38,7 @@ const SupplyStatsCard = ({
   claimRewards,
   contract,
   ConnectWalletButton,
-  contractAddress,
+  tokenAddress,
   multisigAddress
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(
@@ -290,7 +290,7 @@ const SupplyStatsCard = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-xl sm:text-2xl font-extrabold text-neutral-800 dark:text-white mt-3"
+              className="text-xl xs:text-2xl font-extrabold text-neutral-800 dark:text-white mt-3"
             >
               {showEmissionsChart ? "Projected Emissions" : "Supply Distribution"}
             </motion.p>
@@ -411,18 +411,18 @@ const SupplyStatsCard = ({
             </div>
             <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
               <code className="text-sm font-mono flex-1 break-all">
-                {contractAddress}
+                {tokenAddress}
               </code>
               <div className="flex gap-2">
                 <button
-                  onClick={() => copyToClipboard(contractAddress, 'contract')}
+                  onClick={() => copyToClipboard(tokenAddress, 'contract')}
                   className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors"
                   title="Copy address"
                 >
                     <MdCheck className="text-green-500" />
                 </button>
                 <a
-                  href={`${explorerBase}${contractAddress}`}
+                  href={`${explorerBase}${tokenAddress}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors"
