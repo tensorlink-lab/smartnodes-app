@@ -34,13 +34,13 @@ const Navbar = () => {
       {/* Logo and menu for desktop */}
       {!activeMenu ? (
         <div
-          className={`flex flex-row bg-gray-400 rounded-xl px-3 py-0 cursor-pointer`}
+          className={`flex flex-row bg-slate-300 rounded-xl px-3 py-0 cursor-pointer`}
           style={{ zIndex: 100000 }}
           onClick={() => {
               setActiveMenu(!activeMenu);
           }}
         >
-          <img src={logoSrc} alt="task" className="w-auto h-auto max-w-[325px] max-h-[160px] hidden md:block" />
+          <img src={logoSrc} alt="task" className="w-auto h-auto max-w-[275px] max-h-[160px] hidden md:block" />
           <img src={smallLogoSrc} alt="task" className="w-[70px] h-[70px] md:hidden mb-1 my-1.5" />
         </div>      
       ) : (
@@ -79,7 +79,7 @@ const Navbar = () => {
                     : "scale-y-0 opacity-0 -translate-y-2 pointer-events-none"
                   }
                 `}>
-                  <ul className="px-2 py-2">
+                  <ul className="p-1">
                     {nav.networks.map((networkObj, idx) => (
                       <li
                         key={networkObj.link}
@@ -102,6 +102,8 @@ const Navbar = () => {
                   </ul>
                 </div>
               </div>
+            ) : nav.title == "Dashboard" ? (
+              <a href="/app#dashboard">{nav.title}</a>
             ) : (
               <a href={`/${nav.id}`}>{nav.title}</a>
             )}

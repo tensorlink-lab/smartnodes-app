@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 const MainHero = () => {
   return (
-    <section id="home" className={`${styles.section} rounded-md xs:px-5 px-12 lg:mx-20`}>
+    <section id="home" className={`${styles.section} rounded-md xs:px-4 px-12 lg:mx-20`}>
       <div className="dark:bg-gradient-to-br dark:from-zinc-900 dark:to-slate-900 bg-gradient-to-br from-zinc-50 to-gray-100 rounded-xl px-5 flex sm:mx-10 md:flex-row flex-col z-20 border border-gray-300 dark:border-gray-800 backdrop-blur-sm dark:shadow-black shadow-indigo-950 shadow-lg">
         {/* Left Column - Title & Description */}
         <div className="flex-1 w-full flex-col items-center max-w-xl sm:min-w-[350px] z-0 mx-3 sm:mx-5 md:mx-10 md:py-10 py-6 mb-5">
@@ -27,7 +27,7 @@ const MainHero = () => {
           {/* Subtitle */}
           <div className="mt-6 mr-2">
             <p className="text-gray-700 dark:text-gray-300 text-md xs:text-lg leading-relaxed max-w-lg">
-              Smartnodes connects devices around the world into collaborative peer-to-peer compute and data processing networks, powering science, AI, and research with global collaboration.
+              Smartnodes connects devices around the world into collaborative peer-to-peer compute and data processing networks, powering science, AI, and research by uniting shared resources.
             </p>
           </div>
 
@@ -35,7 +35,7 @@ const MainHero = () => {
           <div className="flex flex-col sm:flex-row gap-4 mt-10">
             <a
               href="/app"
-              className="group inline-flex items-center justify-center px-6 py-3 text-white bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 rounded-lg text-sm md:text-base font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
+              className="group inline-flex items-center justify-center p-3 text-white bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 rounded-lg text-sm md:text-base font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
             >
               <svg className="w-4 h-4 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -44,7 +44,7 @@ const MainHero = () => {
             </a>
             <a
               href="/docs"
-              className="group inline-flex items-center justify-center px-6 py-3 text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg text-sm md:text-base font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
+              className="group inline-flex items-center justify-center p-3 text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg text-sm md:text-base font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
             >
               <svg className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

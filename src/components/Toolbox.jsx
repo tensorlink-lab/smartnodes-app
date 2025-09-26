@@ -24,21 +24,23 @@ const Testimonials = () => {
               </span>
             </div>
             <div className="mt-1 sm:mt-2">
-              Toolbox.
+              Ecosystem.
             </div>
           </h2>
 
           <div className="my-6 sm:mb-8 mt-8 md:mb-10 bg-gray-100 dark:bg-gray-800 rounded-lg p-4 xs:p-7 shadow-lg border border-gray-400 dark:border-gray-700">
-            <p className="text-gray-700 dark:text-gray-300 text-sm xs:text-md sm:text-lg leading-relaxed">
-            Smartnodes equips developers with cutting-edge tools designed to simplify and accelerate data acquisition and computation, broadening the accessibility of 
-            resources across a wide range of scientific and research domains. These powerful functionalities are encapsulated in dedicated networks 
-            and made available through programming libraries and APIs.
+            <p className="text-gray-700 dark:text-gray-300 text-sm xs:text-md sm:text-[17px] leading-relaxed">
+              Rather than building isolated tools, Smartnodes creates an interconnected ecosystem of specialized networks, each optimized for different computational or data-intensive challenges. This modular approach enables organic innovation where new networks emerge as technology evolves. The community determines which networks receive block reward distribution, creating a natural selection mechanism where networks remain active based on utility and community value.
+            </p>
+            <br/>
+            <p className="text-gray-700 dark:text-gray-300 text-sm xs:text-md sm:text-[17px] leading-relaxed">
+              Validators stake SNO tokens to serve as gatekeepers who validate computations and coordinate network interactions. Worker nodes contribute resources to power these validator-secured networks, and end users access the resulting processing power through either direct User Node connections with full encryption, or validator-managed APIs for streamlined integration. This unified design ensures that governance, infrastructure, and access all reinforce each other to maintain an ecosystem focused on delivering real-world value.
             </p>
           </div>
         </div>
           
         {/* Right column with animation - hide on smaller screens */}
-        <div className="flex-1 items-center justify-center mt-6 lg:mt-0 hidden lg:block">
+        <div className="flex-1 items-center justify-center mt-5 lg:mt-0 hidden lg:block">
           <div className="w-full h-full">
             <AnimatedLottie 
               animationData={features} 

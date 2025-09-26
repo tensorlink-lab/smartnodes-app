@@ -1,7 +1,7 @@
 import { MdDescription, MdLanguage, MdCheckCircle } from 'react-icons/md';
-import { NetworkDashboard, DashboardSwitcher, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton, DAODashboard } from "..";
+import { NetworkDashboard, DashboardSwitcher, AirdropIndicator, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton, DAODashboard } from "..";
 import styles, { layout } from "../../style";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Dummy data for local testing
 const dummyNetworkStats = {
@@ -13,6 +13,28 @@ const dummyNetworkStats = {
   available_capacity: 9565387824,
   used_capacity: 15231271888,
   models: ["Qwen/Qwen2.5-7B-Instruct"]
+};
+
+const dummyModelDemand = {
+    status: "success",
+    data: {
+        popular_models: [
+            {
+                model_name: "Qwen/Qwen2.5-7B-Instruct",
+                recent_requests: 3,
+                total_requests: 3,
+                last_accessed: 1758814095.544846, 
+                has_distribution: true,
+                requests_per_day: 0.1,
+                last_accessed_human: "0 minutes ago"
+            }
+        ],
+        total_models_tracked: 1,
+        models_with_recent_activity: 1,
+        time_period_days: 30,
+        min_requests_threshold: 1,
+        generated_at: 1758814126.513382
+    }
 };
 
 const dummyNetworkHistory = {
@@ -93,8 +115,13 @@ const SmartnodesDashboard = ({
     userUnclaimed,
     claimRewards,
     contract,
+    dao,
+    token,
+    coreAddress,
     tokenAddress,
-    multisigAddress,
+    coordinatorAddress,
+    daoAddress,
+    signer,
     connectToContract,
     connectToCoinbaseWallet
  }) => {
@@ -103,10 +130,11 @@ const SmartnodesDashboard = ({
         NETWORK: 'network',
         GOVERNANCE: 'governance',
     };
+    
     const dashboardConfig = [
         {
             id: DASHBOARD_TYPES.NETWORK,
-            name: 'Active Networks',
+            name: 'Tensorlink',
             icon: <MdLanguage />
         },
         {
@@ -118,8 +146,50 @@ const SmartnodesDashboard = ({
             id: DASHBOARD_TYPES.GOVERNANCE,
             name: 'Governance',
             icon: <MdCheckCircle />
-        },
+        }
     ];
+
+    // Storage key for persisting dashboard selection
+    const STORAGE_KEY = 'smartnodes_active_dashboard';
+
+    // Helper function to get saved dashboard from localStorage
+    const getSavedDashboard = () => {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            // Validate that the saved value is a valid dashboard type
+            if (saved && Object.values(DASHBOARD_TYPES).includes(saved)) {
+                return saved;
+            }
+        } catch (error) {
+            console.warn('Error reading from localStorage:', error);
+        }
+        // Return default if no valid saved value
+        return DASHBOARD_TYPES.NETWORK;
+    };
+
+    // Helper function to save dashboard to localStorage
+    const saveDashboard = (dashboard) => {
+        try {
+            localStorage.setItem(STORAGE_KEY, dashboard);
+        } catch (error) {
+            console.warn('Error saving to localStorage:', error);
+        }
+    };
+
+    // State initialization - get from localStorage or use default
+    const [loading, setLoading] = useState(true);
+    const [networkStats, setNetworkStats] = useState(null);
+    const [networkHistory, setNetworkHistory] = useState(null);
+    const [modelDemand, setModelDemand] = useState(null);
+    const [activeDashboard, setActiveDashboard] = useState(getSavedDashboard());
+    const [useLocalData, setUseLocalData] = useState(true); // Toggle for local testing
+    const [error, setError] = useState(null);
+
+    // Custom setter that also saves to localStorage
+    const updateActiveDashboard = (dashboard) => {
+        setActiveDashboard(dashboard);
+        saveDashboard(dashboard);
+    };
 
     // Function to render active dashboard
     const renderActiveDashboard = () => {
@@ -129,15 +199,10 @@ const SmartnodesDashboard = ({
                 return (
                     <SupplyStatsCard 
                         supplyStats={supplyStats}
-                        userAddress={userAddress}
-                        userBalance={userBalance}
-                        userLocked={userLocked}
-                        userUnclaimed={userUnclaimed}
-                        claimRewards={claimRewards}
-                        contract={contract}
-                        ConnectWalletButton={ConnectWalletButton}
                         tokenAddress={tokenAddress}
-                        multisigAddress={multisigAddress}
+                        coordinatorAddress={coordinatorAddress}
+                        coreAddress={coreAddress}
+                        daoAddress={daoAddress}
                     />
                 );
             case DASHBOARD_TYPES.NETWORK:
@@ -146,26 +211,23 @@ const SmartnodesDashboard = ({
                     fetchNetworkData={fetchNetworkData}
                     networkStats={networkStats}
                     networkHistory={networkHistory}
+                    modelDemandData={modelDemand}
                     error={error}
                 />;
-            
             case DASHBOARD_TYPES.GOVERNANCE:
-                return <DAODashboard 
+                return <DAODashboard dao={dao} token={token} signer={signer}/>;
+            
+            default:
+                return <NetworkDashboard
                     loading={loading}
                     fetchNetworkData={fetchNetworkData}
                     networkStats={networkStats}
                     networkHistory={networkHistory}
+                    modelDemandData={modelDemand}
                     error={error}
-                />
+                />;
         }
     };
-
-    const [loading, setLoading] = useState(true);
-    const [networkStats, setNetworkStats] = useState(null);
-    const [networkHistory, setNetworkHistory] = useState(null);
-    const [activeDashboard, setActiveDashboard] = useState(DASHBOARD_TYPES.NETWORK);
-    const [useLocalData, setUseLocalData] = useState(true); // Toggle for local testing
-    const [error, setError] = useState(null);
 
     const API_BASE_URL = "https://smartnodes.ddns.net/tensorlink-api";
     
@@ -178,6 +240,7 @@ const SmartnodesDashboard = ({
                 setTimeout(() => {
                     setNetworkStats(dummyNetworkStats);
                     setNetworkHistory(dummyNetworkHistory);
+                    setModelDemand(dummyModelDemand);
                     setError(null);
                     setLoading(false);
                 }, 1000);
@@ -185,9 +248,10 @@ const SmartnodesDashboard = ({
             }
             
             // Fetch both stats and history from API
-            const [statsResponse, historyResponse] = await Promise.all([
+            const [statsResponse, historyResponse, models] = await Promise.all([
                 fetch(`${API_BASE_URL}/stats`),
-                fetch(`${API_BASE_URL}/network-history`)
+                fetch(`${API_BASE_URL}/network-history`),
+                fetch(`${API_BASE_URL}/model-demand`)
             ]);
 
             if (!statsResponse.ok || !historyResponse.ok) {
@@ -196,9 +260,11 @@ const SmartnodesDashboard = ({
 
             const statsData = await statsResponse.json();
             const historyData = await historyResponse.json();
+            const modelData = await models.json();
             
             setNetworkStats(statsData);
             setNetworkHistory(historyData);
+            setModelDemand(modelData);
             setError(null);
         } catch (err) {
             console.error('Error fetching network data:', err);
@@ -230,15 +296,59 @@ const SmartnodesDashboard = ({
         return () => clearInterval(interval);
     }, []);
 
+    const titleRef = useRef(null);
+
+    useEffect(() => {
+        // Scroll so that the title is at the very top of the page
+        if (titleRef.current) {
+            titleRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }, []);
+
+    const handleAirdropAction = () => {
+        console.log("Learn more about airdrop clicked");
+    };
+
+    const handleAirdropClose = () => {
+        setShowAirdropBanner(false);
+        // Optional: Save to localStorage to remember user preference
+        localStorage.setItem('airdrop_banner_dismissed', 'true');
+    };
+
+    // Check if user previously dismissed the banner
+    useEffect(() => {
+        const dismissed = localStorage.getItem('airdrop_banner_dismissed');
+        if (dismissed === 'true') {
+            setShowAirdropBanner(false);
+        }
+    }, []);
+
     return (
-        <section className={`bg-gray-300 dark:bg-zinc-900 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
+        <section 
+            id="dashboard"
+            ref={titleRef}
+            className={`bg-gray-300 dark:bg-zinc-900 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
                                 border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
             <div className="mt-5 max-w-[1380px] items-center w-full flex-wrap">
-                <h1 className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-700 border dark:border-white border-black p-5 text-left px-6 md:mt-2 max-w-[830px] mb-6`}>
-                    Smartnodes <span className="font-normal text-gray-400" style={{color: "#f7a6a0"}}>(testnet)</span> Dashboard
+                <div className="w-full max-w-[1380px]">
+                    <AirdropIndicator />
+                </div>
+                <h1 
+                    className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-900 border dark:border-white border-black p-2 xs:p-5 text-left px-6 md:mt-2 max-w-[830px] mb-3`}>
+                    Smartnodes <span className="font-normal text-gray-400" style={{color: "rgba(255, 120, 150, 1)"}}>(testnet)</span> Dashboard
                 </h1>
 
                 <NetworkSummary networkStats={networkStats} />
+                
+                {/* Dashboard Switcher - now uses updateActiveDashboard */}
+                <DashboardSwitcher 
+                    dashboardConfig={dashboardConfig} 
+                    activeDashboard={activeDashboard}
+                    setActiveDashboard={updateActiveDashboard}
+                />
+
+                {/* Render Active Dashboard */}
+                {renderActiveDashboard()}
 
                 <Account 
                     handleActionClick={handleActionClick}
@@ -256,21 +366,6 @@ const SmartnodesDashboard = ({
                     userAddress={userAddress}
                     contract={contract}
                 />
-
-                <h1 className={`${styles.subheading2} text-neutral-800 dark:text-neutral-50 py-3 border-t mt-7`}>
-                    {/* Toggle Panel */}
-                    Network Statistics                    
-                </h1>
-                
-                {/* Dashboard Switcher */}
-                <DashboardSwitcher 
-                    dashboardConfig={dashboardConfig} 
-                    activeDashboard={activeDashboard}
-                    setActiveDashboard={setActiveDashboard}
-                />
-
-                {/* Render Active Dashboard */}
-                {renderActiveDashboard()}
             </div>
         </section>
     );

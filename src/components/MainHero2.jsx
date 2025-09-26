@@ -79,7 +79,7 @@ const MainHero = () => {
 
               {/* Typing Animation */}
               <div className="text-[24px] ss:text-[32px] md:text-[40px] font-bold mb-2">
-                <span className="bg-gradient-to-r from-pink-500 to-gray-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
                   <span className={`typing ${isTyping ? "animate-typing" : ""}`}>
                     {currentWord}
                   </span>

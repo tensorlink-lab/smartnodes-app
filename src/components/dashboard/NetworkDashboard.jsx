@@ -12,10 +12,9 @@ import {
   Title,
   Filler,
 } from 'chart.js';
-import { MdOutlineSupervisorAccount, MdCircle, MdStorage, MdAssessment, MdOutlineSettings, MdVerifiedUser, MdDescription, MdBusinessCenter, MdNetworkCheck } from "react-icons/md";
+import { ModelDemand } from "..";
+import { MdCircle } from "react-icons/md";
 import { Line } from 'react-chartjs-2';
-import { NetworkSummary } from "../../components";
-import styles from "../../style.js";
 
 // Register Chart.js components
 ChartJS.register(
@@ -35,6 +34,7 @@ const NetworkDashboard = ({
   fetchNetworkData,
   networkStats,
   networkHistory,
+  modelDemandData,
   error
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(
@@ -82,8 +82,8 @@ const NetworkDashboard = ({
         {
           label: 'Total Capacity',
           data: datasets.total_capacity,
-          borderColor: '#85deca',
-          backgroundColor: 'rgba(33, 150, 243, 0.1)',
+          borderColor: 'rgba(105, 57, 234)',
+          backgroundColor: 'rgba(105, 57, 234, 0.1)',
           fill: true,
           tension: 0.4,
           yAxisID: 'y',
@@ -91,7 +91,7 @@ const NetworkDashboard = ({
         {
           label: 'Used Capacity',
           data: datasets.used_capacity,
-          borderColor: '#f7a6a0',
+          borderColor: 'rgba(225, 50, 80)',
           backgroundColor: 'rgba(255, 152, 0, 0.1)',
           fill: true,
           tension: 0.4,
@@ -115,16 +115,16 @@ const NetworkDashboard = ({
         {
           label: 'Workers',
           data: datasets.workers,
-          borderColor: '#d6b3f7',
-          backgroundColor: 'rgba(255, 87, 34, 0.1)',
+          borderColor: 'rgba(105, 57, 234)',
+          backgroundColor: 'rgba(105, 57, 234, 0.1)',
           fill: true,
           tension: 0.4,
         },
         {
           label: 'Validators',
           data: datasets.validators,
-          borderColor: '#aaf7b6',
-          backgroundColor: 'rgba(3, 201, 215, 0.1)',
+          borderColor: 'rgba(0, 221, 50)',
+          backgroundColor: 'rgba(3, 201, 115, 0.1)',
           fill: true,
           tension: 0.4,
         },
@@ -139,8 +139,8 @@ const NetworkDashboard = ({
         {
           label: 'Jobs',
           data: datasets.jobs,
-          borderColor: '#f7a6a0',
-          backgroundColor: 'rgba(76, 175, 80, 0.1)',
+          borderColor: 'rgba(225, 50, 80)',
+          backgroundColor: 'rgba(255, 0, 100, 0.1)',
           fill: true,
           tension: 0.4
         },
@@ -156,13 +156,13 @@ const NetworkDashboard = ({
         position: 'top',
         labels: {
           usePointStyle: true,
-          padding: 10,
+          padding: 6,
           color: isDarkMode ? "white" : "black"
         },
       },
       title: {
         display: true,
-        text: 'Network Activity (30 days)',
+        text: 'Network Activity',
         font: {
           size: 18,
           weight: 'bold',
@@ -197,6 +197,14 @@ const NetworkDashboard = ({
         hoverRadius: 6,
       },
     },
+    animation: {
+      duration: 1200,
+      easing: 'easeOutInQuart',
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
+    },
   };
 
   const capacityChartOptions = {
@@ -207,19 +215,26 @@ const NetworkDashboard = ({
         position: 'top',
         labels: {
           usePointStyle: true,
-          padding: 10,
+          padding: 6,
           color: isDarkMode ? "white" : "black"
         },
       },
       title: {
         display: true,
-        text: 'Network Capacity (30 days)',
+        text: 'Capacity (Gb)',
         font: {
           size: 18,
           weight: 'bold',
         },
         color: isDarkMode ? "white" : "black"
       },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: '#374151',
+        borderWidth: 1,
+      }
     },
     scales: {
       x: {
@@ -243,13 +258,21 @@ const NetworkDashboard = ({
             return formatBytes(value);
           }
         },
-      }
+      },
     },
     elements: {
       point: {
         radius: 3,
         hoverRadius: 6,
       },
+    },
+    animation: {
+      duration: 1200,
+      easing: 'easeOutInQuart',
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
     },
   };
 
@@ -283,123 +306,64 @@ const NetworkDashboard = ({
 
   return (
     <div className="w-full mt-2 max-w-[1380px] space-y-2">
-      <div className="mb-6">
-
-        <h1 className={`${styles.subheading3} dark:text-white py-3`}>
-          Active Networks
-        </h1>
+      <motion.div 
+        initial={{ opacity: 0, x: 40 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0 }} 
+        className="mb-6 xs:-mx-0 -mx-1"
+      >
+        <div className="border border-gray-400 rounded-xl p-3 xs:p-5 bg-gray-100 dark:bg-zinc-900 shadow-sm min-h-[500px]">
+          {/* Updated header section - responsive flex layout */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1">
+            <h1 className="font-extrabold text-xl sm:text-2xl text-neutral-800 dark:text-white">Tensorlink Network Analytics</h1>
+            
+            {/* Network Status Indicators */}
+            <div className="flex flex-wrap gap-2">
+              <div className="flex items-center bg-green-100 dark:bg-green-800/30 rounded-md p-1 xs:px-3 xs:py-2 border border-gray-300 dark:border-neutral-400 hover:scale-[1.02] cursor-pointer transition-transform duration-200">
+                <MdCircle className="text-green-500 text-xs mr-1.5" />
+                <span className="text-green-700 dark:text-green-300 font-medium text-xs">Tensorlink</span>
+                <span className="text-xs text-green-600 dark:text-green-400 bg-green-200 dark:bg-green-700 px-1 xs:px-2 py-0.5 rounded-full ml-2">Active</span>
+              </div>
+              <div className="flex items-center bg-neutral-100 dark:bg-neutral-800/30 rounded-md p-1 xs:px-3 xs:py-2 border border-gray-300 dark:border-gray-700">
+                <MdCircle className="text-neutral-500 text-xs mr-1.5" />
+                <span className="text-neutral-700 dark:text-neutral-300 font-medium text-xs xs:text-sm">More coming soon...</span>
+              </div>
+            </div>
+          </div>
         
-        <div className="">
-            {/* Tensorlink Network Status */}
-            <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4 mb-2 px-2">
+          {/* Charts Container - Side by side on large screens */}
+          <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-1 mt-4 rounded-lg -mx-2 md:-mx-0">
+            {/* User Activity Chart */}
+            {userChartData && (
                 <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="flex items-center bg-green-100 dark:bg-green-800/30 rounded-lg p-3 border-2 border-gray-300 dark:border-neutral-400 shadow-md"
-                >
-                    <div className="flex items-center">
-                        <MdCircle className="text-green-500 text-sm mr-2" />
-                        <span className="text-green-700 dark:text-green-300 font-medium">Tensorlink</span>
-                        </div>
-                        <div className="ml-auto">
-                        <span className="text-xs text-green-600 dark:text-green-400 bg-green-200 dark:bg-green-700 px-2 py-1 rounded-full">
-                            Active
-                        </span>
-                    </div>
-                </motion.div>
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="flex items-center bg-neutral-100 dark:bg-neutral-800/30 rounded-lg p-3 border-2 border-gray-300 dark:border-gray-700 shadow-md"
-                >
-                    <div className="flex items-center">
-                    <MdCircle className="text-neutral-500 text-sm mr-2" />
-                        <span className="text-neutral-700 dark:text-neutral-300 font-medium">More coming soon...</span>
-                    </div>
-                </motion.div>
-            </div>
-
-            {/* Section header for Tensorlink data */}
-            <div className="mb-4 mt-5">
-                <div className="flex items-center justify-center">
-                <div className="flex-1 h-px bg-green-300 dark:bg-green-600"></div>
-                <div className="mx-4 text-sm text-green-600 dark:text-green-400 font-medium bg-green-100 dark:bg-green-800/50 px-3 py-1 rounded-full">
-                    Tensorlink Network Analytics
-                </div>
-                <div className="flex-1 h-px bg-green-300 dark:bg-green-600"></div>
-                </div>
-            </div>
-
-            {/* Charts Container - Side by side on large screens */}
-            <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 rounded-lg">
-                {/* User Activity Chart */}
-                {userChartData && (
-                    <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="bg-neutral-200 dark:bg-neutral-800 rounded-2xl p-4 shadow-lg border-2 border-neutral-50 dark:border-neutral-300"
-                    >
-                    <div className="flex items-center mb-2">
-                    <MdCircle className="text-green-500 text-xs mr-2" />
-                    <span className="text-xs text-green-600 dark:text-green-400 font-medium">Tensorlink Network Activity</span>
-                    </div>
-                    <div className="h-80 xl:h-96">
-                        <Line data={userChartData} options={userChartOptions} />
-                    </div>
-                    </motion.div>
-                )}
-
-                {/* Capacity and Jobs Chart */}
-                {capacityChartData && (
-                    <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="bg-zinc-200 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-200 dark:border-neutral-400"
-                    >
-                      <div className="flex items-center mb-2">
-                        <MdCircle className="text-green-500 text-xs mr-2" />
-                        <span className="text-xs text-green-600 dark:text-green-400 font-medium">Tensorlink Network Capacity</span>
-                      </div>
-                      <div className="h-80 xl:h-96">
-                          <Line data={capacityChartData} options={capacityChartOptions} />
-                      </div>
-                    </motion.div>
-                )}
-              </motion.div>
-            </div>
-          
-            {/* {networkStats?.models && (
-              <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
-              >
-                  <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">Available Models (API)</h3>
-                  <div className="flex flex-wrap gap-2">
-                  {networkStats.models.map((model, index) => (
-                      <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
-                      >
-                      {model}
-                      </span>
-                  ))}
-                  </div>
-              </motion.div>
-            )} */}
-        </div>
+                  transition={{ duration: 0.6 }}
+                  className="bg-neutral-200 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[380px]"
+                >
+                  <Line data={userChartData} options={userChartOptions} />
+                </motion.div>
+            )}
 
-        {/* Last Updated */}
-        {networkHistory?.metadata && (
-        <div className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center pb-10">
-            Last updated: {new Date(networkHistory.metadata.generated_at_iso).toLocaleString()}
+            {/* Capacity and Jobs Chart */}
+            {capacityChartData && (
+                <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="bg-neutral-200 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[380px]"
+                >
+                  <Line data={capacityChartData} options={capacityChartOptions} />
+                </motion.div>
+            )}
+          </motion.div>
+          <ModelDemand 
+            modelDemandData={modelDemandData}
+            loading={loading}
+            error={error}
+          />
         </div>
-        )}
+      </motion.div>
     </div>
     );
 };

@@ -36,9 +36,13 @@ import NodeDashboard from "./dashboard/NodeDashboard";
 import Account from "./dashboard/Account";
 import DashboardSwitcher from "./dashboard/DashboardSwitcher";
 import DAODashboard from "./dashboard/DAODashboard";
+import AirdropIndicator from "./AirdropIndicator";
+import ModelDemand from "./ModelDemand";
 
 export {
   DAODashboard,
+  ModelDemand,
+  AirdropIndicator,
   DashboardSwitcher,
   Account,
   ActionMenu,

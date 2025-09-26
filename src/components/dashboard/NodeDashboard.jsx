@@ -101,7 +101,7 @@ const NodeDashboard = ({
   };
 
   const NodeCard = ({ node }) => (
-    <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg border border-gray-300 dark:border-gray-600">
+    <motion.div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg border border-gray-300 dark:border-gray-600">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
           {node.type === 'validator' ? (
@@ -158,11 +158,11 @@ const NodeDashboard = ({
       <p className="text-xs text-gray-500 dark:text-gray-400">
         Last activity: {node.lastActivity}
       </p>
-    </div>
+    </motion.div>
   );
 
   return (
-    <div className="mt-5 max-w-[1380px] items-center w-full flex-wrap">
+    <div className="mt-2 max-w-[1380px] items-center w-full flex-wrap">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -171,7 +171,7 @@ const NodeDashboard = ({
       >
         {/* Active Nodes Section */}
         <div className="mb-6">
-          <h2 className="text-xl font-bold flex justify-between items-center gap-2 mb-2 dark:text-white">
+          <h2 className="text-xl font-bold flex justify-between items-center gap-2 mb-3 dark:text-white">
             <div className="flex items-center">
               <MdComputer className="text-blue-500 mr-3 hidden xs:block" />
               Active Nodes ({activeNodes.length})
@@ -192,7 +192,7 @@ const NodeDashboard = ({
               <p className="text-gray-500 dark:text-gray-400">Visit the <a href="tensorlink/docs/mining" className="text-blue-400 hover:underline">documentation</a> to start up a node.</p>
             </div>
           ) : (
-            <div className="text-center py-24 bg-gray-100 dark:bg-gray-700 rounded-lg">
+            <div className="text-center py-12 bg-gray-100 dark:bg-gray-700 rounded-lg">
               <MdComputer className="text-6xl text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 dark:text-gray-400">Connect your wallet to track job activity.</p>
             </div>
@@ -243,7 +243,7 @@ const NodeDashboard = ({
                 ))}
               </div>
             ) : (
-              <div className="text-center py-10">
+              <div className="text-center py-4">
                 <MdAssignment className="text-6xl text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">
                   {!isUserRegistered 

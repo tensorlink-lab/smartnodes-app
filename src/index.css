@@ -318,3 +318,23 @@ body.dark {
   width: 0;
   animation: typing 2s steps(12) forwards, blink 0.7s step-end infinite;
 }
+
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 300% 300%; /* make gradient larger than container */
+  background-image: linear-gradient(
+    270deg,
+    #a855f7, /* purple-400 */
+    #ec4899, /* pink-400 */
+    #f87171  /* red-400 */
+  );
+  animation: gradient-x 6s ease infinite;
+}

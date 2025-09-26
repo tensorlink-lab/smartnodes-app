@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import tokenAbiArtifact from "../assets/SmartnodesToken.json";
+import tokenAbiArtifact from "../assets/SmartnodesERC20.json";
 import coreAbiArtifact from "../assets/SmartnodesCore.json";
 import coordinatorAbiArtifact from '../assets/SmartnodesCoordinator.json';
+import daoAbiArtifact from '../assets/SmartnodesDAO.json';
 import { SmartnodesDashboard } from "../components";
 import { ethers } from 'ethers';
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
@@ -14,24 +15,28 @@ const SmartnodesApp = () => {
   };
 
   // Network configuration
-  const RPC_ENDPOINT = "http://127.0.0.1:8545";
-  // const BASE_NETWORK_ID = 84532;
-  // const CHAIN_ID_HEX = '0x14a34'; // Base Sepolia (84532)
-  const BASE_NETWORK_ID = 31337;
-  const CHAIN_ID_HEX = '0x7A69'; 
+  // const RPC_ENDPOINT = "http://127.0.0.1:8545";
+  const RPC_ENDPOINT = "https://sepolia.base.org";
+  const BASE_NETWORK_ID = 84532;
+  const CHAIN_ID_HEX = '0x14a34'; // Base Sepolia (84532)
+  // const BASE_NETWORK_ID = 31337;
+  // const CHAIN_ID_HEX = '0x7A69'; 
   
   
   // Contract addresses
-  const CONTRACT_ADDRESSES = {
-    token: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-    core: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
-    coordinator: '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
+  const CONTRACT_ADDRESSES = {  
+    token: '0x9b38874d53c99861CbB87B25c54C1Fc2e5827fED',
+    timelock: '0x18261818ed1bEfB24B70153a373b8351D9ed8e7e',
+    dao: '0x21758f11900F2737a47617731CAaB7EA84332EE5',
+    core: '0x36e13F23F90E226074A66324209A23F754a86c0B',
+    coordinator: '0xcB9b80dF839c9850970832Da4bcD3faE895D3Ff4'
   };
-
+1
   // ABIs
   const tokenAbi = tokenAbiArtifact.abi;
   const coreAbi = coreAbiArtifact.abi;
   const coordinatorAbi = coordinatorAbiArtifact.abi;
+  const daoAbi = daoAbiArtifact.abi;
 
   // State variables
   const [status, setStatus] = useState('Loading network stats...');
@@ -42,12 +47,14 @@ const SmartnodesApp = () => {
   const [tokenContract, setTokenContract] = useState(null);
   const [coreContract, setCoreContract] = useState(null);
   const [multisigContract, setMultisigContract] = useState(null);
+  const [daoContract, setDAOContract] = useState(null);
   const [readOnlyProvider, setReadOnlyProvider] = useState(null);
   const [readOnlyContracts, setReadOnlyContracts] = useState({
     token: null,
     core: null,
     coordinator: null
   });
+  const [signer, setSigner] = useState(null);
 
   // User data
   const [userAddress, setUserAddress] = useState('-');
@@ -57,11 +64,13 @@ const SmartnodesApp = () => {
   
   // Network stats
   const [supplyStats, setSupplyStats] = useState([
-    { title: "Total Supply", amount: "-" },
-    { title: "Locked", amount: "-" },
-    { title: "Unclaimed Rewards", amount: "-" },
-    { title: "State Reward", amount: "-" },
-    { title: "State Time (s)", amount: "-" }
+    { title: "Total Supply", amount: "-", suffix: "SNO" },
+    { title: "Circulating Supply", amount: "-", suffix: "SNO" },
+    { title: "Locked", amount: "-", suffix: "SNO" },
+    { title: "Unclaimed Rewards", amount: "-", suffix: "SNO" },
+    { title: "State Reward", amount: "-", suffix: "SNO" },
+    { title: "State Time", amount: "-", suffix: "hours" },
+    { title: "DAO Treasury", amount: "-", suffix: "SNO" }
   ]);
 
   // Coinbase Wallet SDK
@@ -79,7 +88,8 @@ const SmartnodesApp = () => {
         const contracts = {
           token: new ethers.Contract(CONTRACT_ADDRESSES.token, tokenAbi, provider),
           core: new ethers.Contract(CONTRACT_ADDRESSES.core, coreAbi, provider),
-          coordinator: new ethers.Contract(CONTRACT_ADDRESSES.coordinator, coordinatorAbi, provider)
+          coordinator: new ethers.Contract(CONTRACT_ADDRESSES.coordinator, coordinatorAbi, provider),
+          dao: new ethers.Contract(CONTRACT_ADDRESSES.dao, coordinatorAbi, provider)
         };
         
         setReadOnlyContracts(contracts);
@@ -116,26 +126,25 @@ const SmartnodesApp = () => {
       }
 
       // Fetch supply data
-      const result = await readOnlyToken.getSupply();
-      const [supply, locked, unclaimed] = result.map(val => BigInt(val));
+      const result = await readOnlyToken.getSupplyBreakdown();
+      const [supply, circulating, locked, unclaimed, escrowed, a] = result.map(val => BigInt(val));
       
-      const emissionRate = await readOnlyToken.getEmissionRate();
-      const totalJobs = (await readOnlyCore.getJobCount()) - BigInt(1);
-
       // Convert and format values
       const formattedSupply = round(Number(ethers.formatUnits(supply, 18)), 2);
       const formattedLocked = round(Number(ethers.formatUnits(locked, 18)), 2);
       const formattedUnclaimed = round(Number(ethers.formatUnits(unclaimed, 18)), 2);
-      const formattedEmissionRate = round(Number(ethers.formatUnits(emissionRate, 18)), 2);
-      const formattedTotalJobs = Number(ethers.formatUnits(totalJobs, 0));
+      const daoBalanceRaw = await readOnlyToken.balanceOf(CONTRACT_ADDRESSES.timelock);
+      const formattedDao = round(Number(ethers.formatUnits(daoBalanceRaw, 18)), 2);
+      // const stateTime = await readOnlyCore.getStateTime();
 
       setSupplyStats([
-        { title: "Total Supply", amount: formattedSupply + formattedUnclaimed },
-        { title: "Circulating Supply", amount: formattedSupply - formattedLocked },
-        { title: "Locked", amount: formattedLocked },
-        { title: "Unclaimed Rewards", amount: formattedUnclaimed },
-        { title: "State Reward", amount: formattedEmissionRate },
-        { title: "State Time (mins)", amount: 60 },
+        { title: "Total Supply", amount: formattedSupply + formattedUnclaimed, suffix: "SNO" },
+        { title: "Circulating Supply", amount: formattedSupply - formattedLocked, suffix: "SNO" },
+        { title: "Locked", amount: formattedLocked, suffix: "SNO" },
+        { title: "Unclaimed Rewards", amount: formattedUnclaimed, suffix: "SNO" },
+        { title: "State Reward", amount: 45000, suffix: "SNO" },
+        { title: "State Time", amount: 8, suffix: "hours" },
+        { title: "DAO Treasury", amount: formattedDao, suffix: "SNO" }
       ]);
 
       setStatus(isWalletConnected 
@@ -269,11 +278,16 @@ const SmartnodesApp = () => {
       // Create contract instances with signer
       const tokenContractInstance = new ethers.Contract(CONTRACT_ADDRESSES.token, tokenAbi, signer);
       const multisigContractInstance = new ethers.Contract(CONTRACT_ADDRESSES.coordinator, coordinatorAbi, signer);
+      const coreContractInstance = new ethers.Contract(CONTRACT_ADDRESSES.core, coreAbi, signer);
+      const daoContractInstance = new ethers.Contract(CONTRACT_ADDRESSES.dao, daoAbi, signer);
 
       setTokenContract(tokenContractInstance);
       setMultisigContract(multisigContractInstance);
+      setCoreContract(coreContractInstance);
+      setDAOContract(daoContractInstance);
       setUserAddress(accounts[0]);
       setIsWalletConnected(true);
+      setSigner(signer);  
       
       // Fetch user data
       await getUserData(tokenContractInstance, accounts[0]);
@@ -353,11 +367,16 @@ const SmartnodesApp = () => {
       contract={tokenContract}
       tokenAddress={CONTRACT_ADDRESSES.token}
       coordinatorAddress={CONTRACT_ADDRESSES.coordinator}
+      coreAddress={CONTRACT_ADDRESSES.core}
+      dao={daoContract}
+      daoAddress={CONTRACT_ADDRESSES.dao}
       connectToContract={connectToContract}
       connectToCoinbaseWallet={connectToCoinbaseWallet}
       status={status}
       error={error}
       isWalletConnected={isWalletConnected}
+      signer={signer}
+      token={tokenContract}
     />
   );
 };

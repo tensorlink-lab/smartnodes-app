@@ -11,16 +11,16 @@ const Overview = () => (
         <h1 className="text-xl sm:text-3xl dark:text-zinc-100 font-bold">Distributed Neural Networks with Tensorlink</h1>
       </div>
       <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>
-        Tensorlink is a Python library and computational platform that provides powerful tools and APIs for large-scale 
-        neural network training and inference in PyTorch. It enables users to work with complex models that exceed the memory 
-        limits of a single device, expanding access to cutting-edge deep learning. Tensorlink streamlines the parsing and 
+        Tensorlink is a Python library and computational platform that provides tools for neural network inference and 
+        training with PyTorch models. It enables users to work with LLMs and custom models without the VRAM requirements, 
+        expanding access to cutting-edge AI. Providing both free and paid access to LLM APIs and integrated distributed pytorch
         distribution of models and provides a framework for accessing and sharing computation directly peer-to-peer, making 
-        powerful models available on demand and enabling users to easily donate or tap into idle compute.
+        model infrastructure, Tensorlink stands out as a unique and decentralized cloud service.
       </p>
       <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>
-        By simplifying the parsing and distribution of models among peers, while also supporting pre-trained architectures from libraries like Hugging Face, Tensorlink 
-        enables seamless operation of complex distributed models. By leveraging techniques such as model sharding, parallel workflow execution, automated peer discovery, 
-        and a built-in incentive system, Tensorlink provides an efficient, decentralized alternative to traditional cloud-based ML services across consumer hardware. 
+        By simplifying the distribution of models among peers while also supporting pre-trained architectures from libraries like Hugging Face, Tensorlink 
+        enables seamless operation of model sharding, parallel workflow execution, automated peer discovery, 
+        all with a built-in incentive system, Tensorlink provides an efficient, decentralized alternative to traditional cloud-based ML services across consumer hardware. 
         This significantly lowers the barrier to entry for both training and inference, empowering individuals and organizations to deploy state-of-the-art AI models without 
         the need for costly, centralized infrastructure.
       </p>
@@ -30,7 +30,7 @@ const Overview = () => (
         <h2 className="text-lg sm:text-2xl dark:text-zinc-100 font-bold">Key Features</h2>
       </div>
       <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>
-        Tensorlink integrates directly into PyTorch codebases through lightweight wrappers around core PyTorch objects such as modules and optimizers. This allows developers 
+        Tensorlink integrates directly into PyTorch codebases through API access to Hugging Face models or lightweight wrappers around core PyTorch objects such as modules and optimizers. This allows developers 
         to maintain familiar workflows while scaling models dynamically across a distributed compute network. By enabling collaboration and resource-sharing between users, 
         Tensorlink brings the power of distributed training and inference to a broader community.
       </p>

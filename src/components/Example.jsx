@@ -31,7 +31,7 @@ const Example = () => {
         {/* Title & Description Section */}
         <div className="flex-1 w-full flex flex-col items-center xxs:items-start max-w-2xl z-0 mx-auto md:mx-7 md:py-10 py-6 mb-5">
           <h2 className="flex-1 font-poppins font-extrabold lg:text-6xl sm:text-5xl text-3xl text-gray-900 dark:text-gray-100 mt-2 text-left" style={{ letterSpacing: '0.05rem', lineHeight: '1.2' }}>
-            Distributed<br />
+            Peer-to-peer<br />
             <span className="text-blue-600 dark:text-blue-400">Machine Learning</span><br />
             <span className="text-red-500">Infrastructure</span>
             <br />

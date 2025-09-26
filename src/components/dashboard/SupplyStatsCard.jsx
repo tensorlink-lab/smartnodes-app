@@ -14,7 +14,7 @@ import {
 } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { useMediaQuery } from "react-responsive";
-import { MdLink, MdVerified, MdCheck, MdLaunch, MdSecurity } from "react-icons/md";
+import { MdLink, MdLibraryAddCheck, MdMonetizationOn, MdVerified, MdCheck, MdLaunch, MdSecurity } from "react-icons/md";
 
 // Register Chart.js components
 ChartJS.register(
@@ -31,19 +31,17 @@ ChartJS.register(
 
 const SupplyStatsCard = ({ 
   supplyStats, 
-  userAddress, 
-  userBalance, 
-  userLocked, 
-  userUnclaimed, 
-  claimRewards,
-  contract,
-  ConnectWalletButton,
   tokenAddress,
-  multisigAddress
+  coordinatorAddress,
+  coreAddress,
+  daoAddress
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(
     document.documentElement.classList.contains('dark')
   );
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const isDark = document.documentElement.classList.contains('dark');
@@ -57,17 +55,43 @@ const SupplyStatsCard = ({
 
     return () => observer.disconnect();
   }, []);
+
+
+  // Format with 3 significant figures + suffix
+  const formatValue = (num) => {
+    if (num === null || num === undefined) return "-";
+
+    // Convert BigInt or string to number
+    let value = typeof num === "bigint" ? Number(num) : Number(num);
+
+    if (isNaN(value)) return "-";
+    if (value === 0) return "0";
+
+    const suffixes = ["", "k", "M", "B", "T"];
+    const tier = Math.floor(Math.log10(Math.abs(value)) / 3);
+
+    if (tier === 0) {
+      // Round to 3 sig figs, then format with commas
+      return Number(value.toPrecision(3)).toLocaleString();
+    }
+
+    const suffix = suffixes[tier];
+    const scaled = value / Math.pow(10, tier * 3);
+
+    return Number(scaled.toPrecision(3)).toLocaleString() + suffix;
+  };
+
   const emissionsData = [
-    { date: "Sep 2025", validator: 0, worker: 0, dao: 0 },
-    { date: "Sep 2026", validator: 4917375, worker: 41797687.5, dao: 2458687.5 },
-    { date: "Sep 2027", validator: 7867800, worker: 66876300, dao: 3933900 },
-    { date: "Sep 2028", validator: 9638055, worker: 81923467.5, dao: 4819027.5 },
-    { date: "Sep 2029", validator: 10700208, worker: 90951768, dao: 5350104},
-    { date: "Sep 2030", validator: 11337499.8, worker: 96368748.3, dao: 5668749.9},
-    { date: "Sep 2031", validator: 11719525.2, worker: 99615964.2, dao: 5859762.6},
-    { date: "Sep 2032", validator: 12101550.6, worker: 102863180.1, dao: 6050775.3},
-    { date: "Sep 2033", validator: 12483576, worker: 106110396, dao: 6241788},
-    { date: "Sep 2034", validator: 12865601.4, worker: 109357611.9, dao: 6432800.7},
+    { date: "Sep 2025", genesis_nodes: 4000000, dao: 0, worker: 0, validator: 0},
+    { date: "Sep 2026", genesis_nodes: 4000000, dao: 2458687.5, worker: 41797687.5, validator: 4917375},
+    { date: "Sep 2027", genesis_nodes: 4000000, dao: 3933900, worker: 66876300, validator: 7867800},
+    { date: "Sep 2028", genesis_nodes: 4000000, dao: 4819027.5, worker: 81923467.5, validator: 9638055},
+    { date: "Sep 2029", genesis_nodes: 4000000, dao: 5350104, worker: 90951768, validator: 10700208},
+    { date: "Sep 2030", genesis_nodes: 4000000, dao: 5668749.9, worker: 96368748.3, validator: 11337499.8},
+    { date: "Sep 2031", genesis_nodes: 4000000, dao: 5859762.6, worker: 99615964.2, validator: 11719525.2},
+    { date: "Sep 2032", genesis_nodes: 4000000, dao: 6015807.3, worker: 102268724.1, validator: 12031614.6},
+    { date: "Sep 2033", genesis_nodes: 4000000, dao: 6171852, worker: 104921484, validator: 12343704},
+    { date: "Sep 2034", genesis_nodes: 4000000, dao: 6327896.7, worker: 107574243.9, validator: 12655793.4},
   ];
 
   const isSmallScreen = useMediaQuery({ maxWidth: 600 });
@@ -81,9 +105,10 @@ const SupplyStatsCard = ({
   const totalSupply = !isLoading ? (supplyStats.find(item => item.title === "Total Supply")?.amount || 0) : 0;
   const locked = !isLoading ? (supplyStats.find(item => item.title === "Locked")?.amount || 0) : 0;
   const unclaimed = !isLoading ? (supplyStats.find(item => item.title === "Unclaimed Rewards")?.amount || 0) : 0;
+  const dao = !isLoading ? (supplyStats.find(item => item.title === "DAO Treasury")?.amount || 0) : 0;
 
   // Compute circulating supply
-  const circulatingSupply = totalSupply - locked - unclaimed;
+  const circulatingSupply = totalSupply - locked - unclaimed - dao;
 
   // Format number for display
   const formatNumber = (number) => {
@@ -93,13 +118,27 @@ const SupplyStatsCard = ({
     });
   };
 
+  // Handle tooltip positioning
+  const handleMouseEnter = (e) => {
+    const rect = e.target.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left + rect.width / 2,
+      y: rect.top - 10
+    });
+    setShowTooltip(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowTooltip(false);
+  };
+
   // Doughnut chart data
   const doughnutData = {
-    labels: ['Locked', 'Unclaimed', 'Circulating'],
+    labels: ['Locked', 'Unclaimed', 'Circulating', 'DAO'],
     datasets: [
       {
-        data: [locked, unclaimed, circulatingSupply],
-        backgroundColor: ['#85deca', '#f7a6a0', '#aaf7b6'],
+        data: [locked, unclaimed, circulatingSupply, dao],
+        backgroundColor: ['rgba(255, 100, 150, 1)', 'rgba(150, 70, 255, 1)', 'rgba(120, 160, 255, 1)', 'rgba(50, 200, 125, 1)'],
         borderColor: ['#ffffff', '#ffffff', '#ffffff'],
         borderWidth: 3,
         hoverBorderWidth: 3,
@@ -108,15 +147,15 @@ const SupplyStatsCard = ({
     ],
   };
 
-  // Line chart data with stacked configuration
+  // Line chart data with corrected stacking order (validators first so they show on top)
   const lineData = {
     labels: emissionsData.map(d => d.date),
     datasets: [
       {
-        label: 'DAO',
-        data: emissionsData.map(d => d.dao),
-        backgroundColor: 'rgba(247, 166, 160, 0.8)',
-        borderColor: '#f7a6a0',
+        label: 'Workers',
+        data: emissionsData.map(d => d.worker),
+        backgroundColor: 'rgba(133, 222, 202, 0.6)',
+        borderColor: '#85deca',
         borderWidth: 2,
         fill: 'origin',
         tension: 0.3,
@@ -131,12 +170,12 @@ const SupplyStatsCard = ({
         tension: 0.3,
       },
       {
-        label: 'Workers',
-        data: emissionsData.map(d => d.worker),
-        backgroundColor: 'rgba(133, 222, 202, 0.8)',
-        borderColor: '#85deca',
+        label: 'DAO',
+        data: emissionsData.map(d => d.dao),
+        backgroundColor: 'rgba(113, 122, 222, 0.6)',
+        borderColor: '#aa9eca',
         borderWidth: 2,
-        fill: '-1',
+        fill: 'origin', // Fill from the bottom
         tension: 0.3,
       },
     ],
@@ -155,7 +194,7 @@ const SupplyStatsCard = ({
             family: 'Inter, system-ui, sans-serif',
             size: isSmallScreen ? 11 : 13,
           },
-          padding: isSmallScreen ? 10 : 50,
+          padding: isSmallScreen ? 10 : 30,
           usePointStyle: true,
           pointStyle: 'circle',
           
@@ -175,7 +214,7 @@ const SupplyStatsCard = ({
         }
       }
     },
-    cutout: '35%',
+    cutout: '40%',
     animation: {
       animateRotate: true,
       animateScale: true,
@@ -184,7 +223,7 @@ const SupplyStatsCard = ({
     },
   };
 
-  // Line chart options with stacking enabled
+  // Line chart options with improved stacking
   const lineOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -198,7 +237,7 @@ const SupplyStatsCard = ({
           },
         },
         grid: {
-          color: isDarkMode ? "white" : "black",
+          color: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
         },
       },
       y: {
@@ -213,7 +252,7 @@ const SupplyStatsCard = ({
           }
         },
         grid: {
-          color: isDarkMode ? "white" : "black",
+          color: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
         },
       },
     },
@@ -273,7 +312,32 @@ const SupplyStatsCard = ({
   );
 
   return (
-    <div className="max-w-[1380px] w-full">
+    <div className="max-w-[1380px] w-full relative">
+      {/* Tooltip */}
+      <AnimatePresence>
+        {showTooltip && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            style={{
+              position: 'fixed',
+              left: tooltipPosition.x,
+              top: tooltipPosition.y,
+              transform: 'translateX(-50%) translateY(-100%)',
+              zIndex: 1000,
+            }}
+            className="bg-gray-800 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap pointer-events-none shadow-lg"
+          >
+            {showEmissionsChart 
+              ? "Switch to Supply Distribution" 
+              : "Switch to Projected Emissions"
+            }
+            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Main Supply Stats and Chart Row */}
       <div className="flex md:flex-row flex-col mb-2">
          {/* Left: Chart */}
@@ -281,8 +345,8 @@ const SupplyStatsCard = ({
           initial={{ opacity: 0, x: 0 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className={`flex flex-col items-center justify-center bg-neutral-200 dark:bg-neutral-900 rounded-xl border border-white transition-all duration-500 
-            ${showEmissionsChart ? 'md:max-w-[800px]' : 'sm:max-w-[400px] md:max-w-[450px] max-w-[480px]'} 
+          className={`flex flex-col items-center justify-center bg-neutral-200 dark:bg-neutral-900 rounded-xl border border-gray-600 dark:border-white transition-all duration-500 
+            ${showEmissionsChart ? 'lg:max-w-[600px] md:max-w-[460px]' : 'lg:max-w-[490px] max-w-[420px]'} 
             w-full`}
         >
           <div className="w-full flex justify-between items-center px-4">
@@ -290,9 +354,9 @@ const SupplyStatsCard = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-xl xs:text-2xl font-extrabold text-neutral-800 dark:text-white mt-3"
+              className="text-xl xs:text-2xl font-bold text-neutral-800 dark:text-white mt-3 sm:mt-2"
             >
-              {showEmissionsChart ? "Projected Emissions" : "Supply Distribution"}
+              {showEmissionsChart ? "Projected Emissions (SNO)" : "Supply Distribution (SNO)"}
             </motion.p>
             <motion.button
               whileHover={{ scale: 1.1 }}
@@ -302,7 +366,9 @@ const SupplyStatsCard = ({
               transition={{ duration: 0.6, delay: 0.5 }}
               aria-label="Toggle chart"
               onClick={() => setShowEmissionsChart(!showEmissionsChart)}
-              className="mt-4 p-2 rounded-full hover:bg-gray-400 transition-colors"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              className="mt-4 p-2 rounded-full hover:bg-gray-400 transition-colors relative"
             >
               <svg className="w-6 h-6 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
@@ -310,7 +376,7 @@ const SupplyStatsCard = ({
             </motion.button>
           </div>
 
-          <div style={{ width: '100%', height: isSmallScreen ? '240px' : '340px', paddingLeft: '60px', padding: isSmallScreen ? '0px' : '15px' }}>
+          <div style={{ width: '100%', height: isSmallScreen ? '240px' : '300px', paddingLeft: '60px', padding: isSmallScreen ? '0px' : '15px' }}>
             <AnimatePresence mode="wait">
               {isLoading ? (
                 <LoadingSpinner />
@@ -322,6 +388,7 @@ const SupplyStatsCard = ({
                   exit={{ opacity: 0, x: -30 }}
                   transition={{ duration: 0.75 }}
                   style={{ width: '100%', height: '100%' }}
+                  className="p-3 overflow-visible"
                 >
                   {showEmissionsChart ? (
                     <Line data={lineData} options={lineOptions} />
@@ -335,138 +402,195 @@ const SupplyStatsCard = ({
           </div>
         </motion.div>
 
+        {/* Supply Stats */}
         <motion.div 
-          initial={{ opacity: 0, x: -20 }}
+          initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-neutral-200 dark:bg-neutral-800 rounded-xl mr-3 mt-2 md:mt-0 md:ml-2 max-w-[650px] dark:text-gray-200 dark:bg-secondary-dark-bg w-full p-7 lg:pt-10 pt-5 border dark:border-gray-400 border-gray-500"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className={`bg-zinc-100 dark:bg-stone-900 rounded-xl border border-gray-600 dark:border-gray-400 p-2 xs:p-4 w-full max-w-[600px] mt-2 md:mt-0 md:ml-2
+            ${showEmissionsChart ? '' : ''}`}
         >
-          <h1 className="font-extrabold text-xl md:text-2xl lg:text-3xl lg:mb-6 mb-2 dark:text-white">Supply & Emissions</h1>
-          {/* Display "Current Supply" on top */}
-          {supplyStats.map((item, index) => (
-            item.title === "Total Supply" && (
+          <h2 className="text-xl xs:text-2xl font-bold text-gray-900 dark:text-white mb-2 xs:mb-3 py-1">Supply & Emissions</h2>
+          
+          {/* Total Supply - Featured */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="p-4 bg-gradient-to-r from-gray-200 to-gray-200 dark:from-gray-800 dark:to-gray-800 rounded-lg max-w-[285px] border border-gray-300 dark:border-gray-500"
+          >
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Total Supply</p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl xs:text-3xl font-bold text-gray-900 dark:text-white">
+                {formatNumber(totalSupply)}
+              </span>
+              <span className="text-lg text-gray-500 dark:text-gray-400">SNO</span>
+            </div>
+          </motion.div>
+
+          {/* Other Stats Grid */}
+          <div className="flex flex-wrap gap-1 xs:gap-2 mt-1 xs:mt-2 ">
+            {supplyStats.filter(item => item.title !== "Total Supply").map((item, index) => (
               <motion.div 
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="mb-4 lg:mb-0 mt-1"
+                transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
+                className="p-2 lg:p-3 border border-gray-300 dark:border-gray-500 bg-gray-200 dark:bg-gray-700 rounded-lg max-w-[130px] md:min-w-[155px] lg:min-w-[150px] lg:max-w-[165px] flex-1"
               >
-                <p className="font-bold text-xl md:text-2xl dark:text-gray-200 text-gray-500">{item.title}</p>
-                <div className="flex items-baseline dark:text-white">
-                  <motion.p 
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, delay: 0.4 }}
-                    className="xs:text-3xl text-2xl md:text-3xl font-semibold break-words max-w-full overflow-hidden dark:text-white"
-                  >
-                    {(isNaN(Number(item.amount)) ? '-' : Number(item.amount).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 }))}
-                  </motion.p>
-                  <p className="xs:text-2xl text-lg ml-2">SNO</p>
-                </div>
+                <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+                  {item.title}
+                </p>
+                <p className="text-md md:text-xl font-semibold text-gray-900 dark:text-white flex items-baseline gap-1">
+                  {formatValue(item.amount)}
+                  {item.suffix && (
+                    <span className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+                      {item.suffix}
+                    </span>
+                  )}
+                </p>
               </motion.div>
-            )
-          ))}
-
-          {/* Display the rest of the values in the row beneath */}
-          <div className="flex flex-wrap justify-start mb-0 items-center h-[60%]">
-            {supplyStats.map((item, index) => (
-              item.title !== "Total Supply" && (
-                <motion.div 
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1 * (index + 1) }}
-                  className="mr-7"
-                >
-                  <div>
-                    <p className="font-bold md:text-xl dark:text-gray-200 text-gray-500 mt-2">{item.title}</p>
-                    <p className="text-2xl break-words max-w-full overflow-hidden dark:text-white">
-                      {(isNaN(Number(item.amount)) ? '-' : Number(item.amount).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 1 }))}
-                    </p>
-                  </div>
-                </motion.div>
-              )
             ))}
           </div>
+
         </motion.div>
+    
       </div>
 
-      {/* Contract Info */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-gray-200 w-full dark:bg-neutral-700 rounded-xl min-w-[250px] max-w-[510px] sm:max-h-[310px] dark:text-gray-200 p-6 border border-black dark:border-gray-400 mb-2"
-      >
-        <h1 className="font-extrabold text-xl md:text-2xl mb-2 dark:text-white">Contract Address</h1>
-        {/* Contract Addresses */}
-        <div className="space-y-4 mb-6">
-          {/* Core Contract */}
-          <div className="flex flex-col space-y-2">
-            <div className="flex items-center gap-2 mt-4">
-              <MdLink className="text-blue-500" />
-              <span className="font-bold text-lg text-gray-600 dark:text-gray-300">Core Contract</span>
-              {true && <MdVerified className="text-green-500" />}
-            </div>
-            <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-              <code className="text-sm font-mono flex-1 break-all">
-                {tokenAddress}
-              </code>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => copyToClipboard(tokenAddress, 'contract')}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors"
-                  title="Copy address"
-                >
-                    <MdCheck className="text-green-500" />
-                </button>
-                <a
-                  href={`${explorerBase}${tokenAddress}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors"
-                  title="View on explorer"
-                >
-                  <MdLaunch className="text-blue-500" />
-                </a>
-              </div>
-            </div>
-          </div>
 
-          {/* Multisig Contract */}
-          <div className="flex flex-col space-y-2">
-            <div className="flex items-center gap-2">
-              <MdSecurity className="text-green-500" />
-              <span className="font-bold text-lg text-gray-600 dark:text-gray-300">Multisig Contract</span>
-              {true && <MdVerified className="text-green-500" />}
+        {/* Contract Info */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="bg-gray-200 w-full dark:bg-zinc-800 rounded-lg min-w-[250px] max-w-[450px] dark:text-gray-200 p-5 border border-black/20 dark:border-gray-500 sm:mt-2"
+        >
+          <h1 className="font-bold text-xl md:text-2xl dark:text-white mb-3">Contract Addresses</h1>
+
+          <div className="space-y-3">
+
+            {/* Token Contract */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center gap-2">
+                <MdMonetizationOn className="text-green-500 text-lg" />
+                <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">Token Contract</span>
+                <MdVerified className="text-green-500 text-sm" />
+              </div>
+              <div className="flex items-center gap-3 p-2 bg-gray-100 dark:bg-gray-700 rounded-md">
+                <code className="text-xs font-mono flex-1 break-all">{tokenAddress}</code>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => copyToClipboard(tokenAddress, 'token')}
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                    title="Copy address"
+                  >
+                    <MdCheck className="text-green-500 text-sm" />
+                  </button>
+                  <a
+                    href={`${explorerBase}${tokenAddress}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                    title="View on explorer"
+                  >
+                    <MdLaunch className="text-blue-500 text-sm" />
+                  </a>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2 p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-              <code className="text-sm font-mono flex-1 break-all">
-                {multisigAddress}
-              </code>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => copyToClipboard(multisigAddress, 'multisig')}
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors"
-                  title="Copy address"
-                >
-                  <MdCheck className="text-green-500" />
-                </button>
-                <a
-                  href={`${explorerBase}${multisigAddress}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors"
-                  title="View on explorer"
-                >
-                  <MdLaunch className="text-blue-500" />
-                </a>
+
+            {/* Core Contract */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center gap-2">
+                <MdLink className="text-blue-500 text-lg" />
+                <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">Core Contract</span>
+                <MdVerified className="text-green-500 text-sm" />
+              </div>
+              <div className="flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-md">
+                <code className="text-xs font-mono flex-1 break-all">{coreAddress}</code>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => copyToClipboard(coreAddress, 'contract')}
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                    title="Copy address"
+                  >
+                    <MdCheck className="text-green-500 text-sm" />
+                  </button>
+                  <a
+                    href={`${explorerBase}${coreAddress}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                    title="View on explorer"
+                  >
+                    <MdLaunch className="text-blue-500 text-sm" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Multisig Contract */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center gap-2">
+                <MdSecurity className="text-red-500 text-lg" />
+                <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">Multisig Contract</span>
+                <MdVerified className="text-green-500 text-sm" />
+              </div>
+              <div className="flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-md">
+                <code className="text-xs font-mono flex-1 break-all">{coordinatorAddress}</code>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => copyToClipboard(coordinatorAddress, 'multisig')}
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                    title="Copy address"
+                  >
+                    <MdCheck className="text-green-500 text-sm" />
+                  </button>
+                  <a
+                    href={`${explorerBase}${coordinatorAddress}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                    title="View on explorer"
+                  >
+                    <MdLaunch className="text-blue-500 text-sm" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* DAO Contract */}
+            <div className="flex flex-col space-y-1">
+              <div className="flex items-center gap-2">
+                <MdLibraryAddCheck className="text-purple-500 text-lg" />
+                <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">DAO Contract</span>
+                <MdVerified className="text-green-500 text-sm" />
+              </div>
+              <div className="flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-md">
+                <code className="text-xs font-mono flex-1 break-all">{daoAddress}</code>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => copyToClipboard(daoAddress, 'token')}
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                    title="Copy address"
+                  >
+                    <MdCheck className="text-green-500 text-sm" />
+                  </button>
+                  <a
+                    href={`${explorerBase}${daoAddress}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
+                    title="View on explorer"
+                  >
+                    <MdLaunch className="text-blue-500 text-sm" />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      
 
       <motion.div className="flex flex-wrap justify-start gap-1 items-center w-full mb-4">
           {/* {summaryCards.map((item, index) => (

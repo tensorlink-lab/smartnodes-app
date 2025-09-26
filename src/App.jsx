@@ -7,7 +7,7 @@ import { useStateContext } from "./contexts/contextProvider";
 const useWindowSizeHandler = (setActiveMenu) => {
   useEffect(() => {
     const handleResize = () => {
-      setActiveMenu(window.innerWidth >= 1440);
+      setActiveMenu(window.innerWidth >= 1130);
     };
 
     // Set initial state
@@ -50,7 +50,7 @@ const App = () => {
         {activeMenu && <Sidebar />}
         
         {/* Main content area */}
-        <div className={`flex flex-col min-h-screen w-full ${activeMenu ? "pl-[265px]" : ""} transition-all duration-300 ease-out`}>
+        <div className={`flex flex-col min-h-screen w-full ${activeMenu ? "pl-[245px]" : ""} transition-all duration-300 ease-out`}>
           <div className="z-40 w-full">
             <Navbar />
           </div>
