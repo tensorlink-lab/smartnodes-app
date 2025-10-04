@@ -14,10 +14,10 @@ import {
   dropbox,
 } from "../assets";
 import { MdHome } from "react-icons/md";
+import { Cpu, Zap, Lock } from "lucide-react";
 
 export const overview = {
-  // info: "Share your unused computing power, earn rewards, and help users and researchers tackle challenges in AI, science, and beyond. Smartnodes enables the creation of volunteer data processing networks by transforming idle hardware into collaborative compute nodes, building inclusive, scalable infrastructure capable of achieving what was previously out of reach.",
-  info: "Smartnodes transforms globally distributed hardware into a programmable, composable layer for big data and compute. By exposing resources through APIs and Python libraries, developers can stream, process, and analyze data across a secure peer-to-peer network, unlocking scalable and collaborative infrastructure for machine learning and scientific computing.",
+  info: "Smartnodes transforms globally distributed hardware into a programmable, composable layer for big data and compute. Developers can access these resources securely through APIs and programming libraries, unlocking scalable and collaborative infrastructure for scientific computing.",
 };
 
 export const portals = [
@@ -146,19 +146,22 @@ export const features = [
     id: "1",
     title: "Plug-and-Play",
     content:
-      "Easily tap into distributed computational resources through model wrappers that integrate with existing PyTorch workflows, offloading model compute behind the scenes.",
+      "Easily tap into distributed compute with model wrappers that integrate seamlessly with your PyTorch models and offload heavy computation behind the scenes.",
+    icon: Cpu,
   },
   {
     id: "2",
     title: "On-demand Inference",
     content:
-      "Access free and paid APIs for inference with pre-trained Hugging Face models, or deploy your own models and expose them as live API endpoints.",
+      "Access LLM inference via free or paid APIs with pre-trained Hugging Face models, or deploy your own custom models to the network. Eliminate the need for VRAM in your application workflows.",
+    icon: Zap,
   },
   {
     id: "3",
-    title: "Scale & Privacy",
+    title: "Scale + Privacy",
     content:
-      "Automatically shards oversized models across multiple devices, enabling large-scale inference and options for privacy-enhanced inference pipelines.",
+      "Securely distribute oversized models across multiple devices, enabling scalable inference while keeping sensitive data under your control.",
+    icon: Lock,
   },
 
   // {
@@ -224,24 +227,6 @@ export const feedback = [
   // },
 ];
 
-export const stats = [
-  {
-    id: "stats-1",
-    title: "User Active",
-    value: "3800+",
-  },
-  {
-    id: "stats-2",
-    title: "Trusted by Company",
-    value: "230+",
-  },
-  {
-    id: "stats-3",
-    title: "Transaction",
-    value: "$230M+",
-  },
-];
-
 export const footerLinks = [
   {
     title: "About",
@@ -301,15 +286,16 @@ export const footerLinks = [
         link: "https://buymeacoffee.com/smartnodes",
       },
       {
-        name: "Bitcoin: bc1qg6klkt3z77wdlgusz5lujulr5ezayvqsw8m4r5",
+        name: "Bitcoin",
         link: "bc1qg6klkt3z77wdlgusz5lujulr5ezayvqsw8m4r5",
       },
       {
-        name: "Ethereum: 0x1Bc3a15dfFa205AA24F6386D959334ac1BF27336",
+        name: "Ethereum",
         link: "0x1Bc3a15dfFa205AA24F6386D959334ac1BF27336",
       },
       {
-        name: "Solana: 3urnEem9JcdYB7t5ysVpk62fh2M8cU6RsmM9PoJaDiJV",
+        name: "Solana",
+        link: "3urnEem9JcdYB7t5ysVpk62fh2M8cU6RsmM9PoJaDiJV",
       },
     ],
   },

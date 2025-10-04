@@ -10,7 +10,7 @@ const LocalhostGPT = () => {
   const [error, setError] = useState(null);
   const [infoVisible, setInfoVisible] = useState(false);
   const [modelParams, setModelParams] = useState({
-    model: "Qwen/Qwen2.5-7B-Instruct",
+    model: "Qwen/Qwen3-8B",
     temperature: 0.5,
     maxLength: 512,
     maxNewTokens: 512,
@@ -381,7 +381,7 @@ const LocalhostGPT = () => {
                     onChange={(e) => updateModelParam('model', e.target.value)}
                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-slate-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
-                    <option value="Qwen/Qwen2.5-7B-Instruct">Qwen 2.5 7B Instruct</option>
+                    <option value="Qwen/Qwen3-8B">Qwen3 8B</option>
                     {/* <option value="meta-llama/Llama-2-7b-chat-hf">Llama 2 7B Chat</option>
                     <option value="mistralai/Mistral-7B-Instruct-v0.2">Mistral 7B Instruct</option> */}
                   </select>

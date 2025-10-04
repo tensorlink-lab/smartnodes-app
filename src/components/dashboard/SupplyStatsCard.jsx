@@ -345,7 +345,7 @@ const SupplyStatsCard = ({
           initial={{ opacity: 0, x: 0 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className={`flex flex-col items-center justify-center bg-neutral-200 dark:bg-neutral-900 rounded-xl border border-gray-600 dark:border-white transition-all duration-500 
+          className={`flex flex-col items-center justify-center bg-neutral-200 dark:bg-neutral-900 rounded-xl border border-gray-600 dark:border-neutral-500 transition-all duration-500 
             ${showEmissionsChart ? 'lg:max-w-[600px] md:max-w-[460px]' : 'lg:max-w-[490px] max-w-[420px]'} 
             w-full`}
         >
@@ -407,7 +407,7 @@ const SupplyStatsCard = ({
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className={`bg-zinc-100 dark:bg-stone-900 rounded-xl border border-gray-600 dark:border-gray-400 p-2 xs:p-4 w-full max-w-[600px] mt-2 md:mt-0 md:ml-2
+          className={`bg-neutral-100 dark:bg-neutral-900 rounded-xl border border-gray-600 dark:border-gray-500 p-2 xs:p-4 w-full max-w-[600px] mt-2 md:mt-0 md:ml-2
             ${showEmissionsChart ? '' : ''}`}
         >
           <h2 className="text-xl xs:text-2xl font-bold text-gray-900 dark:text-white mb-2 xs:mb-3 py-1">Supply & Emissions</h2>
@@ -417,7 +417,7 @@ const SupplyStatsCard = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="p-4 bg-gradient-to-r from-gray-200 to-gray-200 dark:from-gray-800 dark:to-gray-800 rounded-lg max-w-[285px] border border-gray-300 dark:border-gray-500"
+            className="p-4 bg-gradient-to-r from-gray-100 to-gray-100 dark:from-zinc-800 dark:to-neutral-800 rounded-lg max-w-[285px] border border-gray-300 dark:border-gray-500"
           >
             <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Total Supply</p>
             <div className="flex items-baseline gap-2">
@@ -436,7 +436,7 @@ const SupplyStatsCard = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                className="p-2 lg:p-3 border border-gray-300 dark:border-gray-500 bg-gray-200 dark:bg-gray-700 rounded-lg max-w-[130px] md:min-w-[155px] lg:min-w-[150px] lg:max-w-[165px] flex-1"
+                className="p-2 lg:p-3 border border-gray-300 dark:border-gray-500 bg-gray-100 dark:bg-zinc-800 rounded-lg max-w-[130px] md:min-w-[155px] lg:min-w-[150px] lg:max-w-[165px] flex-1"
               >
                 <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
                   {item.title}

@@ -40,10 +40,11 @@ const NetworkDashboard = ({
   const [isDarkMode, setIsDarkMode] = useState(
     document.documentElement.classList.contains('dark')
   );
+
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const isDark = document.documentElement.classList.contains('dark');
-      setIsDarkMode(isDark); // trigger re-render
+      setIsDarkMode(isDark);
     });
 
     observer.observe(document.documentElement, {
@@ -68,11 +69,10 @@ const NetworkDashboard = ({
     return num.toString();
   };
 
-  const getCapacityAndJobsChartData = () => {
+  const getCapacityChartData = () => {
     if (!networkHistory) return null;
-
     const { labels, datasets } = networkHistory.daily;
-    
+
     return {
       labels: labels.map(date => {
         const d = new Date(date);
@@ -86,7 +86,6 @@ const NetworkDashboard = ({
           backgroundColor: 'rgba(105, 57, 234, 0.1)',
           fill: true,
           tension: 0.4,
-          yAxisID: 'y',
         },
         {
           label: 'Used Capacity',
@@ -95,17 +94,15 @@ const NetworkDashboard = ({
           backgroundColor: 'rgba(255, 152, 0, 0.1)',
           fill: true,
           tension: 0.4,
-          yAxisID: 'y',
         },
       ],
     };
   };
-    
+
   const getUserChartData = () => {
     if (!networkHistory) return null;
-
     const { labels, datasets } = networkHistory.daily;
-    
+
     return {
       labels: labels.map(date => {
         const d = new Date(date);
@@ -136,13 +133,27 @@ const NetworkDashboard = ({
           fill: true,
           tension: 0.4,
         },
+      ],
+    };
+  };
+
+  const getJobsChartData = () => {
+    if (!networkHistory) return null;
+    const { labels, datasets } = networkHistory.daily;
+
+    return {
+      labels: labels.map(date => {
+        const d = new Date(date);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      }),
+      datasets: [
         {
           label: 'Jobs',
           data: datasets.jobs,
           borderColor: 'rgba(225, 50, 80)',
           backgroundColor: 'rgba(255, 0, 100, 0.1)',
           fill: true,
-          tension: 0.4
+          tension: 0.4,
         },
       ],
     };
@@ -156,15 +167,19 @@ const NetworkDashboard = ({
         position: 'top',
         labels: {
           usePointStyle: true,
-          padding: 6,
+          padding: 4,
+          boxWidth: 6,
+          boxHeight: 6,
+          font: { size: 12 },
           color: isDarkMode ? "white" : "black"
         },
       },
       title: {
         display: true,
-        text: 'Network Activity',
+        text: 'Network Participants',
+        padding: { top: 5, bottom: 5 },
         font: {
-          size: 18,
+          size: 16,
           weight: 'bold',
         },
         color: isDarkMode ? "white" : "black"
@@ -174,17 +189,15 @@ const NetworkDashboard = ({
       x: {
         ticks: {
           color: isDarkMode ? "white" : "black",
-          font: {
-            size: 12
-          },
+          font: { size: 11 },
+          maxRotation: 45,
+          minRotation: 0,
         },
       },
       y: {
         ticks: {
           color: isDarkMode ? "white" : "black",
-          font: {
-            size: 12
-          },
+          font: { size: 11 },
           callback: function(value) {
             return formatNumber(value);
           }
@@ -193,8 +206,69 @@ const NetworkDashboard = ({
     },
     elements: {
       point: {
-        radius: 3,
-        hoverRadius: 6,
+        radius: 2,
+        hoverRadius: 5,
+      },
+    },
+    animation: {
+      duration: 1200,
+      easing: 'easeOutInQuart',
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
+    },
+  };
+
+  const jobsChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          usePointStyle: true,
+          padding: 4,
+          boxWidth: 6,
+          boxHeight: 6,
+          font: { size: 12 },
+          color: isDarkMode ? "white" : "black"
+        },
+      },
+      title: {
+        display: true,
+        text: 'Job Activity',
+        padding: { top: 5, bottom: 5 },
+        font: {
+          size: 16,
+          weight: 'bold',
+        },
+        color: isDarkMode ? "white" : "black"
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: isDarkMode ? "white" : "black",
+          font: { size: 11 },
+          maxRotation: 45,
+          minRotation: 0,
+        },
+      },
+      y: {
+        ticks: {
+          color: isDarkMode ? "white" : "black",
+          font: { size: 11 },
+          callback: function(value) {
+            return formatNumber(value);
+          }
+        },
+      }
+    },
+    elements: {
+      point: {
+        radius: 2,
+        hoverRadius: 5,
       },
     },
     animation: {
@@ -215,15 +289,19 @@ const NetworkDashboard = ({
         position: 'top',
         labels: {
           usePointStyle: true,
-          padding: 6,
+          padding: 4,
+          boxWidth: 6,
+          boxHeight: 6,
+          font: { size: 12 },
           color: isDarkMode ? "white" : "black"
         },
       },
       title: {
         display: true,
         text: 'Capacity (Gb)',
+        padding: { top: 5, bottom: 5 },
         font: {
-          size: 18,
+          size: 16,
           weight: 'bold',
         },
         color: isDarkMode ? "white" : "black"
@@ -240,9 +318,9 @@ const NetworkDashboard = ({
       x: {
         ticks: {
           color: isDarkMode ? "white" : "black",
-          font: {
-            size: 12
-          },
+          font: { size: 11 },
+          maxRotation: 45,
+          minRotation: 0,
         },
       },
       y: {
@@ -251,9 +329,7 @@ const NetworkDashboard = ({
         position: 'left',
         ticks: {
           color: isDarkMode ? "white" : "black",
-          font: {
-            size: 12
-          },
+          font: { size: 11 },
           callback: function(value) {
             return formatBytes(value);
           }
@@ -262,8 +338,8 @@ const NetworkDashboard = ({
     },
     elements: {
       point: {
-        radius: 3,
-        hoverRadius: 6,
+        radius: 2,
+        hoverRadius: 5,
       },
     },
     animation: {
@@ -278,7 +354,7 @@ const NetworkDashboard = ({
 
   if (loading) {
     return (
-      <div className="w-full max-w-[1380px] flex justify-center items-center -96">
+      <div className="w-full max-w-[1380px] flex justify-center items-center h-96">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
@@ -290,7 +366,7 @@ const NetworkDashboard = ({
         <div className="text-red-500 text-center">
           <p className="text-lg font-semibold">Error loading network data</p>
           <p className="text-sm mt-2">{error}</p>
-          <button 
+          <button
             onClick={fetchNetworkData}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
@@ -302,62 +378,65 @@ const NetworkDashboard = ({
   }
 
   const userChartData = getUserChartData();
-  const capacityChartData = getCapacityAndJobsChartData();
+  const capacityChartData = getCapacityChartData();
+  const jobsChartData = getJobsChartData();
 
   return (
     <div className="w-full mt-2 max-w-[1380px] space-y-2">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, x: 40 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.6, delay: 0 }} 
+        transition={{ duration: 0.6, delay: 0 }}
         className="mb-6 xs:-mx-0 -mx-1"
       >
-        <div className="border border-gray-400 rounded-xl p-3 xs:p-5 bg-gray-100 dark:bg-zinc-900 shadow-sm min-h-[500px]">
-          {/* Updated header section - responsive flex layout */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1">
-            <h1 className="font-extrabold text-xl sm:text-2xl text-neutral-800 dark:text-white">Tensorlink Network Analytics</h1>
-            
-            {/* Network Status Indicators */}
-            <div className="flex flex-wrap gap-2">
-              <div className="flex items-center bg-green-100 dark:bg-green-800/30 rounded-md p-1 xs:px-3 xs:py-2 border border-gray-300 dark:border-neutral-400 hover:scale-[1.02] cursor-pointer transition-transform duration-200">
-                <MdCircle className="text-green-500 text-xs mr-1.5" />
-                <span className="text-green-700 dark:text-green-300 font-medium text-xs">Tensorlink</span>
-                <span className="text-xs text-green-600 dark:text-green-400 bg-green-200 dark:bg-green-700 px-1 xs:px-2 py-0.5 rounded-full ml-2">Active</span>
-              </div>
-              <div className="flex items-center bg-neutral-100 dark:bg-neutral-800/30 rounded-md p-1 xs:px-3 xs:py-2 border border-gray-300 dark:border-gray-700">
-                <MdCircle className="text-neutral-500 text-xs mr-1.5" />
-                <span className="text-neutral-700 dark:text-neutral-300 font-medium text-xs xs:text-sm">More coming soon...</span>
-              </div>
-            </div>
+        <div className="border border-gray-400 rounded-xl p-4 bg-gray-200 dark:bg-neutral-800 shadow-sm min-h-[500px]">
+          {/* Header section */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1 px-1">
+            <h1 className="font-extrabold text-xl sm:text-2xl text-neutral-800 dark:text-white">
+              Tensorlink Network Analytics
+            </h1>
           </div>
-        
-          {/* Charts Container - Side by side on large screens */}
-          <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-1 mt-4 rounded-lg -mx-2 md:-mx-0">
+
+          {/* Charts Container - Three charts in grid */}
+          <motion.div className="grid grid-cols-1 lg:grid-cols-2 gap-1 mt-4 rounded-lg md:-mx-0 -mx-2">
             {/* User Activity Chart */}
             {userChartData && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
-                  className="bg-neutral-200 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[380px]"
-                >
-                  <Line data={userChartData} options={userChartOptions} />
-                </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
+              >
+                <Line data={userChartData} options={userChartOptions} />
+              </motion.div>
             )}
 
-            {/* Capacity and Jobs Chart */}
+            {/* Jobs Chart */}
+            {jobsChartData && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
+              >
+                <Line data={jobsChartData} options={jobsChartOptions} />
+              </motion.div>
+            )}
+
+            {/* Capacity Chart - Spans full width at bottom */}
             {capacityChartData && (
-                <motion.div
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="bg-neutral-200 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[380px]"
-                >
-                  <Line data={capacityChartData} options={capacityChartOptions} />
-                </motion.div>
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px] lg:col-span-2"
+              >
+                <Line data={capacityChartData} options={capacityChartOptions} />
+              </motion.div>
             )}
           </motion.div>
-          <ModelDemand 
+
+          <ModelDemand
             modelDemandData={modelDemandData}
             loading={loading}
             error={error}
@@ -365,7 +444,7 @@ const NetworkDashboard = ({
         </div>
       </motion.div>
     </div>
-    );
+  );
 };
 
 export default NetworkDashboard;

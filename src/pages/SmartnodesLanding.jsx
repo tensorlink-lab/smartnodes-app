@@ -1,12 +1,11 @@
 import styles from "../style";
 import React, { useEffect } from "react";
 import { useStateContext } from "../contexts/contextProvider";
-import { Testimonials, LaunchApp, MainHero, MainHero2, Opportunity, ParticleBackground, AirdropIndicator } from '../components';
+import { Testimonials, LaunchApp, MainHero, MainHero2, Opportunity, ParticleBackground, Framework } from '../components';
 
 const SmartnodesLanding = () => {
-  const { setActiveMenu } = useStateContext();
+  const { activeMenu, setActiveMenu } = useStateContext();
 
-  // Use useEffect to call setActiveMenu only once after the component mounts
   useEffect(() => {
     setActiveMenu(false);
   }, []);
@@ -16,12 +15,10 @@ const SmartnodesLanding = () => {
       <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}>
         <ParticleBackground />
       </div>
-      <div className="md:mt-1 mt-5 flex-col">
-        <div className="px-1 xs:px-5 xs:pt-1">
-          <AirdropIndicator />
-        </div>
+      <div className="md:mt-1 mt-5 flex-col md:mx-20 lg:mx-20 transition-transform duration-300">
         <MainHero />
         <MainHero2 />
+        <Framework />
         <Opportunity />
         <Testimonials style={{ zIndex: 0 }} />
         <LaunchApp />

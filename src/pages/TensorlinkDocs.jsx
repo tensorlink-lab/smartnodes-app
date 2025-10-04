@@ -27,10 +27,9 @@ const TensorlinkDocs = () => {
   );
 
   return (
-    <div>
+    <div className="bg-white dark:bg-zinc-950 pt-1 mt-3 border-t border-t-black dark:border-t-white">
       <Disclaimer1 />
       <Disclaimer2 />
-
       <Routes>
         <Route index element={<Overview />} />
         <Route path="overview" element={<Overview />} />

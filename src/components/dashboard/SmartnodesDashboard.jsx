@@ -123,7 +123,8 @@ const SmartnodesDashboard = ({
     daoAddress,
     signer,
     connectToContract,
-    connectToCoinbaseWallet
+    connectToCoinbaseWallet,
+    activeMenu
  }) => {
     const DASHBOARD_TYPES = {
         SUPPLY_STATS: 'supply_stats',
@@ -182,7 +183,7 @@ const SmartnodesDashboard = ({
     const [networkHistory, setNetworkHistory] = useState(null);
     const [modelDemand, setModelDemand] = useState(null);
     const [activeDashboard, setActiveDashboard] = useState(getSavedDashboard());
-    const [useLocalData, setUseLocalData] = useState(true); // Toggle for local testing
+    const [useLocalData, setUseLocalData] = useState(false); // Toggle for local testing
     const [error, setError] = useState(null);
 
     // Custom setter that also saves to localStorage
@@ -291,8 +292,8 @@ const SmartnodesDashboard = ({
     useEffect(() => {
         fetchNetworkData();
         
-        // Refresh data every 2 minutes
-        const interval = setInterval(fetchNetworkData, 120000);
+        // Refresh data every 10 minutes
+        const interval = setInterval(fetchNetworkData, 600000);
         return () => clearInterval(interval);
     }, []);
 
@@ -327,18 +328,18 @@ const SmartnodesDashboard = ({
         <section 
             id="dashboard"
             ref={titleRef}
-            className={`bg-gray-300 dark:bg-zinc-900 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
+            className={`bg-gray-300 dark:bg-zinc-900 flex mt-3 flex-col border-t dark:border-t-white border-t-black items-center pb-5
                                 border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
-            <div className="mt-5 max-w-[1380px] items-center w-full flex-wrap">
+            <div className="mt-3 max-w-[1380px] items-center w-full flex-wrap">
                 <div className="w-full max-w-[1380px]">
                     <AirdropIndicator />
                 </div>
                 <h1 
-                    className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-900 border dark:border-white border-black p-2 xs:p-5 text-left px-6 md:mt-2 max-w-[830px] mb-3`}>
-                    Smartnodes <span className="font-normal text-gray-400" style={{color: "rgba(255, 120, 150, 1)"}}>(testnet)</span> Dashboard
+                    className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-900 border dark:border-neutral-500 border-black p-2 xs:p-5 text-left px-6 md:mt-2 max-w-[830px] mb-3`}>
+                    Smartnodes <span className="font-normal text-gray-400" style={{color: "rgba(105, 220, 100, 1)"}}>(testnet)</span> Dashboard
                 </h1>
 
-                <NetworkSummary networkStats={networkStats} />
+                <NetworkSummary networkStats={networkStats} activeMenu={activeMenu}/>
                 
                 {/* Dashboard Switcher - now uses updateActiveDashboard */}
                 <DashboardSwitcher 

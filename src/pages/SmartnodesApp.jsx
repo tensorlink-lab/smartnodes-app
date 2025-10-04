@@ -7,7 +7,7 @@ import { SmartnodesDashboard } from "../components";
 import { ethers } from 'ethers';
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
 
-const SmartnodesApp = () => {
+const SmartnodesApp = ({ activeMenu }) => {
   // Utility function
   const round = (num, decimals) => {
     const factor = Math.pow(10, decimals);
@@ -377,6 +377,7 @@ const SmartnodesApp = () => {
       isWalletConnected={isWalletConnected}
       signer={signer}
       token={tokenContract}
+      activeMenu={activeMenu}
     />
   );
 };

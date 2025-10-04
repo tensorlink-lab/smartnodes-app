@@ -1,25 +1,39 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MdClose, MdRocket } from 'react-icons/md';
 
 const AirdropIndicator = ({ 
-    isVisible = true,
+    localStorageKey = "airdropClosed", // key to store close state
     title = "Testnet & Airdrop Now Live!",
     description = "Run a Tensorlink node to earn rewards!",
     actionText = "Learn More",
-    onActionClick,
-    onClose,
     closable = true,
+    closeOnAction = false, // NEW: close permanently on action click
     pulseEffect = true
 }) => {
-    const [visible, setVisible] = useState(isVisible);
+    const [visible, setVisible] = useState(() => {
+        const stored = localStorage.getItem(localStorageKey);
+        return stored !== "true";
+    });
+
+
+    // On mount, check localStorage to see if it was closed before
+    useEffect(() => {
+        const closed = localStorage.getItem(localStorageKey);
+        if (closed === "true") {
+            setVisible(false);
+        }
+    }, [localStorageKey]);
 
     const handleClose = () => {
         setVisible(false);
-        if (onClose) onClose();
+        localStorage.setItem(localStorageKey, "true"); // persist closed state
     };
 
     const handleActionClick = () => {
         if (onActionClick) onActionClick();
+        if (closeOnAction) {
+            handleClose(); // close permanently if specified
+        }
     };
 
     if (!visible) return null;
@@ -27,40 +41,37 @@ const AirdropIndicator = ({
     const pulseClasses = pulseEffect ? "animate-pulse" : "";
 
     return (
-        <div className="w-full flex justify-center mb-2">
+        <div className="w-full flex justify-center mb-2 max-w-[1380px]">
             <div
                 className="
-                    bg-gradient-to-r from-purple-700 via-pink-700 to-red-600 text-white
-                    px-4 py-3 relative overflow-hidden rounded-lg w-full border dark:border-neutral-200 border-black"
+                    bg-gradient-to-r from-blue-800 via-pink-800 to-red-700 text-white
+                    p-2 relative overflow-hidden rounded-lg w-full border dark:border-neutral-200 border-black"
             >
-                {/* Background animation effect */}
-                <div className="absolute inset-0 bg-blue-300 opacity-10 animate-pulse"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/100 via-pink-500/100 to-purple-500/100 animate-pulse opacity-30"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-pink-500/100 via-blue-500/100 to-blue-500/100 animate-pulse opacity-30" style={{ animationDelay: '1s' }}></div>
                 
                 <div className="relative flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        {/* Icon with pulse effect */}
                         <div className={pulseClasses}>
                             <MdRocket className="text-2xl xs:block hidden" />
                         </div>
                         
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
-                        <div className="flex items-center font-bold text-sm sm:text-base">
-                            {title}
-                            {/* Small screen rocket (inline with title) */}
-                            <MdRocket className={`text-2xl xs:hidden inline mr-4 ${pulseClasses}`} />
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
+                            <div className="flex items-center font-bold text-sm sm:text-base">
+                                {title}
+                                <MdRocket className={`text-2xl xs:hidden inline mr-4 ${pulseClasses}`} />
+                            </div>
+                            <span className="text-xs sm:text-sm opacity-90">
+                                {description}
+                            </span>
                         </div>
-                        <span className="text-xs sm:text-sm opacity-90">
-                            {description}
-                        </span>
-                    </div>
-
                     </div>
 
                     <div className="flex items-center space-x-1">
-                        {/* Action button */}
                         {actionText && (
-                            <button
-                                onClick={handleActionClick}
+                            <a
+                                href="docs"
+                                onClick={closeOnAction ? handleClose : undefined}
                                 className="
                                     bg-white bg-opacity-20 hover:bg-opacity-30 
                                     text-white text-xs sm:text-sm font-medium 
@@ -71,10 +82,9 @@ const AirdropIndicator = ({
                                 "
                             >
                                 {actionText}
-                            </button>
+                            </a>
                         )}
 
-                        {/* Close button */}
                         {closable && (
                             <button
                                 onClick={handleClose}
@@ -90,6 +100,7 @@ const AirdropIndicator = ({
                         )}
                     </div>
                 </div>
+
             </div>
         </div>
     );

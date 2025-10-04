@@ -18,7 +18,7 @@ const Sidebar = ({ open, close }) => {
 
     return (
         <div
-            className="fixed inset-y-0 left-0 w-[245px] bg-zinc-200 dark:bg-zinc-700 overflow-y-auto overflow-x-hidden"
+            className="fixed inset-y-0 left-0 w-[245px] bg-slate-100 dark:bg-zinc-800 overflow-y-auto overflow-x-hidden"
             style={{ zIndex: 1000000 }}
         >
             <div className="flex justify-between items-center p-3">

@@ -10,7 +10,7 @@ https_serv = "https://smartnodes-lab.ddns.net/tensorlink-api"  # May not work wi
 http_serv = "http://smartnodes-lab.ddns.net:443/tensorlink-api"  # Use this if HTTPS fails
 
 payload = {
-    "hf_name": "Qwen/Qwen2.5-7B-Instruct",
+    "hf_name": "Qwen/Qwen3-8B",
     "message": "Describe the role of AI in medicine.",
     "max_length": 1024,
     "max_new_tokens": 256,
@@ -54,73 +54,86 @@ const result = await response.json();
 console.log(result);`;
 
 const ApiExample = () => (
-  <section className="px-6 md:px-10 flex flex-col border-t dark:border-t-white border-t-black items-center">
-      <div className="text-left justify-center items-center sm:max-w-[1280px]">
-      <div className="flex items-center ml-1 mb-6 mt-16 xs:px-0 px-24">
-        <div className="bg-red-600 h-8 w-2 mr-4 rounded-lg"></div>
-        <h1 className="text-xl sm:text-3xl dark:text-zinc-100 font-bold">Inference APIs with Tensorlink</h1>
-      </div>
-      
-      <p className={`${styles.landingText2} sm:px-5 md:px-10 dark:text-gray-300 text-black mb-5 mt-5 px-24`}>
-        Tensorlink provides a lightweight API for distributed inference, offering on-demand access to popular pre-trained models from Hugging Face. 
-        It supports both free public inference on a rotating set of models and paid requests for dedicated jobs and custom services. 
-        The list of currently supported public models is maintained on our GitHub page and updated regularly to reflect availability and usage trends. 
-        Below is the most recent set of free, publicly accessible models:
-      </p>
+  <section className="px-5 md:px-10 flex flex-col border-t dark:border-neutral-800 border-neutral-200 items-center h-full bg-white dark:bg-neutral-950">
+    <div className="text-left py-7 max-w-[900px] w-full">
 
-      <ul className={`${styles.landingText2} sm:px-5 md:px-10 dark:text-gray-300 text-black mb-5 mt-5 px-24 list-disc pl-20`}>
-        <li><code className="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">Qwen/Qwen2.5-7B-Instruct</code> - General Purpose Language Model</li>
-      </ul>
-
-      <div className="bg-yellow-50 mt-7 p-4 rounded-lg border-l-4 border-yellow-500 mx-10">
-        <p className="text-yellow-800 dark:text-black font-medium">
-          ⚠️ A wider selection of much larger models will become available as more nodes join the network. Sorry for the inconvenience.
+      {/* Page Title */}
+      <div className="pb-4 mb-4 border-b dark:border-neutral-800 border-neutral-200">
+        <h1 className="text-4xl font-bold dark:text-white text-neutral-900 mb-2">
+          Inference APIs with Tensorlink
+        </h1>
+        <p className="text-lg dark:text-neutral-400 text-neutral-600">
+          Lightweight APIs for distributed inference
         </p>
       </div>
-      
-      <p className={`${styles.landingText2} sm:px-5 md:px-10 dark:text-gray-300 text-black mb-5 mt-5 xs:px-0 px-24`}>
-        A good example of the API in action is this <a href="https://smartnodes.ca/tensorlink/localhostGPT" className="text-blue-600 dark:text-blue-400 underline"> demo</a> that
-        queries an LLM using Tensorlink to run a simple web-based chatbot.
-      </p>
 
-      <div className="flex items-center mb-6 ml-1 mt-16 xs:px-0 px-24">
-        <div className="bg-blue-600 h-8 w-2 mr-4 rounded-lg"></div>
-        <h2 className="text-lg sm:text-2xl ml-3 dark:text-zinc-100 font-bold">Example: API request from Python (with requests)</h2>
+      {/* Intro */}
+      <div className="mb-12">
+        <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
+          Tensorlink provides a lightweight API for distributed inference, 
+          offering on-demand access to pre-trained Hugging Face models. 
+          Both free and paid inference options are supported. The public 
+          model list is maintained on our GitHub and updated regularly.
+        </p>
+        <ul className="list-disc pl-6 text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
+          <li>
+            <code className="bg-neutral-100 dark:bg-neutral-900 px-1 py-0.5 rounded text-sm font-mono">
+              Qwen/Qwen3-8B
+            </code>{" "}
+            – General Purpose Language Model
+          </li>
+        </ul>
+        <div className="bg-amber-50 dark:bg-amber-950/20 border-l-4 border-amber-500 p-4 mb-6">
+          <p className="text-sm dark:text-amber-200 text-amber-900">
+            ⚠️ Larger models will become available as more nodes join the network.
+          </p>
+        </div>
       </div>
-      
-      <div className="max-w-[250px] xs:max-w-[400px] sm:max-w-[600px] md:max-w-full xs:ml-0 ml-24">
-        <SyntaxHighlighter language="python" className="flex overflow-scroll max-w-full" style={vscDarkPlus}>
+
+      {/* Example: Python */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-semibold dark:text-white text-neutral-900 mb-4 pb-2 border-b dark:border-neutral-800 border-neutral-200">
+          Example: Python (requests)
+        </h2>
+        <SyntaxHighlighter
+          language="python"
+          style={vscDarkPlus}
+          className="rounded-lg text-sm sm:text-base"
+        >
           {codeStringPythonApi}
         </SyntaxHighlighter>
       </div>
 
-      <div className="flex items-center mb-6 ml-1 mt-16 xs:px-0 px-24">
-        <div className="bg-blue-600 h-8 w-2 mr-4 rounded-lg"></div>
-        <h2 className="text-lg sm:text-2xl ml-3 dark:text-zinc-100 font-bold">Example: API request with JavaScript (Fetch API)</h2>
-      </div>
-      
-      <div className="max-w-[250px] xs:max-w-[400px] sm:max-w-[600px] md:max-w-full xs:ml-0 ml-24">
-        <SyntaxHighlighter language="javascript" className="flex overflow-scroll max-w-full" style={vscDarkPlus}>
+      {/* Example: JavaScript */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-semibold dark:text-white text-neutral-900 mb-4 pb-2 border-b dark:border-neutral-800 border-neutral-200">
+          Example: JavaScript (fetch)
+        </h2>
+        <SyntaxHighlighter
+          language="javascript"
+          style={vscDarkPlus}
+          className="rounded-lg text-sm sm:text-base"
+        >
           {codeStringJavaScriptApi}
         </SyntaxHighlighter>
       </div>
 
-      <div className="flex items-center mb-6 ml-1 mt-16 xs:px-0 px-24">
-        <div className="bg-blue-600 h-8 w-2 mr-4 rounded-lg"></div>
-        <h2 className="text-lg sm:text-2xl ml-3 dark:text-zinc-100 font-bold">API Parameters</h2>
-      </div>
-      
-      <div className="overflow-x-auto sm:px-5 md:px-10 mt-5 mb-10 xs:block hidden">
-        <table className="min-w-full divide-y divide-gray-300 dark:divide-gray-700 ">
-          <thead>
-            <tr>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold dark:text-gray-200 text-gray-900">Field</th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold dark:text-gray-200 text-gray-900">Type</th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold dark:text-gray-200 text-gray-900">Required</th>
-              <th className="px-3 sm:px-6 py-3 text-left text-xs sm:text-sm font-semibold dark:text-gray-200 text-gray-900">Description</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
+      {/* Parameters Table */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-semibold dark:text-white text-neutral-900 mb-4 pb-2 border-b dark:border-neutral-800 border-neutral-200">
+          API Parameters
+        </h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-neutral-200 dark:divide-neutral-800">
+            <thead>
+              <tr>
+                <th className="px-3 py-3 text-left text-sm font-semibold dark:text-neutral-200 text-neutral-900">Field</th>
+                <th className="px-3 py-3 text-left text-sm font-semibold dark:text-neutral-200 text-neutral-900">Type</th>
+                <th className="px-3 py-3 text-left text-sm font-semibold dark:text-neutral-200 text-neutral-900">Required</th>
+                <th className="px-3 py-3 text-left text-sm font-semibold dark:text-neutral-200 text-neutral-900">Description</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800 text-sm dark:text-neutral-300 text-neutral-700">
             <tr>
               <td className="px-3 sm:px-6 py-4 text-xs sm:text-sm dark:text-gray-300 text-gray-700"><code className="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">hf_name</code></td>
               <td className="px-3 sm:px-6 py-4 text-xs sm:text-sm dark:text-gray-300 text-gray-700">string</td>
@@ -169,26 +182,29 @@ const ApiExample = () => (
               <td className="px-3 sm:px-6 py-4 text-xs sm:text-sm dark:text-gray-300 text-gray-700">✕</td>
               <td className="px-3 sm:px-6 py-4 text-xs sm:text-sm dark:text-gray-300 text-gray-700">Conversation history (<code className="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded"></code>)</td>
             </tr>
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div className="bg-blue-100 mx-16 dark:bg-blue-900 p-4 rounded-lg mt-8 mb-12 border-l-4 border-blue-500">
-        <p className="text-blue-800 dark:text-blue-200 font-medium mb-2">
-          <strong>⚠️ Note:</strong>
+      {/* Notes */}
+      <div className="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 mb-12">
+        <p className="text-sm dark:text-blue-200 text-blue-800 font-medium mb-2">
+          Notes
         </p>
-        <ul className="list-disc pl-6 text-blue-800 dark:text-blue-200">
-          <li>Currently limited to select HF models (listed in <code className="bg-blue-200 dark:bg-blue-800 px-1 py-0.5 rounded">tensorlink/ml/models.json</code>)</li>
-          <li>Custom models and more diverse selection coming soon...</li>
-          <li>Keep histories concise for faster response time.</li>
-          <li>Model loading and generation performance depends on network conditions and node availability.</li>
+        <ul className="list-disc pl-6 text-sm dark:text-blue-200 text-blue-800 space-y-1">
+          <li>Currently limited to select Hugging Face models</li>
+          <li>Custom model support coming soon</li>
+          <li>Keep histories concise for faster response</li>
+          <li>Performance depends on network/node availability</li>
         </ul>
       </div>
     </div>
 
-    <div className="flex mt-10 mb-10 justify-between max-w-[1300px] w-full">
+    {/* Navigation */}
+    <div className="flex mt-8 mb-10 justify-between max-w-[900px] w-full pt-8 border-t dark:border-neutral-800 border-neutral-200">
       <NavButton className="text-left" title="Models" subtitle="Previous" page="tensorlink/docs/model" />
-      <NavButton title="Nodes" subtitle="Next" page="tensorlink/docs/nodes" />
+      <NavButton className="text-right" title="Nodes" subtitle="Next" page="tensorlink/docs/nodes" />
     </div>
   </section>
 );

@@ -1,8 +1,6 @@
 import Navbar from "./Navbar";
 import Example from "./Example";
 import WhyTensorlink from "./WhyTensorlink";
-import ToPortal from "./ToPortal";
-import Stats from "./Stats";
 import Footer from "./Footer";
 import Testimonials from "./Toolbox";
 import MainHero from "./MainHero";
@@ -38,8 +36,11 @@ import DashboardSwitcher from "./dashboard/DashboardSwitcher";
 import DAODashboard from "./dashboard/DAODashboard";
 import AirdropIndicator from "./AirdropIndicator";
 import ModelDemand from "./ModelDemand";
+import Framework from "./Framework";
+import ToPortal from "./ToPortal";
 
 export {
+  ToPortal,
   DAODashboard,
   ModelDemand,
   AirdropIndicator,
@@ -71,8 +72,7 @@ export {
   Opportunity,
   Example,
   WhyTensorlink,
-  ToPortal,
-  Stats,
+  Framework,
   Footer,
   Testimonials,
   MainHero2,

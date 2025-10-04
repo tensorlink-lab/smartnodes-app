@@ -124,7 +124,7 @@ const ModelDemand = ({ modelDemandData, loading, error }) => {
       initial={{ opacity: 0, x: 40 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }} 
-      className="mb-2 xs:-mx-0 -mx-1 mt-5"
+      className="xs:-mx-0 -mx-1 mt-5 px-1"
     >
       <div className="rounded-xl p-2">
         {/* Header Section */}
@@ -156,9 +156,9 @@ const ModelDemand = ({ modelDemandData, loading, error }) => {
         {/* Table/List View */}
         <div className="hidden sm:block overflow-x-auto">
           {data?.popular_models && data.popular_models.length > 0 ? (
-            <div className="bg-white dark:bg-neutral-800 rounded-xl border border-neutral-300 dark:border-neutral-600 overflow-hidden">
+            <div className="bg-neutral-50 dark:bg-neutral-800 rounded-xl border border-neutral-300 dark:border-neutral-600 overflow-hidden">
               {/* Table Header */}
-              <div className="bg-neutral-200 dark:bg-neutral-700 border-b border-neutral-300 dark:border-neutral-600">
+              <div className="bg-neutral-100 dark:bg-neutral-700 border-b border-neutral-300 dark:border-neutral-600">
                 <div className="grid grid-cols-12 gap-2 p-3 text-xs font-semibold text-neutral-700 dark:text-neutral-300 uppercase tracking-wide">
                   <div 
                     className="col-span-4 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 flex items-center"
@@ -280,7 +280,7 @@ const ModelDemand = ({ modelDemandData, loading, error }) => {
               </div>
             </div>
           ) : (
-            <div className="flex items-center justify-center h-32 bg-white dark:bg-neutral-800 rounded-xl border border-neutral-300 dark:border-neutral-600">
+            <div className="flex items-center justify-center h-32 bg-neutral-50 dark:bg-neutral-800 rounded-xl border border-neutral-300 dark:border-neutral-600">
               <div className="text-center text-neutral-600 dark:text-neutral-400">
                 <MdSmartToy className="text-4xl mx-auto mb-2 opacity-50" />
                 <p>No model demand data available</p>
@@ -290,7 +290,7 @@ const ModelDemand = ({ modelDemandData, loading, error }) => {
         </div>
 
         <div className="sm:hidden">
- {/* Popular Models Grid */}
+        { /* Popular Models Grid */}
         {data?.popular_models && data.popular_models.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {data.popular_models.map((model, index) => (
@@ -299,7 +299,7 @@ const ModelDemand = ({ modelDemandData, loading, error }) => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-neutral-200 dark:bg-neutral-800 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-300 hover:shadow-xl transition-shadow duration-300"
+                className="bg-neutral-100 dark:bg-neutral-800 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-300 hover:shadow-xl transition-shadow duration-300"
               >
                 {/* Model Header */}
                 <div className="flex items-start justify-between mb-3">
@@ -316,7 +316,7 @@ const ModelDemand = ({ modelDemandData, loading, error }) => {
 
                 {/* Stats Grid */}
                 <div className="grid grid-cols-2 gap-2 mb-3">
-                  <div className="bg-white dark:bg-neutral-700 rounded-lg p-2 px-3 border border-gray-300 dark:border-gray-600">
+                  <div className="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-2 px-3 border border-gray-300 dark:border-gray-600">
                     <div className="flex items-center mb-1">
                       <MdBarChart className="text-blue-500 text-sm mr-1" />
                       <span className="text-xs text-neutral-600 dark:text-neutral-400">Total Requests</span>
@@ -326,7 +326,7 @@ const ModelDemand = ({ modelDemandData, loading, error }) => {
                     </p>
                   </div>
                   
-                  <div className="bg-white dark:bg-neutral-700 rounded-lg p-2 px-3 border border-gray-300 dark:border-gray-600">
+                  <div className="bg-neutral-50 dark:bg-neutral-700 rounded-lg p-2 px-3 border border-gray-300 dark:border-gray-600">
                     <div className="flex items-center mb-1">
                       <MdTrendingUp className="text-green-500 text-sm mr-1" />
                       <span className="text-xs text-neutral-600 dark:text-neutral-400">Recent Requests</span>

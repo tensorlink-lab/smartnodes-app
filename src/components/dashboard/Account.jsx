@@ -14,7 +14,7 @@ const Account = ({
  }) => {
     return (
         <div>
-            <div className="border-t border-black dark:border-white my-8 mx-16" />
+            <div className="border-t border-black dark:border-gray-400 my-8 mx-16" />
             <motion.div 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

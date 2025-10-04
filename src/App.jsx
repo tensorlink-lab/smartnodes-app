@@ -4,10 +4,14 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useStateContext } from "./contexts/contextProvider";
 
+const excludedPages = ["/"];
+
 const useWindowSizeHandler = (setActiveMenu) => {
   useEffect(() => {
     const handleResize = () => {
-      setActiveMenu(window.innerWidth >= 1130);
+      if (!excludedPages.includes(window.location.pathname)) {
+        setActiveMenu(window.innerWidth >= 1130);
+      }
     };
 
     // Set initial state
@@ -81,7 +85,7 @@ const App = () => {
               </Route>
 
               <Route path="tensorlink/localhostGPT/*" element={<LocalhostGPT />} />
-              <Route path="app" element={<SmartnodesApp />} />
+              <Route path="app" element={<SmartnodesApp activeMenu={activeMenu} />} />
               <Route path="*" element={<Smartnodes />} />
             </Routes>
           </main>

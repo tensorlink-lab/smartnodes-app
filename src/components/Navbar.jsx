@@ -30,7 +30,7 @@ const Navbar = () => {
   const handleActiveMenu = () => setActiveMenu(!activeMenu);
 
   return (
-    <motion.nav className="w-full flex z-20 pt-5 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}>
+    <motion.nav className="w-full flex z-20 pt-4 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}>
       {/* Logo and menu for desktop */}
       {!activeMenu ? (
         <div
@@ -40,7 +40,7 @@ const Navbar = () => {
               setActiveMenu(!activeMenu);
           }}
         >
-          <img src={logoSrc} alt="task" className="w-auto h-auto max-w-[275px] max-h-[160px] hidden md:block" />
+          <img src={logoSrc} alt="task" className="w-auto h-auto max-w-[235px] max-h-[150px] hidden md:block" />
           <img src={smallLogoSrc} alt="task" className="w-[70px] h-[70px] md:hidden mb-1 my-1.5" />
         </div>      
       ) : (
@@ -125,7 +125,7 @@ const Navbar = () => {
         <div
           className={`
             absolute top-16 right-0 mx-4 mt-4 min-w-[140px]
-            border border-gray-300 p-6 dark:bg-slate-500 bg-slate-200
+            border border-gray-300 p-6 dark:bg-slate-600 bg-slate-200
             rounded-xl shadow-xl z-30
             transform origin-top transition-all duration-300 ease-out
             ${toggle ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0 pointer-events-none"}
