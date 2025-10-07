@@ -1,4 +1,4 @@
-import { MdDescription, MdLanguage, MdCheckCircle } from 'react-icons/md';
+import { MdDescription, MdLanguage, MdAccountCircle, MdVerifiedUser } from 'react-icons/md';
 import { NetworkDashboard, DashboardSwitcher, AirdropIndicator, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton, DAODashboard } from "..";
 import styles, { layout } from "../../style";
 import { useState, useEffect, useRef } from "react";
@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 // Dummy data for local testing
 const dummyNetworkStats = {
   validators: 1,
-  workers: 1,
+  workers: 3,
   users: 0,
   jobs: 4,
   proposal: 1839,
@@ -41,19 +41,19 @@ const dummyNetworkHistory = {
   daily: {
     labels: ["2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-14","2025-06-15","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-21","2025-06-22","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-28","2025-06-29","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-05","2025-07-06","2025-07-07","2025-07-08"],
     datasets: {
-      workers: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+      workers: [1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,3,3,3,3,3],
       validators: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
       users: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       jobs: [9,4,5,3,2,2,4,5,3,5,4,4,3,4,1,1,2,2,2,2,1,2,2,3,1,1,1,1,0,2],
       proposals: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      total_capacity: [24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,0,24709234688,24709234688,24802164736,24802295808,24664014848,24664014848,24664014848,24664014848,0,0,24796659712],
-      used_capacity: [15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,0,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,0,0,15231271888]
+      total_capacity: [24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,0,24709234688,24709234688,24802164736,24802295808,49420697600,49420697600,49420697600,49420697600,89420697600, 89420697600, 89420697600],
+      used_capacity: [15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,0,15231271888,15231271888,15231271888,15231271888,24710348800,24710348800,24710348800,24710348800,24710348800, 49420697600, 49420697600]
     }
   },
   timestamps: [1749441600.0,1749528000.0,1749614400.0,1749700800.0,1749787200.0,1749873600.0,1749960000.0,1750046400.0,1750132800.0,1750219200.0,1750305600.0,1750392000.0,1750478400.0,1750564800.0,1750651200.0,1750737600.0,1750824000.0,1750910400.0,1750996800.0,1751083200.0,1751169600.0,1751256000.0,1751342400.0,1751428800.0,1751515200.0,1751601600.0,1751688000.0,1751774400.0,1751860800.0,1751947200.0],
   summary: {
     current: {
-      workers: 1,
+      workers: 3,
       validators: 0,
       users: 0,
       jobs: 3,
@@ -112,7 +112,6 @@ const SmartnodesDashboard = ({
     userAddress, 
     userBalance, 
     userLocked, 
-    userUnclaimed,
     claimRewards,
     contract,
     dao,
@@ -127,6 +126,7 @@ const SmartnodesDashboard = ({
     activeMenu
  }) => {
     const DASHBOARD_TYPES = {
+        NODE: "node",
         SUPPLY_STATS: 'supply_stats',
         NETWORK: 'network',
         GOVERNANCE: 'governance',
@@ -134,19 +134,24 @@ const SmartnodesDashboard = ({
     
     const dashboardConfig = [
         {
+            id: DASHBOARD_TYPES.NODE,
+            name: "Account",
+            icon: <MdAccountCircle />
+        },
+        {
             id: DASHBOARD_TYPES.NETWORK,
-            name: 'Tensorlink',
+            name: 'Network',
             icon: <MdLanguage />
         },
         {
             id: DASHBOARD_TYPES.SUPPLY_STATS,
-            name: 'Contract Info',
+            name: 'Contract',
             icon: <MdDescription />
         },
         {
             id: DASHBOARD_TYPES.GOVERNANCE,
             name: 'Governance',
-            icon: <MdCheckCircle />
+            icon: <MdVerifiedUser />
         }
     ];
 
@@ -183,8 +188,9 @@ const SmartnodesDashboard = ({
     const [networkHistory, setNetworkHistory] = useState(null);
     const [modelDemand, setModelDemand] = useState(null);
     const [activeDashboard, setActiveDashboard] = useState(getSavedDashboard());
-    const [useLocalData, setUseLocalData] = useState(false); // Toggle for local testing
+    const [useLocalData, setUseLocalData] = useState(true); // Toggle for local testing
     const [error, setError] = useState(null);
+    const [userUnclaimed, setUserUnclaimed] = useState("-");
 
     // Custom setter that also saves to localStorage
     const updateActiveDashboard = (dashboard) => {
@@ -218,6 +224,22 @@ const SmartnodesDashboard = ({
             case DASHBOARD_TYPES.GOVERNANCE:
                 return <DAODashboard dao={dao} token={token} signer={signer}/>;
             
+            case DASHBOARD_TYPES.NODE:
+                return <div>
+                    <Account 
+                        handleActionClick={handleActionClick}
+                        userAddress={userAddress}
+                        userBalance={userBalance}
+                        userLocked={userLocked}
+                        userUnclaimed={userUnclaimed}
+                        claimRewards={claimRewards}
+                        connectToContract={connectToContract} 
+                        connectToCoinbaseWallet={connectToCoinbaseWallet} 
+                        contract={contract} 
+                    />
+                    <NodeDashboard />
+                </div>
+            
             default:
                 return <NetworkDashboard
                     loading={loading}
@@ -230,7 +252,8 @@ const SmartnodesDashboard = ({
         }
     };
 
-    const API_BASE_URL = "https://smartnodes.ddns.net/tensorlink-api";
+    // const API_BASE_URL = "https://smartnodes.ddns.net/tensorlink-api";
+    const API_BASE_URL = "http://192.168.2.54:64747";
     
     const fetchNetworkData = async () => {
         try {
@@ -262,6 +285,16 @@ const SmartnodesDashboard = ({
             const statsData = await statsResponse.json();
             const historyData = await historyResponse.json();
             const modelData = await models.json();
+
+            console.log(userAddress);
+            if (userAddress !== "-") {
+                const response = await fetch(`${API_BASE_URL}/worker-info?worker_address=${userAddress}`);
+                console.log(response);
+                if (!response.ok) throw new Error(`Failed to find worker rewards.`);
+                
+                const unclaimed = await response.json();
+                setUserUnclaimed(unclaimed);
+            }
             
             setNetworkStats(statsData);
             setNetworkHistory(historyData);
@@ -328,7 +361,7 @@ const SmartnodesDashboard = ({
         <section 
             id="dashboard"
             ref={titleRef}
-            className={`bg-gray-300 dark:bg-zinc-900 flex mt-3 flex-col border-t dark:border-t-white border-t-black items-center pb-5
+            className={`bg-zinc-100 dark:bg-zinc-900 flex mt-3 flex-col border-t dark:border-t-white border-t-black items-center pb-5
                                 border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
             <div className="mt-3 max-w-[1380px] items-center w-full flex-wrap">
                 <div className="w-full max-w-[1380px]">
@@ -350,23 +383,6 @@ const SmartnodesDashboard = ({
 
                 {/* Render Active Dashboard */}
                 {renderActiveDashboard()}
-
-                <Account 
-                    handleActionClick={handleActionClick}
-                    userAddress={userAddress}
-                    userBalance={userBalance}
-                    userLocked={userLocked}
-                    userUnclaimed={userUnclaimed}
-                    claimRewards={claimRewards}
-                    connectToContract={connectToContract} 
-                    connectToCoinbaseWallet={connectToCoinbaseWallet} 
-                    contract={contract} 
-                />
-
-                <NodeDashboard 
-                    userAddress={userAddress}
-                    contract={contract}
-                />
             </div>
         </section>
     );

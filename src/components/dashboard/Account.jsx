@@ -14,12 +14,11 @@ const Account = ({
  }) => {
     return (
         <div>
-            <div className="border-t border-black dark:border-gray-400 my-8 mx-16" />
             <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
-                className="bg-gray-200 mb-2 dark:bg-gray-600 rounded-xl dark:text-gray-200 p-4 sm:pt-4 overflow-x-scroll border border-black dark:border-gray-400 max-w-[700px]"
+                className="bg-zinc-50 mb-2 dark:bg-zinc-800 rounded-xl dark:text-gray-200 p-4 sm:pt-4 overflow-x-scroll border border-black dark:border-gray-400 max-w-[700px]"
             >
                 <div className="flex justify-between items-center">
                     <h1 className="font-extrabold text-xl sm:text-2xl mb-1 text-neutral-800 dark:text-white py-1">Account</h1>

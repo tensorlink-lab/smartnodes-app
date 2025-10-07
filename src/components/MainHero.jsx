@@ -9,9 +9,9 @@ import { AirdropIndicator } from ".";
 const MainHero = () => {
   return (
     <div>
-        <div className="mt-5 px-2 sm:px-10 -mb-5">
-          <AirdropIndicator />
-        </div>
+      <div className="mt-5 px-2 -mb-5 flex justify-center">
+        <AirdropIndicator />
+      </div>
       <section id="home" className={`${styles.section} rounded-md xs:px-4 px-12 lg:mx-12`}>
         <div className="dark:bg-gradient-to-br dark:from-zinc-900 transition-all duration-500 flex-col dark:to-slate-900 bg-gradient-to-br from-zinc-50 to-gray-100 rounded-xl border border-gray-300 dark:border-gray-800 backdrop-blur-sm dark:shadow-black shadow-indigo-950 shadow-lg">
           <div className="md:flex-row flex-col px-5 sm:px-0 flex sm:mx-10 z-20">

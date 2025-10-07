@@ -3,10 +3,10 @@ import { logo } from "../assets";
 import { footerLinks, socialMedia } from "../constants";
 
 const Footer = () => (
-  <section className="px-5 md:px-10 flex flex-col border-t dark:border-neutral-400 border-neutral-600 items-center bg-white dark:bg-neutral-950 w-full"
+  <section className="px-5 md:px-10 flex flex-col border-t dark:border-neutral-400 border-neutral-600 items-center bg-neutral-50 dark:bg-neutral-950 w-full pb-6"
   style={{zIndex: 1000}}>
     {/* Top Section */}
-    <div className="flex flex-col md:flex-row justify-between w-full max-w-[900px] py-10 gap-10">
+    <div className="flex flex-col md:flex-row justify-between w-full max-w-[1200px] py-10 gap-10">
       {/* Logo & Description */}
       <div className="flex flex-col items-start">
         <img
@@ -20,7 +20,7 @@ const Footer = () => (
       </div>
 
       {/* Footer Links */}
-      <div className="flex flex-wrap gap-10 md:gap-16">
+      <div className="flex flex-wrap gap-1 md:gap-5">
         {footerLinks.map((footerlink) => (
           <div key={footerlink.title} className="flex flex-col min-w-[150px]">
             <h4 className="text-lg font-semibold dark:text-white text-neutral-900 mb-3">
@@ -58,7 +58,7 @@ const Footer = () => (
     </div>
 
     {/* Bottom Section */}
-    <div className="w-full max-w-[900px] flex flex-col md:flex-row items-center justify-between pt-6 border-t dark:border-neutral-800 border-neutral-200">
+    <div className="w-full max-w-[1200px] flex flex-col md:flex-row items-center justify-between pt-6 border-t dark:border-neutral-800 border-neutral-200">
       <p className="text-sm dark:text-neutral-500 text-neutral-500">
         © 2025 Smartnodes. All Rights Reserved.
       </p>

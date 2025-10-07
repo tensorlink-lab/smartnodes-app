@@ -60,7 +60,6 @@ const SmartnodesApp = ({ activeMenu }) => {
   const [userAddress, setUserAddress] = useState('-');
   const [userBalance, setUserBalance] = useState("-");
   const [userLocked, setUserLocked] = useState("-");
-  const [userUnclaimed, setUserUnclaimed] = useState("-");
   
   // Network stats
   const [supplyStats, setSupplyStats] = useState([
@@ -207,46 +206,29 @@ const SmartnodesApp = ({ activeMenu }) => {
   // Get user-specific data from contracts
   const getUserData = async (tokenContractInstance, address) => {
     try {
-    setStatus('Loading your wallet data...');
-    
-    let balance;
-    try {
-      balance = await tokenContractInstance.balanceOf(address);
-    } catch (error) {
-      balance = 0;
-    }
-    
-    let unclaimedRewards;
-    try {
-      unclaimedRewards = await tokenContractInstance.getUnclaimedRewards(address);
-    } catch (error) {
-      unclaimedRewards = { sno: 0, eth: 0 };
-    }
-    
-    let lockedTokens;
-    try {
-      lockedTokens = await tokenContractInstance.getLockedTokens(address);
-    } catch (error) {
-      lockedTokens = { sno: 0, eth: 0 };
-    }
-    
-    // Process the results
-    setUserBalance(balance ? Number(ethers.formatUnits(balance, 18)).toFixed(2) : '0');
-    
-    // Handle PaymentAmounts struct safely
-    const unclaimedSno = unclaimedRewards && unclaimedRewards.sno ? 
-      Number(ethers.formatUnits(unclaimedRewards.sno, 18)).toFixed(1) : '0';
-    const unclaimedEth = unclaimedRewards && unclaimedRewards.eth ? 
-      Number(ethers.formatUnits(unclaimedRewards.eth, 18)).toFixed(1) : '0';
-    
-    const lockedSno = lockedTokens && lockedTokens.sno ? 
+      setStatus('Loading your wallet data...');
+      
+      let balance;
+      try {
+        balance = await tokenContractInstance.balanceOf(address);
+      } catch (error) {
+        balance = 0;
+      }
+      
+      let lockedTokens;
+      try {
+        lockedTokens = await tokenContractInstance.getLockedTokens(address);
+      } catch (error) {
+        lockedTokens = { sno: 0, eth: 0 };
+      }
+      
+      // Process the results
+      setUserBalance(balance ? Number(ethers.formatUnits(balance, 18)).toFixed(2) : '0');
+      const lockedSno = lockedTokens && lockedTokens.sno ? 
       Number(ethers.formatUnits(lockedTokens.sno, 18)).toFixed(1) : '0';
-    const lockedEth = lockedTokens && lockedTokens.eth ? 
-      Number(ethers.formatUnits(lockedTokens.eth, 18)).toFixed(1) : '0';
     
       setUserBalance(Number(ethers.formatUnits(balance, 18)).toFixed(2));
     
-      setUserUnclaimed(unclaimedSno);
       setUserLocked(lockedSno);
       
       setStatus('Your data loaded successfully!');
@@ -362,7 +344,6 @@ const SmartnodesApp = ({ activeMenu }) => {
       userAddress={userAddress}
       userBalance={userBalance}
       userLocked={userLocked}
-      userUnclaimed={userUnclaimed}
       claimRewards={claimRewards}
       contract={tokenContract}
       tokenAddress={CONTRACT_ADDRESSES.token}

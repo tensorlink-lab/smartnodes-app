@@ -5,8 +5,8 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { NavButton } from "../..";
 
 const Mining = () => (
-  <section className="px-5 md:px-10 flex flex-col border-t dark:border-neutral-800 border-neutral-200 items-center h-full bg-white dark:bg-neutral-950">
-    <div className="text-left py-7 max-w-[900px] w-full">
+  <section className="px-5 md:px-10 flex flex-col border-t dark:border-neutral-800 border-neutral-200 items-center h-full">
+    <div className="text-left py-7 max-w-[1200px] w-full">
       {/* Page Title */}
       <div className="pb-4 mb-6 border-b dark:border-neutral-800 border-neutral-200">
         <h1 className="text-4xl font-bold dark:text-white text-neutral-900 mb-2">
@@ -93,7 +93,7 @@ const Mining = () => (
     </div>
 
     {/* Navigation */}
-    <div className="flex mt-8 mb-10 justify-between max-w-[900px] w-full pt-8 border-t dark:border-neutral-800 border-neutral-200">
+    <div className="flex mt-8 mb-10 justify-between max-w-[1200px] w-full pt-8 border-t dark:border-neutral-800 border-neutral-200">
       <NavButton className="text-left" title="Nodes" subtitle="Previous" page="tensorlink/docs/nodes" />
       <NavButton className="text-right" title="Community" subtitle="Next" page="tensorlink/docs/community" />
     </div>

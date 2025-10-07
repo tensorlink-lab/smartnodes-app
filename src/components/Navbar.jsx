@@ -48,13 +48,13 @@ const Navbar = () => {
       )}
 
       {/* Desktop navbar */}
-      <ul className="list-none md:flex hidden justify-end px-5 items-center flex-1">
+      <ul className="list-none md:flex hidden justify-end px-5 py-1 items-center flex-1">
         {navLinks.map((nav, index) => (
           <li
             key={nav.id}
             className={`font-poppins font-normal cursor-pointer text-[16px] ${
               active === nav.title ? "dark:text-white text-black" : "dark:text-dimWhite text-gray-500"
-            } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`}
+            } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"} ${nav.title === "Dashboard" ? "transition-transform duration-300 hover:scale-105" : ""}`}
             onClick={() => setActive(nav.title)}
             style={{ zIndex: 10000 }}
           >
@@ -102,8 +102,15 @@ const Navbar = () => {
                   </ul>
                 </div>
               </div>
-            ) : nav.title == "Dashboard" ? (
-              <a href="/app#dashboard">{nav.title}</a>
+          ) : nav.title == "Dashboard" ? (
+              <a 
+                href="/app#dashboard"
+                className="relative px-4 py-2 rounded-lg font-semibold text-white overflow-hidden group"
+              >
+                <span className="relative z-10">{nav.title}</span>
+                <span className="absolute inset-0 bg-gradient-to-r rounded-lg from-purple-500/60 via-blue-500/60 to-pink-500/60 animate-gradient-x group-hover:from-purple-500/70 group-hover:via-blue-500/70 group-hover:to-pink-500/70 transition-all duration-300"></span>
+                <span className="absolute inset-0 bg-gradient-to-r rounded-lg from-purple-500/60 via-blue-500/60 to-pink-500/60 blur-md opacity-75 animate-gradient-x group-hover:opacity-100 group-hover:blur-md transition-all duration-300"></span>
+              </a>
             ) : (
               <a href={`/${nav.id}`}>{nav.title}</a>
             )}
@@ -191,6 +198,15 @@ const Navbar = () => {
                       </ul>
                     </div>
                   </div>
+                ) : nav.title == "Dashboard" ? (
+                  <a 
+                    href="/app#dashboard"
+                    className="relative px-4 py-2 rounded-lg font-semibold text-white overflow-hidden inline-block"
+                  >
+                    <span className="relative z-10">{nav.title}</span>
+                    <span className="absolute inset-0 bg-gradient-to-r rounded-lg from-purple-500/50 via-blue-500/50 to-pink-500/50 animate-gradient-x group-hover:from-purple-500/70 group-hover:via-blue-500/70 group-hover:to-pink-500/70 transition-all duration-300"></span>
+                    <span className="absolute inset-0 bg-gradient-to-r rounded-lg from-purple-500/50 via-blue-500/50 to-pink-500/50 blur-md opacity-75 animate-gradient-x group-hover:opacity-100 group-hover:blur-lg transition-all duration-300"></span>
+                  </a>
                 ) : (
                   <a href={`/${nav.id}`}>{nav.title}</a>
                 )}

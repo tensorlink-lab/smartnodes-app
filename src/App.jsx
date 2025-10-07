@@ -48,7 +48,7 @@ const App = () => {
   useWindowSizeHandler(setActiveMenu);
 
   return (
-    <div className="relative flex min-h-screen bg-gray-300 dark:bg-zinc-900">
+    <div className="relative flex-row min-h-screen bg-gray-200 dark:bg-zinc-900">
       <BrowserRouter>
         {/* Sidebar - now properly fixed */}
         {activeMenu && <Sidebar />}
@@ -88,9 +88,8 @@ const App = () => {
               <Route path="app" element={<SmartnodesApp activeMenu={activeMenu} />} />
               <Route path="*" element={<Smartnodes />} />
             </Routes>
+            <Footer />
           </main>
-          
-          <Footer />
         </div>
       </BrowserRouter>
     </div>

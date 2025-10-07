@@ -108,13 +108,13 @@ const DAODashboard = ({ dao, token, signer }) => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">DAO Dashboard</h1>
-        <button
+        <h1 className="text-xl sm:text-2xl dark:text-white font-bold pb-[700px]">DAO Dashboard (coming soon)</h1>
+        {/* <button
           onClick={() => setShowCreate(true)}
           className="flex items-center bg-blue-500 text-white px-3 py-2 rounded-lg shadow-md"
         >
           <MdAdd className="mr-1" /> New Proposal
-        </button>
+        </button> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

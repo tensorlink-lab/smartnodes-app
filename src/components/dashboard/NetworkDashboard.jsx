@@ -55,20 +55,6 @@ const NetworkDashboard = ({
     return () => observer.disconnect();
   }, []);
 
-  const formatBytes = (bytes) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
-
-  const formatNumber = (num) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toString();
-  };
-
   const getCapacityChartData = () => {
     if (!networkHistory) return null;
     const { labels, datasets } = networkHistory.daily;
@@ -82,16 +68,16 @@ const NetworkDashboard = ({
         {
           label: 'Total Capacity',
           data: datasets.total_capacity,
-          borderColor: 'rgba(105, 57, 234)',
-          backgroundColor: 'rgba(105, 57, 234, 0.1)',
+          borderColor: 'rgb(99, 102, 241)',
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
           fill: true,
           tension: 0.4,
         },
         {
           label: 'Used Capacity',
           data: datasets.used_capacity,
-          borderColor: 'rgba(225, 50, 80)',
-          backgroundColor: 'rgba(255, 152, 0, 0.1)',
+          borderColor: 'rgb(239, 68, 68)',
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
           fill: true,
           tension: 0.4,
         },
@@ -112,24 +98,24 @@ const NetworkDashboard = ({
         {
           label: 'Workers',
           data: datasets.workers,
-          borderColor: 'rgba(105, 57, 234)',
-          backgroundColor: 'rgba(105, 57, 234, 0.1)',
+          borderColor: 'rgb(99, 102, 241)',
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
           fill: true,
           tension: 0.4,
         },
         {
           label: 'Validators',
           data: datasets.validators,
-          borderColor: 'rgba(0, 221, 50)',
-          backgroundColor: 'rgba(3, 201, 115, 0.1)',
+          borderColor: 'rgb(34, 197, 94)',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
           fill: true,
           tension: 0.4,
         },
         {
           label: 'Users',
           data: datasets.users,
-          borderColor: '#85deca',
-          backgroundColor: 'rgba(139, 195, 74, 0.1)',
+          borderColor: 'rgb(239, 68, 68)',
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
           fill: true,
           tension: 0.4,
         },
@@ -150,8 +136,8 @@ const NetworkDashboard = ({
         {
           label: 'Jobs',
           data: datasets.jobs,
-          borderColor: 'rgba(225, 50, 80)',
-          backgroundColor: 'rgba(255, 0, 100, 0.1)',
+          borderColor: 'rgb(99, 102, 241)',
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
           fill: true,
           tension: 0.4,
         },
@@ -177,7 +163,8 @@ const NetworkDashboard = ({
       title: {
         display: true,
         text: 'Network Participants',
-        padding: { top: 5, bottom: 5 },
+        align: 'start',
+        padding: { top: 5, bottom: 15 },
         font: {
           size: 16,
           weight: 'bold',
@@ -187,21 +174,10 @@ const NetworkDashboard = ({
     },
     scales: {
       x: {
-        ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: { size: 11 },
-          maxRotation: 45,
-          minRotation: 0,
-        },
+        display: false,
       },
       y: {
-        ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: { size: 11 },
-          callback: function(value) {
-            return formatNumber(value);
-          }
-        },
+        display: false,
       }
     },
     elements: {
@@ -212,7 +188,7 @@ const NetworkDashboard = ({
     },
     animation: {
       duration: 1200,
-      easing: 'easeOutInQuart',
+      easing: 'easeInOutQuart',
     },
     interaction: {
       intersect: false,
@@ -238,7 +214,8 @@ const NetworkDashboard = ({
       title: {
         display: true,
         text: 'Job Activity',
-        padding: { top: 5, bottom: 5 },
+        align: 'start',
+        padding: { top: 5, bottom: 15 },
         font: {
           size: 16,
           weight: 'bold',
@@ -248,21 +225,10 @@ const NetworkDashboard = ({
     },
     scales: {
       x: {
-        ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: { size: 11 },
-          maxRotation: 45,
-          minRotation: 0,
-        },
+        display: false,
       },
       y: {
-        ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: { size: 11 },
-          callback: function(value) {
-            return formatNumber(value);
-          }
-        },
+        display: false,
       }
     },
     elements: {
@@ -273,7 +239,7 @@ const NetworkDashboard = ({
     },
     animation: {
       duration: 1200,
-      easing: 'easeOutInQuart',
+      easing: 'easeInOutQuart',
     },
     interaction: {
       intersect: false,
@@ -289,7 +255,7 @@ const NetworkDashboard = ({
         position: 'top',
         labels: {
           usePointStyle: true,
-          padding: 4,
+          padding: 10,
           boxWidth: 6,
           boxHeight: 6,
           font: { size: 12 },
@@ -298,8 +264,9 @@ const NetworkDashboard = ({
       },
       title: {
         display: true,
-        text: 'Capacity (Gb)',
-        padding: { top: 5, bottom: 5 },
+        text: 'GPU Capacity',
+        align: 'start',
+        padding: { top: 5, bottom: 15 },
         font: {
           size: 16,
           weight: 'bold',
@@ -312,28 +279,34 @@ const NetworkDashboard = ({
         bodyColor: '#fff',
         borderColor: '#374151',
         borderWidth: 1,
+        callbacks: {
+          label: function(context) {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            const bytes = context.parsed.y;
+            
+            // Convert bytes to GB or TB
+            if (bytes >= 1099511627776) { // 1 TB in bytes
+              label += (bytes / 1099511627776).toFixed(2) + ' TB';
+            } else if (bytes >= 1073741824) { // 1 GB in bytes
+              label += (bytes / 1073741824).toFixed(2) + ' GB';
+            } else {
+              label += bytes.toFixed(2) + ' Bytes';
+            }
+            
+            return label;
+          }
+        }
       }
     },
     scales: {
       x: {
-        ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: { size: 11 },
-          maxRotation: 45,
-          minRotation: 0,
-        },
+        display: false,
       },
       y: {
-        type: 'linear',
-        display: true,
-        position: 'left',
-        ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: { size: 11 },
-          callback: function(value) {
-            return formatBytes(value);
-          }
-        },
+        display: false,
       },
     },
     elements: {
@@ -344,7 +317,7 @@ const NetworkDashboard = ({
     },
     animation: {
       duration: 1200,
-      easing: 'easeOutInQuart',
+      easing: 'easeInOutQuart',
     },
     interaction: {
       intersect: false,
@@ -398,7 +371,7 @@ const NetworkDashboard = ({
           </div>
 
           {/* Charts Container - Three charts in grid */}
-          <motion.div className="grid grid-cols-1 lg:grid-cols-2 gap-1 mt-4 rounded-lg md:-mx-0 -mx-2">
+          <motion.div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1 mt-4 rounded-lg md:-mx-0 -mx-2">
             {/* User Activity Chart */}
             {userChartData && (
               <motion.div
@@ -429,7 +402,7 @@ const NetworkDashboard = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px] lg:col-span-2"
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
               >
                 <Line data={capacityChartData} options={capacityChartOptions} />
               </motion.div>
