@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ActionMenu, ConnectWalletButton } from "..";
+import { useState } from "react";
 
 const Account = ({ 
     handleActionClick,
@@ -7,11 +8,55 @@ const Account = ({
     userBalance,
     userLocked,
     userUnclaimed,
-    claimRewards,
     connectToContract,
     connectToCoinbaseWallet,
-    contract
+    contract,
+    claimData
  }) => {
+    const [claiming, setClaiming] = useState(false);
+    const [status, setStatus] = useState('');
+    const [error, setError] = useState('');
+
+    const handleBatchClaim = async () => {
+        if (!contract) {
+            setError('Contract not initialized. Please connect your wallet.');
+            return;
+        }
+
+        if (claimData.length === 0) {
+            setError('No claims available');
+            return;
+        }
+
+        setClaiming(true);
+        setError('');
+        setStatus('Preparing batch claim transaction...');
+
+        try {
+            const distributionIds = claimData.map(item => item.distribution_id);
+            const capacities = claimData.map(item => item.capacity);
+            const merkleProofs = claimData.map(item => item.merkle_proof || []);
+
+            setStatus('Submitting transaction...');
+
+            const tx = await contract.batchClaimMerkleRewards(
+            distributionIds,
+            capacities,
+            merkleProofs
+            );
+
+            setStatus('Transaction submitted. Waiting for confirmation...');
+            await tx.wait();
+            setStatus('Rewards claimed successfully!');
+        } catch (err) {
+            console.error('Error claiming rewards:', err);
+            setError(err.message || 'Failed to claim rewards. Please try again.');
+            setStatus('');
+        } finally {
+            setClaiming(false);
+        }
+    };
+    
     return (
         <div>
             <motion.div 
@@ -83,12 +128,6 @@ const Account = ({
                 </div>
                 
                 <div className="flex flex-wrap gap-3 items-center mt-2 px-1">
-                    <a
-                    onClick={claimRewards}
-                    className="border border-gray-400 inline-block p-1.5 px-3 text-white bg-blue-500 hover:bg-blue-600 rounded-md text-sm md:text-base font-semibold cursor-pointer"
-                    >
-                        Claim Rewards
-                    </a>
                     <div>
                         <ConnectWalletButton 
                             connectToContract={connectToContract} 
@@ -96,7 +135,26 @@ const Account = ({
                             contract={contract} 
                         />
                     </div>
+                    <a
+                        onClick={handleBatchClaim}
+                        className="border border-gray-400 inline-block p-1.5 px-3 text-white bg-blue-500 hover:bg-blue-600 rounded-md text-sm md:text-base font-semibold cursor-pointer"
+                    >
+                        Claim Rewards
+                    </a>
                 </div>
+                {/* Status Messages */}
+                {status && (
+                    <div className="mb-4 p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg flex items-center gap-2">
+                    <MdCheckCircle />
+                    <span>{status}</span>
+                    </div>
+                )}
+                {error && (
+                    <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-lg flex items-center gap-2">
+                    <MdError />
+                    <span>{error}</span>
+                    </div>
+                )}
             </motion.div>      
         </div>
     );

@@ -12,7 +12,7 @@ const Footer = () => (
         <img
           src={logo}
           alt="Smartnodes logo"
-          className="h-[50px] sm:h-[60px] bg-neutral-400 rounded-xl px-2 object-contain max-w-[220px] mb-4"
+          className="h-[50px] sm:h-[60px] bg-neutral-300 rounded-xl px-2 object-contain max-w-[220px] mb-4"
         />
         <p className="text-base leading-relaxed dark:text-neutral-400 text-neutral-600 max-w-[300px]">
           Empowering innovation with scalable, distributed networks for data processing and computation in Python.

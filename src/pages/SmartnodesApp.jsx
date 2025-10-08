@@ -108,6 +108,18 @@ const SmartnodesApp = ({ activeMenu }) => {
     if (readOnlyContracts.token) {
       getSmartContractStats();
     }
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        if (accounts.length > 0) {
+          setUserAddress(accounts[0]);
+          setIsWalletConnected(true);
+          getUserData(tokenContract, accounts[0]);
+        } else {
+          setIsWalletConnected(false);
+          setUserAddress(null);
+        }
+      });
+    }
   }, [readOnlyContracts.token]);
 
   // Function to fetch public network stats
@@ -217,9 +229,14 @@ const SmartnodesApp = ({ activeMenu }) => {
       
       let lockedTokens;
       try {
-        lockedTokens = await tokenContractInstance.getLockedTokens(address);
+        const lockInfo = await tokenContractInstance.getLockInfo(address);
+        const { locked, isValidator, timestamp, lockAmount } = lockInfo;
+        lockedTokens = { sno: Number(ethers.formatUnits(lockAmount, 18)).toFixed(2), eth: 0 };
+        setUserLocked(lockedTokens.sno);
+        console.log(lockInfo);
       } catch (error) {
         lockedTokens = { sno: 0, eth: 0 };
+        console.log(error);
       }
       
       // Process the results
@@ -241,46 +258,65 @@ const SmartnodesApp = ({ activeMenu }) => {
     }
   };
 
-  // Connect to MetaMask/Web3 wallet
+  const [connecting, setConnecting] = useState(false);
+
   const connectToContract = async () => {
+    if (connecting) return; // Prevent multiple simultaneous calls
+    setConnecting(true);
+    setStatus('Connecting to wallet...');
+    setError('');
+
     try {
-      setStatus('Connecting to wallet...');
-      setError('');
-      
+      if (!window.ethereum) {
+        setStatus('MetaMask not detected');
+        setError('Please install MetaMask');
+        return;
+      }
+
       const correctNetwork = await checkAndSwitchNetwork();
       if (!correctNetwork) {
         setStatus('Please connect to Base Sepolia network to continue.');
         return;
       }
 
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      // Check if already connected
+      let accounts = await window.ethereum.request({ method: 'eth_accounts' });
+      if (accounts.length === 0) {
+        // Only request accounts if not already connected
+        accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      }
+
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      
-      // Create contract instances with signer
-      const tokenContractInstance = new ethers.Contract(CONTRACT_ADDRESSES.token, tokenAbi, signer);
-      const multisigContractInstance = new ethers.Contract(CONTRACT_ADDRESSES.coordinator, coordinatorAbi, signer);
-      const coreContractInstance = new ethers.Contract(CONTRACT_ADDRESSES.core, coreAbi, signer);
-      const daoContractInstance = new ethers.Contract(CONTRACT_ADDRESSES.dao, daoAbi, signer);
 
+      // Create contract instances
+      const tokenContractInstance = new ethers.Contract(CONTRACT_ADDRESSES.token, tokenAbi, signer);
       setTokenContract(tokenContractInstance);
-      setMultisigContract(multisigContractInstance);
-      setCoreContract(coreContractInstance);
-      setDAOContract(daoContractInstance);
+      setMultisigContract(new ethers.Contract(CONTRACT_ADDRESSES.coordinator, coordinatorAbi, signer));
+      setCoreContract(new ethers.Contract(CONTRACT_ADDRESSES.core, coreAbi, signer));
+      setDAOContract(new ethers.Contract(CONTRACT_ADDRESSES.dao, daoAbi, signer));
       setUserAddress(accounts[0]);
+      setSigner(signer);
       setIsWalletConnected(true);
-      setSigner(signer);  
       
       // Fetch user data
       await getUserData(tokenContractInstance, accounts[0]);
-      
+
+      setStatus('Wallet connected');
     } catch (error) {
       console.error('Connection error:', error);
-      setStatus('Error connecting to wallet.');
-      setError(error.message || 'Failed to connect wallet');
+      if (error.code === -32002) {
+        setStatus('MetaMask request already pending. Please check your wallet.');
+      } else {
+        setStatus('Error connecting to wallet.');
+        setError(error.message || 'Failed to connect wallet');
+      }
       setIsWalletConnected(false);
+    } finally {
+      setConnecting(false);
     }
   };
+
 
   // Connect to Coinbase Wallet
   const connectToCoinbaseWallet = async () => {
@@ -301,7 +337,7 @@ const SmartnodesApp = ({ activeMenu }) => {
       setUserAddress(accounts[0]);
       setIsWalletConnected(true);
       
-      await getUserData(tokenContract, accounts[0]);
+      await getUserData(tokenContractInstance, accounts[0]);
       
     } catch (error) {
       console.error('Coinbase Wallet connection error:', error);
@@ -311,40 +347,12 @@ const SmartnodesApp = ({ activeMenu }) => {
     }
   };
 
-  // Claim rewards function
-  const claimRewards = async () => {
-    if (!tokenContract) {
-      setStatus('Connect to the wallet first to claim rewards.');
-      return;
-    }
-    
-    try {
-      setStatus('Claiming rewards...');
-      setError('');
-      
-      const tx = await tokenContract.claimRewards();
-      setStatus('Transaction submitted. Waiting for confirmation...');
-      
-      await tx.wait();
-      setStatus('Rewards claimed successfully!');
-      
-      // Refresh user data
-      await getUserData(tokenContract, userAddress);
-      
-    } catch (error) {
-      console.error('Error claiming rewards:', error);
-      setStatus('Error claiming rewards.');
-      setError(error.message || 'Failed to claim rewards');
-    }
-  };
-  
   return (
     <SmartnodesDashboard 
       supplyStats={supplyStats}
       userAddress={userAddress}
       userBalance={userBalance}
       userLocked={userLocked}
-      claimRewards={claimRewards}
       contract={tokenContract}
       tokenAddress={CONTRACT_ADDRESSES.token}
       coordinatorAddress={CONTRACT_ADDRESSES.coordinator}

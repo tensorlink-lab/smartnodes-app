@@ -17,10 +17,13 @@ import {
   MdClose,
   MdLogin
 } from 'react-icons/md';
-import { ConnectWalletButton, ActionMenu } from "..";
-
+import { ConnectWalletButton, ClaimRewardsComponent, ActionMenu } from "..";
 
 const NodeDashboard = ({ 
+  claimInfo,
+  userUnclaimed,
+  setUserUnclaimed,
+  fetchNetworkData,
   userAddress = "-",
   contract = null,
 }) => {
@@ -87,7 +90,7 @@ const NodeDashboard = ({
     if (savedNodes.length > 0) {
       setTrackedNodes(savedNodes);
     } else {
-      setTrackedNodes(mockActiveNodes);
+      setTrackedNodes(trackedNodes);
     }
   }, []);
 
@@ -315,10 +318,10 @@ const NodeDashboard = ({
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="bg-neutral-100 mb-2 dark:bg-neutral-900 rounded-xl dark:text-gray-200 p-0 xs:p-4 overflow-x-auto border border-black dark:border-gray-400 max-w-[1300px] relative"
+        className="bg-neutral-100 mb-10 dark:bg-neutral-900 rounded-xl dark:text-gray-200 p-0 xs:p-4 overflow-x-auto border border-black dark:border-gray-400 max-w-[1300px] relative"
       >
         {/* Tracked Nodes Section */}
-        <div className="mb-6">
+        <div className="mb-2">
           <div className="bg-white dark:bg-zinc-800 rounded-lg p-2 sm:px-4 sm:pb-4 border border-gray-300 dark:border-gray-600">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold flex items-center gap-2 dark:text-white">
@@ -386,9 +389,14 @@ const NodeDashboard = ({
           </div>
         </div>
 
+        <ClaimRewardsComponent 
+          claimData={claimInfo} 
+          userAddress={userAddress}
+          setUnclaimed={setUserUnclaimed}
+        />
+
         {/* User Jobs Section */}
-        <div className="space-y-4">
-          {/* Jobs List */}
+        {/* <div className="space-y-4 mt-2">
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-300 dark:border-gray-600">
             <h2 className="text-lg font-bold flex items-center gap-2 mb-4 dark:text-white">
               <MdAssignment className="text-purple-500" />
@@ -441,7 +449,7 @@ const NodeDashboard = ({
               </div>
             )}
           </div>
-        </div>
+        </div> */}
 
         <AnimatePresence>
           {showSignupModal && <div>Signup Modal</div>}

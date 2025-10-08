@@ -14,6 +14,7 @@ import {
 } from 'chart.js';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { useMediaQuery } from "react-responsive";
+import { ProposalsTable, ProposalsBarChart } from "..";
 import { MdLink, MdLibraryAddCheck, MdMonetizationOn, MdVerified, MdCheck, MdLaunch, MdSecurity } from "react-icons/md";
 
 // Register Chart.js components
@@ -34,14 +35,17 @@ const SupplyStatsCard = ({
   tokenAddress,
   coordinatorAddress,
   coreAddress,
-  daoAddress
+  daoAddress,
+  proposals
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(
     document.documentElement.classList.contains('dark')
   );
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-
+  const [currentPage, setCurrentPage] = useState(0);
+  const [activeView, setActiveView] = useState('capacity');
+  const ITEMS_PER_PAGE = 10;
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const isDark = document.documentElement.classList.contains('dark');
@@ -55,7 +59,6 @@ const SupplyStatsCard = ({
 
     return () => observer.disconnect();
   }, []);
-
 
   // Format with 3 significant figures + suffix
   const formatValue = (num) => {
@@ -345,7 +348,7 @@ const SupplyStatsCard = ({
           initial={{ opacity: 0, x: 0 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className={`flex flex-col items-center justify-center bg-neutral-200 dark:bg-neutral-900 rounded-xl border border-gray-600 dark:border-neutral-500 transition-all duration-500 
+          className={`flex flex-col items-center justify-center bg-neutral-200/20 dark:bg-neutral-900 rounded-xl border border-gray-600 dark:border-neutral-500 transition-all duration-500 
             ${showEmissionsChart ? 'lg:max-w-[600px] md:max-w-[460px]' : 'lg:max-w-[490px] max-w-[420px]'} 
             w-full`}
         >
@@ -456,19 +459,18 @@ const SupplyStatsCard = ({
         </motion.div>
     
       </div>
-
-
-        {/* Contract Info */}
+        
+      {/* Proposals Section - Grid Layout */}
+      <div className="flex flex-col md:flex-row gap-2 mt-2 mx-auto">
+                {/* Contract Info */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-gray-200 w-full dark:bg-zinc-800 rounded-lg min-w-[250px] max-w-[450px] dark:text-gray-200 p-5 border border-black/20 dark:border-gray-500 sm:mt-2"
+          className="flex-shrink-0 w-full md:w-[450px] bg-gray-200 dark:bg-zinc-800 rounded-lg min-w-[250px] max-w-[450px] dark:text-gray-200 p-5 border border-black/20 dark:border-gray-500"
         >
           <h1 className="font-bold text-xl md:text-2xl dark:text-white mb-3">Contract Addresses</h1>
-
           <div className="space-y-3">
-
             {/* Token Contract */}
             <div className="flex flex-col space-y-1">
               <div className="flex items-center gap-2">
@@ -590,31 +592,40 @@ const SupplyStatsCard = ({
             </div>
           </div>
         </motion.div>
-      
+        
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex w-full min-w-0 flex-1"
+        >
+          <div className="w-full min-w-0">
+            <ProposalsBarChart
+              proposals={proposals}
+              currentPage={currentPage}
+              ITEMS_PER_PAGE={ITEMS_PER_PAGE}
+              activeView={activeView}
+              setActiveView={setActiveView}
+              isDarkMode={isDarkMode}
+              isSmallScreen={isSmallScreen}
+            />
+          </div>
+        </motion.div>
+      </div>
 
-      <motion.div className="flex flex-wrap justify-start gap-1 items-center w-full mb-4">
-          {/* {summaryCards.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              className="flex xs:pl-1 xs:flex-col pb-1 bg-neutral-100 dark:bg-slate-600 xs:h-[92px] dark:text-gray-200 dark:bg-secondary-dark-bg min-w-[200px] xs:min-w-[155px] rounded-2xl m-1 border border-gray-400 dark:border-neutral-300"
-            >
-              <div className="px-3 flex items-center mt-1 xs:mt-3">
-                <button
-                  type="button"
-                  style={{ color: item.iconColor, backgroundColor: item.iconBg }}
-                  className="text-2xl opacity-0.9 rounded-full max-h-[55px] p-2 border border-gray-300 hover:drop-shadow-xl xs:ml-1 -ml-1"
-                >
-                  {item.icon}
-                </button>
-                <span className="text-xl xs:text-2xl xs:ml-5 ml-3 font-semibold">{item.amount}</span>
-              </div>
-              <p className="text-md dark:text-gray-200 xs:mt-0 xs:mr-0 my-2 pt-1 mr-4 xs:ml-3">{item.title}</p>
-            </motion.div>
-          ))} */}
-      </motion.div>
+      {/* Bottom Row: Table */}
+      <div className="mt-2">
+        <motion.div>
+          <ProposalsTable
+            proposals={proposals}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            ITEMS_PER_PAGE={ITEMS_PER_PAGE}
+            isDarkMode={isDarkMode}
+            isSmallScreen={isSmallScreen}
+          />
+        </motion.div>
+      </div>
     </div>
   );
 };

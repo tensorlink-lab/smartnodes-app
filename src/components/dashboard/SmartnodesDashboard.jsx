@@ -112,7 +112,6 @@ const SmartnodesDashboard = ({
     userAddress, 
     userBalance, 
     userLocked, 
-    claimRewards,
     contract,
     dao,
     token,
@@ -140,7 +139,7 @@ const SmartnodesDashboard = ({
         },
         {
             id: DASHBOARD_TYPES.NETWORK,
-            name: 'Network',
+            name: 'Ecosystem',
             icon: <MdLanguage />
         },
         {
@@ -188,9 +187,40 @@ const SmartnodesDashboard = ({
     const [networkHistory, setNetworkHistory] = useState(null);
     const [modelDemand, setModelDemand] = useState(null);
     const [activeDashboard, setActiveDashboard] = useState(getSavedDashboard());
-    const [useLocalData, setUseLocalData] = useState(true); // Toggle for local testing
+    const [useLocalData, setUseLocalData] = useState(false); // Toggle for local testing
     const [error, setError] = useState(null);
     const [userUnclaimed, setUserUnclaimed] = useState("-");
+    const [proposals, setProposals] = useState({
+        "f09b231df866b0cad1cb80ecd2877c80f519d1559cdbca22dddf36757cb4a19c": {
+            validators: [],
+            job_hashes: ["86a5f2d3b583f8f8ef7baac48a16d4a2a36d370575c78ed8de2bbebfdde89b48"],
+            job_capacities: [221823030],
+            workers: ["0x560fd8449eBAdAfE8168a560F656148F655459Ca"],
+            total_capacity: [24641994752],
+            total_workers: [1],
+            distribution_id: 1,
+            merkle_root: "a8f91bdcbb8a45852ace17fae6a36da4edc71f267737f6be008442b2a8d76036",
+            workers_hash: "db991787d5936e9a20e62084516ad73523339e79bbf6fc4fbadaefb0dba78772",
+            capacities_hash: "84a89de7dea777efe1af81da8d654dd3870fdc317283c1f52bfe9c89338b7e61"
+        },
+        "2041668305650f3c0076bc510a17efb7f233a26b1e8eeef57f008fef3ce8d7f3": {
+            validators: [],
+            job_hashes: [
+            "75d2c3444c96712a1d448f393fa0ef35137b5f632d089c2df355896c635adbd6",
+            "981e34217cf920b640142c5d4a4991da00369ff2da745b79b9e5607d5d636264"
+            ],
+            job_capacities: [443615273],
+            workers: ["0x560fd8449eBAdAfE8168a560F656148F655459Ca"],
+            total_capacity: [0],
+            total_workers: [0],
+            distribution_id: 2,
+            merkle_root: "4817c90023edb8e2464c9bbeeeb1e79b36d228fa679d1fa0248ba03a26d8742c",
+            workers_hash: "db991787d5936e9a20e62084516ad73523339e79bbf6fc4fbadaefb0dba78772",
+            capacities_hash: "45e9f4d72e026e96e14d019d21be2ede672209c890fe9f5a561d9c8da210a0a2"
+        }
+        }
+    ); 
+    const [claimInfo, setClaimInfo] = useState([]);    
 
     // Custom setter that also saves to localStorage
     const updateActiveDashboard = (dashboard) => {
@@ -204,12 +234,14 @@ const SmartnodesDashboard = ({
         switch (activeDashboard) {
             case DASHBOARD_TYPES.SUPPLY_STATS:
                 return (
+
                     <SupplyStatsCard 
                         supplyStats={supplyStats}
                         tokenAddress={tokenAddress}
                         coordinatorAddress={coordinatorAddress}
                         coreAddress={coreAddress}
                         daoAddress={daoAddress}
+                        proposals={proposals}
                     />
                 );
             case DASHBOARD_TYPES.NETWORK:
@@ -232,12 +264,18 @@ const SmartnodesDashboard = ({
                         userBalance={userBalance}
                         userLocked={userLocked}
                         userUnclaimed={userUnclaimed}
-                        claimRewards={claimRewards}
                         connectToContract={connectToContract} 
                         connectToCoinbaseWallet={connectToCoinbaseWallet} 
                         contract={contract} 
+                        claimData={claimInfo}
                     />
-                    <NodeDashboard />
+                    <NodeDashboard 
+                        claimInfo={claimInfo}
+                        userAddress={userAddress}
+                        contract={contract}
+                        fetchNetworkData={fetchNetworkData}
+                        setUserUnclaimed={setUserUnclaimed}
+                    />
                 </div>
             
             default:
@@ -252,8 +290,8 @@ const SmartnodesDashboard = ({
         }
     };
 
-    // const API_BASE_URL = "https://smartnodes.ddns.net/tensorlink-api";
-    const API_BASE_URL = "http://192.168.2.54:64747";
+    const API_BASE_URL = "https://smartnodes.ddns.net/tensorlink-api";
+    // const API_BASE_URL = "http://192.168.2.54:64747";
     
     const fetchNetworkData = async () => {
         try {
@@ -286,16 +324,7 @@ const SmartnodesDashboard = ({
             const historyData = await historyResponse.json();
             const modelData = await models.json();
 
-            console.log(userAddress);
-            if (userAddress !== "-") {
-                const response = await fetch(`${API_BASE_URL}/worker-info?worker_address=${userAddress}`);
-                console.log(response);
-                if (!response.ok) throw new Error(`Failed to find worker rewards.`);
-                
-                const unclaimed = await response.json();
-                setUserUnclaimed(unclaimed);
-            }
-            
+            fetchProposals();
             setNetworkStats(statsData);
             setNetworkHistory(historyData);
             setModelDemand(modelData);
@@ -307,6 +336,24 @@ const SmartnodesDashboard = ({
             setLoading(false);
         }
     };
+
+    const fetchRewards = async () => {
+        if (userAddress !== "-") {
+            const response = await fetch(`${API_BASE_URL}/claim-info?node_address=${userAddress}`);
+            console.log(response);
+            if (!response.ok) throw new Error(`Failed to find worker rewards.`);
+            
+            const unclaimed = await response.json();
+            setClaimInfo(unclaimed);
+        }
+    };
+
+    const fetchProposals = async () => {
+        const response = await fetch(`${API_BASE_URL}/proposal-history`);
+        if (!response.ok) throw new Error(`Failed to find proposals.`);
+        const p = await response.json();
+        setProposals(p);
+    }
 
     const handleActionClick = (actionId) => {
         switch (actionId) {
@@ -338,6 +385,12 @@ const SmartnodesDashboard = ({
             titleRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
         }
     }, []);
+
+    useEffect(() => {
+        if (userAddress !== "-") {
+            fetchRewards();
+        }
+    }, [userAddress]);
 
     const handleAirdropAction = () => {
         console.log("Learn more about airdrop clicked");

@@ -16,6 +16,18 @@ import { ModelDemand } from "..";
 import { MdCircle } from "react-icons/md";
 import { Line } from 'react-chartjs-2';
 
+const formatCapacity = (bytes) => {
+  if (bytes >= 1099511627776) { // 1 TB in bytes
+    return (bytes / 1099511627776).toFixed(1) + ' TB';
+  } else if (bytes >= 1073741824) { // 1 GB in bytes
+    return (bytes / 1073741824).toFixed(1) + ' GB';
+  } else if (bytes >= 1048576) { // 1 MB in bytes
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  } else {
+    return bytes.toFixed(0) + ' B';
+  }
+};
+
 // Register Chart.js components
 ChartJS.register(
   ArcElement,
@@ -166,7 +178,7 @@ const NetworkDashboard = ({
         align: 'start',
         padding: { top: 5, bottom: 15 },
         font: {
-          size: 16,
+          size: 17,
           weight: 'bold',
         },
         color: isDarkMode ? "white" : "black"
@@ -174,11 +186,29 @@ const NetworkDashboard = ({
     },
     scales: {
       x: {
-        display: false,
+        display: true,
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
+        },
       },
       y: {
-        display: false,
-      }
+        display: true,
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
+        },
+      },
     },
     elements: {
       point: {
@@ -217,7 +247,7 @@ const NetworkDashboard = ({
         align: 'start',
         padding: { top: 5, bottom: 15 },
         font: {
-          size: 16,
+          size: 17,
           weight: 'bold',
         },
         color: isDarkMode ? "white" : "black"
@@ -225,11 +255,29 @@ const NetworkDashboard = ({
     },
     scales: {
       x: {
-        display: false,
+        display: true,
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
+        },
       },
       y: {
-        display: false,
-      }
+        display: true,
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
+        },
+      },
     },
     elements: {
       point: {
@@ -268,7 +316,7 @@ const NetworkDashboard = ({
         align: 'start',
         padding: { top: 5, bottom: 15 },
         font: {
-          size: 16,
+          size: 17,
           weight: 'bold',
         },
         color: isDarkMode ? "white" : "black"
@@ -303,10 +351,31 @@ const NetworkDashboard = ({
     },
     scales: {
       x: {
-        display: false,
+        display: true,
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
+        },
       },
       y: {
-        display: false,
+        display: true,
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 },
+          callback: function(value) {
+            return formatCapacity(value);
+          }
+        },
       },
     },
     elements: {
@@ -360,11 +429,119 @@ const NetworkDashboard = ({
         initial={{ opacity: 0, x: 40 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6, delay: 0 }}
-        className="mb-6 xs:-mx-0 -mx-1"
+        className="mb-6 -mx-1 sm:-mx-3"
       >
-        <div className="border border-gray-400 rounded-xl p-4 bg-gray-200 dark:bg-neutral-800 shadow-sm min-h-[500px]">
+        {/* Active Networks Section */}
+        <motion.div 
+          className="my-1"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Active Networks</h3>
+            <div className="h-px flex-1 bg-gradient-to-r from-gray-300 dark:from-gray-700 to-transparent ml-4" />
+          </div>
+          
+          <div className="flex flex-wrap gap-2 pb-2">
+            {/* Tensorlink - Active Network */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="relative group flex-1 min-w-[200px] max-w-[325px]"
+            >
+              <div className="relative flex items-center bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 dark:from-emerald-950/30 dark:via-green-950/30 dark:to-teal-950/30 rounded-xl px-4 py-0 border border-green-200 dark:border-green-800/50 shadow-sm hover:shadow-lg cursor-pointer transition-all duration-300 overflow-hidden">
+                {/* Animated gradient background */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-green-400/0 via-green-400/10 to-green-400/0 dark:from-green-500/0 dark:via-green-500/10 dark:to-green-500/0"
+                  animate={{ 
+                    x: ['-100%', '100%']
+                  }}
+                  transition={{ 
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+                
+                {/* Pulse effect */}
+                <motion.div 
+                  className="absolute inset-0 bg-green-400/5 dark:bg-green-500/5"
+                  animate={{ 
+                    opacity: [0.3, 0.6, 0.3]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                
+                <div className="relative flex items-center gap-3 w-full">
+                  {/* Animated status indicator */}
+                  <div className="relative flex items-center justify-center">
+                    <motion.div
+                      className="absolute w-5 h-5 bg-green-500 dark:bg-green-400 rounded-full"
+                      animate={{ 
+                        scale: [1, 1.8, 1],
+                        opacity: [0.6, 0, 0.6]
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeOut"
+                      }}
+                    />
+                    <div className="relative w-3 h-3 bg-green-500 dark:bg-green-400 rounded-full shadow-lg shadow-green-500/50" />
+                  </div>
+                  
+                  <div className="flex items-center justify-between flex-1 gap-3">
+                    <div className="flex flex-col py-1">
+                      <span className="text-green-900 dark:text-green-100 font-bold text-base">Tensorlink</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-500">On-demand AI Compute</span>
+                    </div>
+                    
+                    <motion.span 
+                      className="text-xs font-bold text-green-700 dark:text-green-300 bg-green-200 dark:bg-green-900/60 px-3 py-1 rounded-full border border-green-300 dark:border-green-700 shadow-sm"
+                      animate={{ 
+                        scale: [1, 1.05, 1]
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      Online
+                    </motion.span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Coming Soon */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              className="flex items-center bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900/30 dark:to-gray-900/30 rounded-xl px-4 py-1 border border-slate-200 dark:border-slate-800 shadow-sm"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-slate-300 dark:bg-slate-600 rounded-full" />
+                <div className="flex flex-col">
+                  <span className="text-slate-600 dark:text-slate-300 font-semibold text-sm">More networks</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-500 italic">Coming soon...</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+        </motion.div>
+
+        <div className="border border-gray-400 rounded-xl p-4 md:px-2 px-3 bg-neutral-50 dark:bg-zinc-900 shadow-sm min-h-[500px]">
           {/* Header section */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1 px-1">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1 px-3">
             <h1 className="font-extrabold text-xl sm:text-2xl text-neutral-800 dark:text-white">
               Tensorlink Network Analytics
             </h1>
@@ -378,7 +555,7 @@ const NetworkDashboard = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
-                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-3 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
               >
                 <Line data={userChartData} options={userChartOptions} />
               </motion.div>
@@ -390,7 +567,7 @@ const NetworkDashboard = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-3 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
               >
                 <Line data={jobsChartData} options={jobsChartOptions} />
               </motion.div>
@@ -402,7 +579,7 @@ const NetworkDashboard = ({
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-3 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
               >
                 <Line data={capacityChartData} options={capacityChartOptions} />
               </motion.div>

@@ -38,9 +38,14 @@ import AirdropIndicator from "./AirdropIndicator";
 import ModelDemand from "./ModelDemand";
 import Framework from "./Framework";
 import ToPortal from "./ToPortal";
+import ClaimRewardsComponent from "./dashboard/Rewards";
+import { ProposalsTable, ProposalsBarChart } from "./dashboard/ProposalsChart";
 
 export {
+  ProposalsTable,
+  ProposalsBarChart,
   ToPortal,
+  ClaimRewardsComponent,
   DAODashboard,
   ModelDemand,
   AirdropIndicator,
