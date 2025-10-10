@@ -249,7 +249,7 @@ const NodeDashboard = ({
         exit={{ opacity: 0, scale: 0.95 }}
         className="bg-neutral-50 dark:bg-gray-700 p-2 sm:p-4 rounded-lg border border-gray-300 dark:border-gray-600"
       >
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {nodeType === 'validator' ? (
               <MdVerifiedUser className="text-green-500" size={20} />
@@ -318,10 +318,10 @@ const NodeDashboard = ({
         initial={{ opacity: 0, x: 100 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="bg-neutral-100 mb-10 dark:bg-neutral-900 rounded-xl dark:text-gray-200 p-0 xs:p-4 overflow-x-auto border border-black dark:border-gray-400 max-w-[1300px] relative"
+        className="bg-neutral-100 mb-10 dark:bg-neutral-900 rounded-xl dark:text-gray-200 p-0 xs:p-4 overflow-x-auto border border-black dark:border-gray-400 grid max-w-[1300px] relative lg:grid-cols-2 gap-1"
       >
         {/* Tracked Nodes Section */}
-        <div className="mb-2">
+        <div>
           <div className="bg-white dark:bg-zinc-800 rounded-lg p-2 sm:px-4 sm:pb-4 border border-gray-300 dark:border-gray-600">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold flex items-center gap-2 dark:text-white">
@@ -368,10 +368,12 @@ const NodeDashboard = ({
 
             {/* Tracked Nodes List */}
             {trackedNodes.length > 0 ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="flex flex-col items-center gap-3">
                 <AnimatePresence>
                   {trackedNodes.map((node) => (
-                    <NodeCard key={node.pubKeyHash} node={node} />
+                    <div className="w-full">
+                      <NodeCard key={node.pubKeyHash} node={node} />
+                    </div>
                   ))}
                 </AnimatePresence>
               </div>

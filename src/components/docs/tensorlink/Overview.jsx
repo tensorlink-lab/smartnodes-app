@@ -22,16 +22,16 @@ const Overview = () => (
       <div className="mb-12">
         <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
           Tensorlink is a decentralized computational platform that enables distributed inference and training of PyTorch models 
-          across a peer-to-peer network of incentivized nodes. It eliminates the need for dedicated AI hardware by allowing users 
-          to run, share, and access models through a distributed network while earning rewards for contributing compute resources. 
+          across a peer-to-peer network. It eliminates the need for dedicated AI hardware by allowing users to run, share, and access 
+          models through a distributed network while earning rewards for contributing compute resources. 
         </p>
         <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
-          The platform integrates directly into PyTorch codebases through REST APIs for popular Hugging Face models and lightweight 
-          wrappers around core PyTorch objects like modules and optimizers. Unlike existing services, Tensorlink provides native 
-          PyTorch integration alongside flexible API access, enabling seamless transitions between local and distributed execution. 
+          Unlike existing services, Tensorlink provides native PyTorch integration alongside flexible API access, enabling seamless 
+          transitions between local and distributed execution. The platform integrates directly into PyTorch codebases through REST 
+          APIs for popular Hugging Face models and lightweight wrappers around core PyTorch objects like modules and optimizers. 
           Nodes connect through a smart contract-secured peer-to-peer mesh, with GPU providers earning token rewards similar to 
-          Folding@Home or Gridcoin. Users can also expose personal GPUs as private endpoints, allowing secure access to AI resources 
-          from external applications while maintaining complete data privacy.
+          Folding@Home or Gridcoin. Users can also expose their personal GPUs as private endpoints, allowing secure access to AI 
+          resources from external applications while maintaining complete data privacy.
         </p>
       </div>
 

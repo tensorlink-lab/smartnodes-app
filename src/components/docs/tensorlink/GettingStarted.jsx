@@ -11,34 +11,36 @@ const GettingStarted = () => (
   >
     <div className="text-left py-7 max-w-[1200px] w-full">
       {/* Page Title */}
-      <div className="pb-4 mb-4 border-b dark:border-neutral-800 border-neutral-200">
-        <h1 className="text-4xl font-bold dark:text-white text-neutral-900 mb-2">
+      <div className="pb-4 mb-4 border-b border-neutral-200 dark:border-neutral-800">
+        <h1 className="text-4xl font-bold text-neutral-900 dark:text-white mb-2">
           Getting Started
         </h1>
-        <p className="text-lg dark:text-neutral-400 text-neutral-600">
+        <p className="text-lg text-neutral-600 dark:text-neutral-400">
           Install Tensorlink and set up your environment for distributed model training.
         </p>
       </div>
 
       {/* Introduction */}
       <div className="mb-12">
-        <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
-          This section guides you through the installation of Tensorlink and its prerequisites. 
-          If your primary goal is to run a distributed model in Python, follow along here. 
-          For alternative entry points, you may also explore:
+        <p className="text-base leading-relaxed text-neutral-700 dark:text-neutral-300 mb-4">
+          This section guides you through the installation of Tensorlink and its prerequisites.
+          If your primary goal is to run a distributed model in Python, follow along here.
+          For model API access, you may also explore the{" "}
+          <a
+            href="/tensorlink/docs/api"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            Inference API
+          </a>{" "}
+          section. If you want to contribute compute resources to the network, see the{" "}
+          <a
+            href="/tensorlink/docs/mining"
+            className="text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            Contributing Resources (Mining)
+          </a>{" "}
+          guide.
         </p>
-        <ul className="list-disc pl-6 space-y-2 text-base dark:text-neutral-300 text-neutral-700">
-          <li>
-            <a href="/mining" className="text-blue-600 dark:text-blue-400 hover:underline">
-              Contributing Resources (Mining)
-            </a>
-          </li>
-          <li>
-            <a href="/inference" className="text-blue-600 dark:text-blue-400 hover:underline">
-              Inference APIs
-            </a>
-          </li>
-        </ul>
       </div>
 
       {/* Requirements */}

@@ -74,20 +74,7 @@ const ApiExample = () => (
           offering on-demand access to pre-trained Hugging Face models. 
           Both free and paid inference options are supported. The public 
           model list is maintained on our GitHub and updated regularly.
-        </p>
-        <ul className="list-disc pl-6 text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
-          <li>
-            <code className="bg-neutral-100 dark:bg-neutral-900 px-1 py-0.5 rounded text-sm font-mono">
-              Qwen/Qwen3-8B
-            </code>{" "}
-            – General Purpose Language Model
-          </li>
-        </ul>
-        <div className="bg-amber-50 dark:bg-amber-950/20 border-l-4 border-amber-500 p-4 mb-6">
-          <p className="text-sm dark:text-amber-200 text-amber-900">
-            ⚠️ Larger models will become available as more nodes join the network.
-          </p>
-        </div>
+        </p>wq3
       </div>
 
       {/* Example: Python */}

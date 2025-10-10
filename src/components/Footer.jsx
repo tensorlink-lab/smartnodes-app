@@ -22,8 +22,8 @@ const Footer = () => (
       {/* Footer Links */}
       <div className="flex flex-wrap gap-1 md:gap-5">
         {footerLinks.map((footerlink) => (
-          <div key={footerlink.title} className="flex flex-col min-w-[150px]">
-            <h4 className="text-lg font-semibold dark:text-white text-neutral-900 mb-3">
+          <div key={footerlink.title} className="flex flex-col min-w-[150px] mt-2">
+            <h4 className="text-md sm:text-lg font-semibold dark:text-white text-neutral-900 mb-3">
               {footerlink.title}
             </h4>
             <ul className="space-y-2">
@@ -35,7 +35,7 @@ const Footer = () => (
                         navigator.clipboard.writeText(link.link);
                         alert(`${link.name.split(":")[0]} address copied!`); // ✅ optional feedback
                       }}
-                      className="flex items-center gap-2 cursor-pointer text-base dark:text-neutral-400 text-neutral-600 hover:text-blue-500 transition"
+                      className="flex items-center gap-2 cursor-pointer text-sm md:text-md dark:text-neutral-400 text-neutral-600 hover:text-blue-500 transition"
                     >
                       <span>{link.name.split(":")[0]}</span>
                       <FaRegCopy className="w-4 h-4 opacity-70 hover:opacity-100" />
@@ -43,7 +43,7 @@ const Footer = () => (
                   ) : (
                     <a
                       href={link.link}
-                      className="text-base dark:text-neutral-400 text-neutral-600 hover:text-blue-500 transition"
+                      className="text-sm md:text-md dark:text-neutral-400 text-neutral-600 hover:text-blue-500 transition"
                     >
                       {link.name}
                     </a>
@@ -62,7 +62,7 @@ const Footer = () => (
       <p className="text-sm dark:text-neutral-500 text-neutral-500">
         © 2025 Smartnodes. All Rights Reserved.
       </p>
-      <div className="flex flex-row gap-6 mt-4 md:mt-0">
+      {/* <div className="flex flex-row gap-6 mt-4 md:mt-0">
         {socialMedia.map((social) => (
           <img
             key={social.id}
@@ -72,7 +72,7 @@ const Footer = () => (
             onClick={() => window.open(social.link)}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   </section>
 );

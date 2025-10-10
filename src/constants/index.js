@@ -1,17 +1,13 @@
 import {
   ai,
-  reddit,
   job,
   telescope,
   blocks,
   community,
   linkedin,
   twitter,
-  airbnb,
-  binance,
   discord,
-  coinbase,
-  dropbox,
+  x,
 } from "../assets";
 import { MdHome } from "react-icons/md";
 import { Cpu, Zap, Lock } from "lucide-react";
@@ -111,6 +107,10 @@ export const sideLinks = [
         name: "Discord",
         id: "https://discord.gg/aCW2kTNzJ2",
         icon: MdHome,
+      },
+      {
+        name: "Whitepaper",
+        id: "https://github.com/smartnodes-lab/smartnodes-core/blob/main/whitepaper.md",
       },
     ],
   },
@@ -235,10 +235,10 @@ export const footerLinks = [
         name: "Home",
         link: "/",
       },
-      // {
-      //   name: "Litepaper",
-      //   link: "https://github.com/smartnodes-lab/smartnodes",
-      // },
+      {
+        name: "Litepaper",
+        link: "https://github.com/smartnodes-lab/smartnodes",
+      },
       {
         name: "GitHub",
         icon: linkedin,
@@ -271,11 +271,11 @@ export const footerLinks = [
         icon: discord,
         link: "https://discord.gg/aCW2kTNzJ2",
       },
-      // {
-      //   name: "LinkedIn",
-      //   icon: linkedin,
-      //   link: "https://www.linkedin.com/company/smartnodes-lab",
-      // }
+      {
+        name: "LinkedIn",
+        icon: linkedin,
+        link: "https://www.linkedin.com/company/smartnodes-lab",
+      },
     ],
   },
   {
@@ -309,31 +309,12 @@ export const socialMedia = [
   },
   {
     id: "social-media-3",
-    icon: twitter,
-    link: "https://www.twitter.com/smartnodes_lab",
-  },
-  // {
-  //   id: "social-media-4",
-  //   icon: linkedin,
-  //   link: "https://www.linkedin.com/company/smartnodes-lab",
-  // }
-];
-
-export const clients = [
-  {
-    id: "client-1",
-    logo: airbnb,
+    icon: x,
+    link: "https://www.x.com/smartnodes_lab",
   },
   {
-    id: "client-2",
-    logo: binance,
-  },
-  {
-    id: "client-3",
-    logo: coinbase,
-  },
-  {
-    id: "client-4",
-    logo: dropbox,
+    id: "social-media-4",
+    icon: linkedin,
+    link: "https://www.linkedin.com/company/smartnodes-lab",
   },
 ];

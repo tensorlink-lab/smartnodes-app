@@ -67,7 +67,8 @@ const NetworkDashboard = ({
     return () => observer.disconnect();
   }, []);
 
-  const getCapacityChartData = () => {
+
+  const getJobsChartData = () => {
     if (!networkHistory) return null;
     const { labels, datasets } = networkHistory.daily;
 
@@ -78,18 +79,45 @@ const NetworkDashboard = ({
       }),
       datasets: [
         {
-          label: 'Total Capacity',
-          data: datasets.total_capacity,
+          label: 'Jobs',
+          data: datasets.jobs,
+          borderColor: 'rgb(99, 102, 241)',
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    };
+  };
+
+  const getCapacityChartData = () => {
+    if (!networkHistory) return null;
+    const { labels, datasets } = networkHistory.daily;
+
+    // Calculate free capacity from total - used
+    const freeCapacity = datasets.total_capacity.map((total, index) => 
+      total - datasets.used_capacity[index]
+    );
+
+    return {
+      labels: labels.map(date => {
+        const d = new Date(date);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      }),
+      datasets: [
+        {
+          label: 'Used Capacity',
+          data: datasets.used_capacity,
           borderColor: 'rgb(99, 102, 241)',
           backgroundColor: 'rgba(99, 102, 241, 0.1)',
           fill: true,
           tension: 0.4,
         },
         {
-          label: 'Used Capacity',
-          data: datasets.used_capacity,
-          borderColor: 'rgb(239, 68, 68)',
-          backgroundColor: 'rgba(239, 68, 68, 0.1)',
+          label: 'Free Capacity',
+          data: freeCapacity,
+          borderColor: 'rgb(34, 197, 94)',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
           fill: true,
           tension: 0.4,
         },
@@ -120,36 +148,6 @@ const NetworkDashboard = ({
           data: datasets.validators,
           borderColor: 'rgb(34, 197, 94)',
           backgroundColor: 'rgba(34, 197, 94, 0.1)',
-          fill: true,
-          tension: 0.4,
-        },
-        {
-          label: 'Users',
-          data: datasets.users,
-          borderColor: 'rgb(239, 68, 68)',
-          backgroundColor: 'rgba(239, 68, 68, 0.1)',
-          fill: true,
-          tension: 0.4,
-        },
-      ],
-    };
-  };
-
-  const getJobsChartData = () => {
-    if (!networkHistory) return null;
-    const { labels, datasets } = networkHistory.daily;
-
-    return {
-      labels: labels.map(date => {
-        const d = new Date(date);
-        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      }),
-      datasets: [
-        {
-          label: 'Jobs',
-          data: datasets.jobs,
-          borderColor: 'rgb(99, 102, 241)',
-          backgroundColor: 'rgba(99, 102, 241, 0.1)',
           fill: true,
           tension: 0.4,
         },
@@ -187,6 +185,7 @@ const NetworkDashboard = ({
     scales: {
       x: {
         display: true,
+        stacked: true, // Enable stacking
         grid: {
           display: true,
           color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
@@ -199,75 +198,7 @@ const NetworkDashboard = ({
       },
       y: {
         display: true,
-        grid: {
-          display: true,
-          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-        },
-        ticks: {
-          display: true,
-          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
-          font: { size: 11 }
-        },
-      },
-    },
-    elements: {
-      point: {
-        radius: 2,
-        hoverRadius: 5,
-      },
-    },
-    animation: {
-      duration: 1200,
-      easing: 'easeInOutQuart',
-    },
-    interaction: {
-      intersect: false,
-      mode: 'index',
-    },
-  };
-
-  const jobsChartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top',
-        labels: {
-          usePointStyle: true,
-          padding: 4,
-          boxWidth: 6,
-          boxHeight: 6,
-          font: { size: 12 },
-          color: isDarkMode ? "white" : "black"
-        },
-      },
-      title: {
-        display: true,
-        text: 'Job Activity',
-        align: 'start',
-        padding: { top: 5, bottom: 15 },
-        font: {
-          size: 17,
-          weight: 'bold',
-        },
-        color: isDarkMode ? "white" : "black"
-      },
-    },
-    scales: {
-      x: {
-        display: true,
-        grid: {
-          display: true,
-          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-        },
-        ticks: {
-          display: true,
-          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
-          font: { size: 11 }
-        },
-      },
-      y: {
-        display: true,
+        stacked: true, // Enable stacking
         grid: {
           display: true,
           color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
@@ -352,6 +283,80 @@ const NetworkDashboard = ({
     scales: {
       x: {
         display: true,
+        stacked: true, // Enable stacking
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
+        },
+      },
+      y: {
+        display: true,
+        stacked: true, // Enable stacking
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 },
+          callback: function(value) {
+            return formatCapacity(value);
+          }
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 2,
+        hoverRadius: 5,
+      },
+    },
+    animation: {
+      duration: 1200,
+      easing: 'easeInOutQuart',
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
+    },
+  };
+
+  const jobsChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          usePointStyle: true,
+          padding: 4,
+          boxWidth: 6,
+          boxHeight: 6,
+          font: { size: 12 },
+          color: isDarkMode ? "white" : "black"
+        },
+      },
+      title: {
+        display: true,
+        text: 'Job Activity',
+        align: 'start',
+        padding: { top: 5, bottom: 15 },
+        font: {
+          size: 17,
+          weight: 'bold',
+        },
+        color: isDarkMode ? "white" : "black"
+      },
+    },
+    scales: {
+      x: {
+        display: true,
         grid: {
           display: true,
           color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
@@ -371,10 +376,7 @@ const NetworkDashboard = ({
         ticks: {
           display: true,
           color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
-          font: { size: 11 },
-          callback: function(value) {
-            return formatCapacity(value);
-          }
+          font: { size: 11 }
         },
       },
     },

@@ -12,7 +12,7 @@ const dummyNetworkStats = {
   proposal: 1839,
   available_capacity: 9565387824,
   used_capacity: 15231271888,
-  models: ["Qwen/Qwen2.5-7B-Instruct"]
+  models: ["Qwen/Qwen3-8B"]
 };
 
 const dummyModelDemand = {
@@ -20,7 +20,7 @@ const dummyModelDemand = {
     data: {
         popular_models: [
             {
-                model_name: "Qwen/Qwen2.5-7B-Instruct",
+                model_name: "Qwen/Qwen3-8B",
                 recent_requests: 3,
                 total_requests: 3,
                 last_accessed: 1758814095.544846, 

@@ -10,7 +10,7 @@ const Mining = () => (
       {/* Page Title */}
       <div className="pb-4 mb-6 border-b dark:border-neutral-800 border-neutral-200">
         <h1 className="text-4xl font-bold dark:text-white text-neutral-900 mb-2">
-          Running a Node (Mining)
+          Running a Node
         </h1>
         <p className="text-lg dark:text-neutral-400 text-neutral-600">
           Contribute compute to Tensorlink by running a worker node.
@@ -29,8 +29,8 @@ const Mining = () => (
           Minimum Requirements
         </h2>
         <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700">
-          A modern NVIDIA GPU with CUDA support (RTX 30xx or better), at least 16 GB of RAM (32+ recommended), 
-          and Linux (Ubuntu 20.04+ preferred). Multi-GPU support and Windows compatibility are still in development.
+          A modern NVIDIA GPU with CUDA support (RTX 20xx or better), at least 16 GB of RAM (32+ recommended), 
+          and Linux (Ubuntu 20.04+ preferred). Multi-GPU support along with Windows and Apple compatibility are still in development and will be available soon.
         </p>
       </div>
 
@@ -42,13 +42,12 @@ const Mining = () => (
         <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700">
           Download the latest{" "}
           <a href="https://github.com/smartnodes-lab/tensorlink/releases" className="text-blue-500 underline">
-            Tensorlink release
+            Tensorlink miner release
           </a>{" "}
           and locate the{" "}
           <code className="bg-neutral-100 dark:bg-neutral-900 px-1.5 py-0.5 rounded text-sm font-mono">
             tensorlink-miner
           </code>{" "}
-          binary. Ensure you have Python 3 and a CUDA-enabled GPU installed.
         </p>
       </div>
 
