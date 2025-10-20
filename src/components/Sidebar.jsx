@@ -47,7 +47,7 @@ const Sidebar = ({ open, close }) => {
                                 onClick={() => {
                                     if (link.sublinks && link.sublinks.length > 0) {
                                         toggleMenu(link.id);
-                                    } else if (item.title === "Links") {
+                                    } else if (item.title === "Links" || link.name === "Whitepaper") {
                                         window.location.href = link.id;
                                     } else {
                                         navigate(`/${link.id}`);

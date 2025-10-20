@@ -13,7 +13,7 @@ import { MdHome } from "react-icons/md";
 import { Cpu, Zap, Lock } from "lucide-react";
 
 export const overview = {
-  info: "Smartnodes transforms globally distributed hardware into a programmable, composable layer for big data and compute. Developers can access these resources securely through APIs and programming libraries, unlocking scalable and collaborative infrastructure for scientific computing.",
+  info: "Smartnodes takes decentralized physical infrastructure (DePIN) to the next level by making it modular and flexible. It transforms globally distributed hardware into a programmable, composable layer for computation and data collection. Developers can securely access these shared resources through APIs and Python libraries, unlocking scalable infrastructure without needing expensive local hardware.",
 };
 
 export const portals = [
@@ -59,6 +59,10 @@ export const sideLinks = [
         icon: MdHome,
         sublinks: [{ id: "overview", name: "Overview" }],
       },
+      {
+        name: "Whitepaper",
+        id: "https://github.com/smartnodes-lab/smartnodes-core/blob/main/whitepaper.md",
+      },
     ],
   },
   {
@@ -83,11 +87,6 @@ export const sideLinks = [
           // { id: "wallet", name: "Wallet Config"},
         ],
       },
-      {
-        name: "localhostGPT",
-        id: "tensorlink/localhostGPT",
-        icon: MdHome,
-      },
     ],
   },
   {
@@ -107,10 +106,6 @@ export const sideLinks = [
         name: "Discord",
         id: "https://discord.gg/aCW2kTNzJ2",
         icon: MdHome,
-      },
-      {
-        name: "Whitepaper",
-        id: "https://github.com/smartnodes-lab/smartnodes-core/blob/main/whitepaper.md",
       },
     ],
   },
@@ -146,38 +141,23 @@ export const features = [
     id: "1",
     title: "Plug-and-Play",
     content:
-      "Easily tap into distributed compute with model wrappers that integrate seamlessly with your PyTorch models and offload heavy computation behind the scenes.",
+      "Effortlessly offload heavy computation to distributed nodes with PyTorch-ready model wrappers that integrate behind the scenes.",
     icon: Cpu,
   },
   {
     id: "2",
     title: "On-demand Inference",
     content:
-      "Access LLM inference via free or paid APIs with pre-trained Hugging Face models, or deploy your own custom models to the network. Eliminate the need for VRAM in your application workflows.",
+      "Run inference or train models on distributed hardware through simple APIs. Deploy Hugging Face or custom models without managing GPUs.",
     icon: Zap,
   },
   {
     id: "3",
-    title: "Scale + Privacy",
+    title: "Scalable & Private",
     content:
-      "Securely distribute oversized models across multiple devices, enabling scalable inference while keeping sensitive data under your control.",
+      "Securely distribute and execute large models across multiple nodes for fast, efficient, and privacy enhanced workloads.",
     icon: Lock,
   },
-
-  // {
-  //   id: "",
-  //   title: "Accessibility",
-  //   content: "Lower financial and technical barriers to AI training, making advanced computational resources more accessible and affordable for all.",
-  // }
-  //     title: "Trustless, Automated, Decision-Making",
-  //     content:
-  //       "Machine-to-Human interfaces that enhance decentralized and automated systems using \
-  //       the power of collective human intelligence.",
-  //     expanded_content: [
-  //       "Allows both people and machines to utilize the collective intelligence of humans \
-  //       via API calls.",
-  //       "Potential use-cases for moderating decentralized apps (e.g. social media, insurance, etc), \
-  //       optimizing AI models, and much more!",
 ];
 
 export const feedback = [

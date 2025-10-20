@@ -150,9 +150,23 @@ const LocalhostGPT = () => {
         throw new Error(data.error);
       }
       
+      // Extract only the assistant's response (after the last "assistant" marker)
+      let assistantResponse = data.response;
+      
+      // Split by "assistant" and get the last occurrence
+      const parts = assistantResponse.split(/assistant\s*/);
+      if (parts.length > 1) {
+        assistantResponse = parts[parts.length - 1].trim();
+      }
+      
+      // Remove any remaining system/user prefixes at the start
+      assistantResponse = assistantResponse
+        .replace(/^(system|user)\s+.*/gm, '')
+        .trim();
+      
       setMessages([...updatedMessages, { 
         role: "assistant", 
-        content: data.response,
+        content: assistantResponse,
         timestamp: new Date().toISOString()
       }]);
       

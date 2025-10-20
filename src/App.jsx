@@ -1,5 +1,5 @@
 import { TensorlinkDocs, Smartnodes, SmartnodesDocs, SmartnodesLanding, SmartnodesApp, TensorLinkLanding } from "./pages";
-import { Navbar, WalletSetup, Footer, Sidebar, Overview, ApiExample, SmartnodesOverview, GettingStarted, ModelExample, LocalhostGPT, Nodes, Mining, Community } from "./components";
+import { Navbar, WalletSetup, Footer, NotFound, Sidebar, Overview, ApiExample, SmartnodesOverview, GettingStarted, ModelExample, Nodes, Mining, Community } from "./components";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useStateContext } from "./contexts/contextProvider";
@@ -84,9 +84,8 @@ const App = () => {
                 <Route path="community" element={<Community />} />
               </Route>
 
-              <Route path="tensorlink/localhostGPT/*" element={<LocalhostGPT />} />
               <Route path="app" element={<SmartnodesApp activeMenu={activeMenu} />} />
-              <Route path="*" element={<Smartnodes />} />
+              <Route path="*" element={<NotFound />} />    
             </Routes>
             <Footer />
           </main>

@@ -40,8 +40,10 @@ import Framework from "./Framework";
 import ToPortal from "./ToPortal";
 import ClaimRewardsComponent from "./dashboard/Rewards";
 import { ProposalsTable, ProposalsBarChart } from "./dashboard/ProposalsChart";
+import NotFound from "./NotFound";
 
 export {
+  NotFound,
   ProposalsTable,
   ProposalsBarChart,
   ToPortal,

@@ -312,7 +312,7 @@ const SmartnodesDashboard = ({
             // Fetch both stats and history from API
             const [statsResponse, historyResponse, models] = await Promise.all([
                 fetch(`${API_BASE_URL}/stats`),
-                fetch(`${API_BASE_URL}/network-history`),
+                fetch(`${API_BASE_URL}/network-history?days=60`),
                 fetch(`${API_BASE_URL}/model-demand`)
             ]);
 

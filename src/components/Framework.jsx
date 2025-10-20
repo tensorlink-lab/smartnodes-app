@@ -9,7 +9,7 @@ const Framework = () => {
         </svg>
       ),
       title: "Modular Architecture",
-      description: "Flexible framework for building custom resource sharing applications with extensible node types."
+      description: "Build flexible resource-sharing applications with customizable node types."
     },
     {
       icon: (
@@ -26,8 +26,8 @@ const Framework = () => {
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
         </svg>
       ),
-      title: "Earn Rewards",
-      description: "Share your resources and get rewarded with SNO tokens through our dynamic incentive system."
+      title: "Unified Economy",
+      description: "All interactions, rewards, and governance operate under a single smart contract and token system—ensuring transparency, interoperability, and long-term sustainability."
     }
   ];
 
@@ -40,7 +40,7 @@ const Framework = () => {
         <div className="relative rounded-2xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-zinc-900 dark:to-slate-900">
           <div className="flex flex-col lg:flex-row">
             {/* Left Column */}
-            <div className="flex-1 px-3 pt-8 md:px-12 md:pt-12">
+            <div className="flex-1 px-5 pt-8 md:px-12 md:pt-12">
               <h2 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-gray-100 leading-tight mb-6">
                 A Modular <br />
                 <span className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
@@ -54,7 +54,7 @@ const Framework = () => {
               </h2>
               <p className="text-gray-600 dark:text-gray-300 text-md leading-relaxed mb-8 max-w-xl">
                 Transform any device into a network participant with our powerful, extensible Python framework. 
-                Build custom nodes that contribute to the world's largest collaborative compute network.
+                
               </p>
             </div>
 
@@ -71,10 +71,10 @@ const Framework = () => {
                         {feature.icon}
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-1">
+                        <h3 className="font-semibold text-md md:text-lg text-gray-900 dark:text-gray-100 mb-1">
                           {feature.title}
                         </h3>
-                        <p className="text-gray-600 text-md dark:text-gray-300 leading-relaxed">
+                        <p className="text-gray-600 text-sm md:text-md dark:text-gray-300 leading-relaxed">
                           {feature.description}
                         </p>
                       </div>

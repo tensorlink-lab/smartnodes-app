@@ -165,10 +165,10 @@ const Navbar = () => {
                     
                     {/* Enhanced Mobile Networks Dropdown */}
                     <div className={`
-                      ml-4 mt-2 bg-gray-800 rounded-lg shadow-lg overflow-hidden
+                      ml-4 bg-gray-800 rounded-lg shadow-lg overflow-hidden
                       transform origin-top transition-all duration-300 ease-out
                       ${networksOpen 
-                        ? "scale-y-100 opacity-100 max-h-96 pointer-events-auto" 
+                        ? "scale-y-100 opacity-100 max-h-96 pointer-events-auto mt-4" 
                         : "scale-y-0 opacity-0 max-h-0 pointer-events-none"
                       }
                     `}>
@@ -199,13 +199,8 @@ const Navbar = () => {
                     </div>
                   </div>
                 ) : nav.title == "Dashboard" ? (
-                  <a 
-                    href="/app#dashboard"
-                    className="relative px-4 py-2 rounded-lg font-semibold text-white overflow-hidden inline-block"
-                  >
-                    <span className="relative z-10">{nav.title}</span>
-                    <span className="absolute inset-0 bg-gradient-to-r rounded-lg from-purple-500/50 via-blue-500/50 to-pink-500/50 animate-gradient-x group-hover:from-purple-500/70 group-hover:via-blue-500/70 group-hover:to-pink-500/70 transition-all duration-300"></span>
-                    <span className="absolute inset-0 bg-gradient-to-r rounded-lg from-purple-500/50 via-blue-500/50 to-pink-500/50 blur-md opacity-75 animate-gradient-x group-hover:opacity-100 group-hover:blur-lg transition-all duration-300"></span>
+                  <a href="/app#dashboard">
+                    {nav.title}
                   </a>
                 ) : (
                   <a href={`/${nav.id}`}>{nav.title}</a>
