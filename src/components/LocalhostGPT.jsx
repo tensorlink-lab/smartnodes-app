@@ -150,9 +150,23 @@ const LocalhostGPT = () => {
         throw new Error(data.error);
       }
       
+      // Extract only the assistant's response (after the last "assistant" marker)
+      let assistantResponse = data.response;
+      
+      // Split by "assistant" and get the last occurrence
+      const parts = assistantResponse.split(/assistant\s*/);
+      if (parts.length > 1) {
+        assistantResponse = parts[parts.length - 1].trim();
+      }
+      
+      // Remove any remaining system/user prefixes at the start
+      assistantResponse = assistantResponse
+        .replace(/^(system|user)\s+.*/gm, '')
+        .trim();
+      
       setMessages([...updatedMessages, { 
         role: "assistant", 
-        content: data.response,
+        content: assistantResponse,
         timestamp: new Date().toISOString()
       }]);
       
@@ -381,7 +395,7 @@ const LocalhostGPT = () => {
                     onChange={(e) => updateModelParam('model', e.target.value)}
                     className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-slate-100 dark:bg-gray-700 text-gray-900 dark:text-white"
                   >
-                    <option value="Qwen/Qwen2.5-7B-Instruct">Qwen 2.5 7B Instruct</option>
+                    <option value="Qwen/Qwen2.5-7B-Instruct">Qwen3 8B</option>
                     {/* <option value="meta-llama/Llama-2-7b-chat-hf">Llama 2 7B Chat</option>
                     <option value="mistralai/Mistral-7B-Instruct-v0.2">Mistral 7B Instruct</option> */}
                   </select>

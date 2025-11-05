@@ -9,7 +9,7 @@ const WhyTensorlink = () => {
     {
       id: 'simplicity',
       title: "Simplicity",
-      description: "Tensorlink provides a seamless interface for accessing compute in PyTorch. Whether you're tapping into shared resources or remotely connecting to your own infrastructure, lightweight node scripts make setup, deployment, and compute contribution effortless.",
+      description: "Tensorlink provides a seamless interface for accessing compute in PyTorch. Whether you're tapping into shared resources or remotely connecting to your own infrastructure, Tensorlink nodes make setup, deployment, and compute contribution effortless.",
       color: "bg-purple-500",
       hoverColor: "hover:bg-purple-600",
       icon: Zap
@@ -17,7 +17,7 @@ const WhyTensorlink = () => {
     {
       id: 'cost',
       title: "Cost",
-      description: "Powered by smart contracts, Tensorlink rewards contributors for supplying compute. This incentive model dramatically lowers the cost of inference and training, making cutting-edge models more accessible to researchers and individual developers.",
+      description: "Tensorlink is powered by a smart contract reward system, incentivizing contributors to supply compute while reducing service costs and even allowing for free services, making cutting-edge models more accessible to researchers and individual developers.",
       color: "bg-red-400",
       hoverColor: "hover:bg-red-500",
       icon: DollarSign
@@ -42,7 +42,7 @@ const WhyTensorlink = () => {
           backgroundImage: "radial-gradient(circle at 20px 20px, rgba(120, 120, 120, 0.8) 2px, transparent 0)",
           backgroundSize: "40px 40px"
         }}
-      ></div>
+      />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-14 relative z-20">
         <div className="flex flex-col lg:flex-row gap-16">
@@ -55,8 +55,9 @@ const WhyTensorlink = () => {
               </span>
             </h2>
             <p className="mt-6 text-xl text-gray-700 dark:text-gray-300 max-w-xl">
-              Tensorlink harnesses idle computers to efficiently process neural networks in PyTorch,
-              providing an economical and user-friendly alternative to hosting services.
+              Tensorlink harnesses idle computers to efficiently process LLMs and neural networks in PyTorch,
+              providing an economical and user-friendly alternative to hosting services, allowing you to tap into
+              AI for any workload.
             </p>
             
             <div className="mt-12">

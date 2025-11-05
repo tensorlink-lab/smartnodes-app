@@ -1,8 +1,6 @@
 import Navbar from "./Navbar";
 import Example from "./Example";
 import WhyTensorlink from "./WhyTensorlink";
-import ToPortal from "./ToPortal";
-import Stats from "./Stats";
 import Footer from "./Footer";
 import Testimonials from "./Toolbox";
 import MainHero from "./MainHero";
@@ -36,9 +34,23 @@ import NodeDashboard from "./dashboard/NodeDashboard";
 import Account from "./dashboard/Account";
 import DashboardSwitcher from "./dashboard/DashboardSwitcher";
 import DAODashboard from "./dashboard/DAODashboard";
+import AirdropIndicator from "./AirdropIndicator";
+import ModelDemand from "./ModelDemand";
+import Framework from "./Framework";
+import ToPortal from "./ToPortal";
+import ClaimRewardsComponent from "./dashboard/Rewards";
+import { ProposalsTable, ProposalsBarChart } from "./dashboard/ProposalsChart";
+import NotFound from "./NotFound";
 
 export {
+  NotFound,
+  ProposalsTable,
+  ProposalsBarChart,
+  ToPortal,
+  ClaimRewardsComponent,
   DAODashboard,
+  ModelDemand,
+  AirdropIndicator,
   DashboardSwitcher,
   Account,
   ActionMenu,
@@ -67,8 +79,7 @@ export {
   Opportunity,
   Example,
   WhyTensorlink,
-  ToPortal,
-  Stats,
+  Framework,
   Footer,
   Testimonials,
   MainHero2,

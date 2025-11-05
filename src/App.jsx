@@ -1,13 +1,17 @@
 import { TensorlinkDocs, Smartnodes, SmartnodesDocs, SmartnodesLanding, SmartnodesApp, TensorLinkLanding } from "./pages";
-import { Navbar, WalletSetup, Footer, Sidebar, Overview, ApiExample, SmartnodesOverview, GettingStarted, ModelExample, LocalhostGPT, Nodes, Mining, Community } from "./components";
+import { Navbar, WalletSetup, Footer, NotFound, Sidebar, Overview, ApiExample, SmartnodesOverview, GettingStarted, ModelExample, Nodes, Mining, Community } from "./components";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useStateContext } from "./contexts/contextProvider";
 
+const excludedPages = ["/"];
+
 const useWindowSizeHandler = (setActiveMenu) => {
   useEffect(() => {
     const handleResize = () => {
-      setActiveMenu(window.innerWidth >= 1440);
+      if (!excludedPages.includes(window.location.pathname)) {
+        setActiveMenu(window.innerWidth >= 1130);
+      }
     };
 
     // Set initial state
@@ -44,13 +48,13 @@ const App = () => {
   useWindowSizeHandler(setActiveMenu);
 
   return (
-    <div className="relative flex min-h-screen bg-gray-300 dark:bg-zinc-900">
+    <div className="relative flex-row min-h-screen bg-gray-200 dark:bg-zinc-900">
       <BrowserRouter>
         {/* Sidebar - now properly fixed */}
         {activeMenu && <Sidebar />}
         
         {/* Main content area */}
-        <div className={`flex flex-col min-h-screen w-full ${activeMenu ? "pl-[265px]" : ""} transition-all duration-300 ease-out`}>
+        <div className={`flex flex-col min-h-screen w-full ${activeMenu ? "pl-[245px]" : ""} transition-all duration-300 ease-out`}>
           <div className="z-40 w-full">
             <Navbar />
           </div>
@@ -80,13 +84,11 @@ const App = () => {
                 <Route path="community" element={<Community />} />
               </Route>
 
-              <Route path="tensorlink/localhostGPT/*" element={<LocalhostGPT />} />
-              <Route path="app" element={<SmartnodesApp />} />
-              <Route path="*" element={<Smartnodes />} />
+              <Route path="app" element={<SmartnodesApp activeMenu={activeMenu} />} />
+              <Route path="*" element={<NotFound />} />    
             </Routes>
+            <Footer />
           </main>
-          
-          <Footer />
         </div>
       </BrowserRouter>
     </div>

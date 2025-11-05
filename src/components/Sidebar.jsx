@@ -18,17 +18,17 @@ const Sidebar = ({ open, close }) => {
 
     return (
         <div
-            className="fixed inset-y-0 left-0 w-[265px] bg-zinc-200 dark:bg-zinc-700 overflow-y-auto overflow-x-hidden"
+            className="fixed inset-y-0 left-0 w-[245px] bg-slate-100 dark:bg-zinc-800 overflow-y-auto overflow-x-hidden border-r border-gray-500"
             style={{ zIndex: 1000000 }}
         >
-            <div className="flex justify-between items-center p-3">
-                <Link to="/" className="bg-gray-400 rounded-xl px-3 py-2">
+            <div className="flex justify-between items-center p-3 mb-5">
+                <Link to="/" className="bg-slate-300 rounded-xl px-3 py-1">
                     <img className="w-40" src={logo} alt="Logo" />
                 </Link>
 
                 <button
                     onClick={() => setActiveMenu(!activeMenu)}
-                    className="rounded-full p-2 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                    className="rounded-full p-2 ml-2 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                 >
                     <MdOutlineCancel size={20} color="grey" />
                 </button>
@@ -37,17 +37,17 @@ const Sidebar = ({ open, close }) => {
             <div className="px-3 pb-10 ml-1">
                 {sideLinks.map((item) => (
                     <div key={item.title} className="mb-8">
-                        <p className="text-gray-400 font-poppins text-lg dark:text-gray-300 px-2 py-2 uppercase font-medium">
+                        <p className="text-gray-400 font-poppins text-lg dark:text-gray-300 px-2 py-1 uppercase font-medium">
                             {item.title}
                         </p>
                         {item.links.map((link) => (
                             <div
                                 key={link.id}
-                                className="mt-2 cursor-pointer"
+                                className="mt-1 cursor-pointer"
                                 onClick={() => {
                                     if (link.sublinks && link.sublinks.length > 0) {
                                         toggleMenu(link.id);
-                                    } else if (item.title === "Links") {
+                                    } else if (item.title === "Links" || link.name === "Whitepaper") {
                                         window.location.href = link.id;
                                     } else {
                                         navigate(`/${link.id}`);

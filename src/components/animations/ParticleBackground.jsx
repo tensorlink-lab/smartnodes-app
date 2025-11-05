@@ -84,7 +84,7 @@ const ParticleBackground = () => {
                     },
                     links: {
                         color: "#555555",
-                        distance: 240,
+                        distance: 220,
                         enable: true,
                         opacity: 0.7,
                         width: 0.5,
@@ -105,15 +105,15 @@ const ParticleBackground = () => {
                     number: {
                         density: {
                             enable: true,
-                            area: 1200,   
+                            area: 400,   
                         },
-                        value: 30,        
+                        value: 8,        
                     },
                     shape: {
                         type: "circle",
                     },
                     size: {
-                        value: { min: 0.5, max: 3 }, 
+                        value: { min: 1, max: 4 }, 
                     },
                 },
                 detectRetina: true,

@@ -14,7 +14,6 @@ const TensorLinkLanding = () => {
       <div className="z-10 mt-5 sm:mt-0 flex-col min-w-full">
         <Example />
         <WhyTensorlink />
-        {/* <WelcomeTensorlink /> */}
         <ToPortal />
       </div>
     </div>

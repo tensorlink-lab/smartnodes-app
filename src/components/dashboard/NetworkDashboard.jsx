@@ -12,10 +12,21 @@ import {
   Title,
   Filler,
 } from 'chart.js';
-import { MdOutlineSupervisorAccount, MdCircle, MdStorage, MdAssessment, MdOutlineSettings, MdVerifiedUser, MdDescription, MdBusinessCenter, MdNetworkCheck } from "react-icons/md";
+import { ModelDemand } from "..";
+import { MdCircle } from "react-icons/md";
 import { Line } from 'react-chartjs-2';
-import { NetworkSummary } from "../../components";
-import styles from "../../style.js";
+
+const formatCapacity = (bytes) => {
+  if (bytes >= 1099511627776) { // 1 TB in bytes
+    return (bytes / 1099511627776).toFixed(1) + ' TB';
+  } else if (bytes >= 1073741824) { // 1 GB in bytes
+    return (bytes / 1073741824).toFixed(1) + ' GB';
+  } else if (bytes >= 1048576) { // 1 MB in bytes
+    return (bytes / 1048576).toFixed(1) + ' MB';
+  } else {
+    return bytes.toFixed(0) + ' B';
+  }
+};
 
 // Register Chart.js components
 ChartJS.register(
@@ -35,15 +46,17 @@ const NetworkDashboard = ({
   fetchNetworkData,
   networkStats,
   networkHistory,
+  modelDemandData,
   error
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(
     document.documentElement.classList.contains('dark')
   );
+
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const isDark = document.documentElement.classList.contains('dark');
-      setIsDarkMode(isDark); // trigger re-render
+      setIsDarkMode(isDark);
     });
 
     observer.observe(document.documentElement, {
@@ -54,25 +67,11 @@ const NetworkDashboard = ({
     return () => observer.disconnect();
   }, []);
 
-  const formatBytes = (bytes) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-  };
 
-  const formatNumber = (num) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toString();
-  };
-
-  const getCapacityAndJobsChartData = () => {
+  const getJobsChartData = () => {
     if (!networkHistory) return null;
-
     const { labels, datasets } = networkHistory.daily;
-    
+
     return {
       labels: labels.map(date => {
         const d = new Date(date);
@@ -80,32 +79,56 @@ const NetworkDashboard = ({
       }),
       datasets: [
         {
-          label: 'Total Capacity',
-          data: datasets.total_capacity,
-          borderColor: '#85deca',
-          backgroundColor: 'rgba(33, 150, 243, 0.1)',
+          label: 'Jobs',
+          data: datasets.jobs,
+          borderColor: 'rgb(99, 102, 241)',
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
           fill: true,
           tension: 0.4,
-          yAxisID: 'y',
-        },
-        {
-          label: 'Used Capacity',
-          data: datasets.used_capacity,
-          borderColor: '#f7a6a0',
-          backgroundColor: 'rgba(255, 152, 0, 0.1)',
-          fill: true,
-          tension: 0.4,
-          yAxisID: 'y',
         },
       ],
     };
   };
-    
+
+  const getCapacityChartData = () => {
+    if (!networkHistory) return null;
+    const { labels, datasets } = networkHistory.daily;
+
+    // Calculate free capacity from total - used
+    const freeCapacity = datasets.total_capacity.map((total, index) => 
+      total - datasets.used_capacity[index]
+    );
+
+    return {
+      labels: labels.map(date => {
+        const d = new Date(date);
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      }),
+      datasets: [
+        {
+          label: 'Used Capacity',
+          data: datasets.used_capacity,
+          borderColor: 'rgb(99, 102, 241)',
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
+          fill: true,
+          tension: 0.4,
+        },
+        {
+          label: 'Free Capacity',
+          data: freeCapacity,
+          borderColor: 'rgb(34, 197, 94)',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    };
+  };
+
   const getUserChartData = () => {
     if (!networkHistory) return null;
-
     const { labels, datasets } = networkHistory.daily;
-    
+
     return {
       labels: labels.map(date => {
         const d = new Date(date);
@@ -115,34 +138,18 @@ const NetworkDashboard = ({
         {
           label: 'Workers',
           data: datasets.workers,
-          borderColor: '#d6b3f7',
-          backgroundColor: 'rgba(255, 87, 34, 0.1)',
+          borderColor: 'rgb(99, 102, 241)',
+          backgroundColor: 'rgba(99, 102, 241, 0.1)',
           fill: true,
           tension: 0.4,
         },
         {
           label: 'Validators',
           data: datasets.validators,
-          borderColor: '#aaf7b6',
-          backgroundColor: 'rgba(3, 201, 215, 0.1)',
+          borderColor: 'rgb(34, 197, 94)',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
           fill: true,
           tension: 0.4,
-        },
-        {
-          label: 'Users',
-          data: datasets.users,
-          borderColor: '#85deca',
-          backgroundColor: 'rgba(139, 195, 74, 0.1)',
-          fill: true,
-          tension: 0.4,
-        },
-        {
-          label: 'Jobs',
-          data: datasets.jobs,
-          borderColor: '#f7a6a0',
-          backgroundColor: 'rgba(76, 175, 80, 0.1)',
-          fill: true,
-          tension: 0.4
         },
       ],
     };
@@ -156,15 +163,20 @@ const NetworkDashboard = ({
         position: 'top',
         labels: {
           usePointStyle: true,
-          padding: 10,
+          padding: 4,
+          boxWidth: 6,
+          boxHeight: 6,
+          font: { size: 12 },
           color: isDarkMode ? "white" : "black"
         },
       },
       title: {
         display: true,
-        text: 'Network Activity (30 days)',
+        text: 'Network Participants',
+        align: 'start',
+        padding: { top: 5, bottom: 15 },
         font: {
-          size: 18,
+          size: 17,
           weight: 'bold',
         },
         color: isDarkMode ? "white" : "black"
@@ -172,30 +184,45 @@ const NetworkDashboard = ({
     },
     scales: {
       x: {
+        display: true,
+        stacked: true, // Enable stacking
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
         ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: {
-            size: 12
-          },
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
         },
       },
       y: {
-        ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: {
-            size: 12
-          },
-          callback: function(value) {
-            return formatNumber(value);
-          }
+        display: true,
+        stacked: true, // Enable stacking
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
         },
-      }
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
+        },
+      },
     },
     elements: {
       point: {
-        radius: 3,
-        hoverRadius: 6,
+        radius: 2,
+        hoverRadius: 5,
       },
+    },
+    animation: {
+      duration: 1200,
+      easing: 'easeInOutQuart',
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
     },
   };
 
@@ -208,14 +235,120 @@ const NetworkDashboard = ({
         labels: {
           usePointStyle: true,
           padding: 10,
+          boxWidth: 6,
+          boxHeight: 6,
+          font: { size: 12 },
           color: isDarkMode ? "white" : "black"
         },
       },
       title: {
         display: true,
-        text: 'Network Capacity (30 days)',
+        text: 'GPU Capacity',
+        align: 'start',
+        padding: { top: 5, bottom: 15 },
         font: {
-          size: 18,
+          size: 17,
+          weight: 'bold',
+        },
+        color: isDarkMode ? "white" : "black"
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: '#374151',
+        borderWidth: 1,
+        callbacks: {
+          label: function(context) {
+            let label = context.dataset.label || '';
+            if (label) {
+              label += ': ';
+            }
+            const bytes = context.parsed.y;
+            
+            // Convert bytes to GB or TB
+            if (bytes >= 1099511627776) { // 1 TB in bytes
+              label += (bytes / 1099511627776).toFixed(2) + ' TB';
+            } else if (bytes >= 1073741824) { // 1 GB in bytes
+              label += (bytes / 1073741824).toFixed(2) + ' GB';
+            } else {
+              label += bytes.toFixed(2) + ' Bytes';
+            }
+            
+            return label;
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        display: true,
+        stacked: true, // Enable stacking
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
+        },
+      },
+      y: {
+        display: true,
+        stacked: true, // Enable stacking
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 },
+          callback: function(value) {
+            return formatCapacity(value);
+          }
+        },
+      },
+    },
+    elements: {
+      point: {
+        radius: 2,
+        hoverRadius: 5,
+      },
+    },
+    animation: {
+      duration: 1200,
+      easing: 'easeInOutQuart',
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
+    },
+  };
+
+  const jobsChartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          usePointStyle: true,
+          padding: 4,
+          boxWidth: 6,
+          boxHeight: 6,
+          font: { size: 12 },
+          color: isDarkMode ? "white" : "black"
+        },
+      },
+      title: {
+        display: true,
+        text: 'Job Activity',
+        align: 'start',
+        padding: { top: 5, bottom: 15 },
+        font: {
+          size: 17,
           weight: 'bold',
         },
         color: isDarkMode ? "white" : "black"
@@ -223,39 +356,49 @@ const NetworkDashboard = ({
     },
     scales: {
       x: {
+        display: true,
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        },
         ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: {
-            size: 12
-          },
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
         },
       },
       y: {
-        type: 'linear',
         display: true,
-        position: 'left',
-        ticks: {
-          color: isDarkMode ? "white" : "black",
-          font: {
-            size: 12
-          },
-          callback: function(value) {
-            return formatBytes(value);
-          }
+        grid: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
         },
-      }
+        ticks: {
+          display: true,
+          color: isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)',
+          font: { size: 11 }
+        },
+      },
     },
     elements: {
       point: {
-        radius: 3,
-        hoverRadius: 6,
+        radius: 2,
+        hoverRadius: 5,
       },
+    },
+    animation: {
+      duration: 1200,
+      easing: 'easeInOutQuart',
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
     },
   };
 
   if (loading) {
     return (
-      <div className="w-full max-w-[1380px] flex justify-center items-center -96">
+      <div className="w-full max-w-[1380px] flex justify-center items-center h-96">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
@@ -267,7 +410,7 @@ const NetworkDashboard = ({
         <div className="text-red-500 text-center">
           <p className="text-lg font-semibold">Error loading network data</p>
           <p className="text-sm mt-2">{error}</p>
-          <button 
+          <button
             onClick={fetchNetworkData}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
@@ -279,129 +422,181 @@ const NetworkDashboard = ({
   }
 
   const userChartData = getUserChartData();
-  const capacityChartData = getCapacityAndJobsChartData();
+  const capacityChartData = getCapacityChartData();
+  const jobsChartData = getJobsChartData();
 
   return (
     <div className="w-full mt-2 max-w-[1380px] space-y-2">
-      <div className="mb-6">
-
-        <h1 className={`${styles.subheading3} dark:text-white py-3`}>
-          Active Networks
-        </h1>
-        
-        <div className="">
-            {/* Tensorlink Network Status */}
-            <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4 mb-2 px-2">
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="flex items-center bg-green-100 dark:bg-green-800/30 rounded-lg p-3 border-2 border-gray-300 dark:border-neutral-400 shadow-md"
-                >
-                    <div className="flex items-center">
-                        <MdCircle className="text-green-500 text-sm mr-2" />
-                        <span className="text-green-700 dark:text-green-300 font-medium">Tensorlink</span>
-                        </div>
-                        <div className="ml-auto">
-                        <span className="text-xs text-green-600 dark:text-green-400 bg-green-200 dark:bg-green-700 px-2 py-1 rounded-full">
-                            Active
-                        </span>
-                    </div>
-                </motion.div>
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="flex items-center bg-neutral-100 dark:bg-neutral-800/30 rounded-lg p-3 border-2 border-gray-300 dark:border-gray-700 shadow-md"
-                >
-                    <div className="flex items-center">
-                    <MdCircle className="text-neutral-500 text-sm mr-2" />
-                        <span className="text-neutral-700 dark:text-neutral-300 font-medium">More coming soon...</span>
-                    </div>
-                </motion.div>
-            </div>
-
-            {/* Section header for Tensorlink data */}
-            <div className="mb-4 mt-5">
-                <div className="flex items-center justify-center">
-                <div className="flex-1 h-px bg-green-300 dark:bg-green-600"></div>
-                <div className="mx-4 text-sm text-green-600 dark:text-green-400 font-medium bg-green-100 dark:bg-green-800/50 px-3 py-1 rounded-full">
-                    Tensorlink Network Analytics
-                </div>
-                <div className="flex-1 h-px bg-green-300 dark:bg-green-600"></div>
-                </div>
-            </div>
-
-            {/* Charts Container - Side by side on large screens */}
-            <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 rounded-lg">
-                {/* User Activity Chart */}
-                {userChartData && (
-                    <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="bg-neutral-200 dark:bg-neutral-800 rounded-2xl p-4 shadow-lg border-2 border-neutral-50 dark:border-neutral-300"
-                    >
-                    <div className="flex items-center mb-2">
-                    <MdCircle className="text-green-500 text-xs mr-2" />
-                    <span className="text-xs text-green-600 dark:text-green-400 font-medium">Tensorlink Network Activity</span>
-                    </div>
-                    <div className="h-80 xl:h-96">
-                        <Line data={userChartData} options={userChartOptions} />
-                    </div>
-                    </motion.div>
-                )}
-
-                {/* Capacity and Jobs Chart */}
-                {capacityChartData && (
-                    <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="bg-zinc-200 dark:bg-neutral-900 rounded-2xl p-4 shadow-lg border-2 border-neutral-200 dark:border-neutral-400"
-                    >
-                      <div className="flex items-center mb-2">
-                        <MdCircle className="text-green-500 text-xs mr-2" />
-                        <span className="text-xs text-green-600 dark:text-green-400 font-medium">Tensorlink Network Capacity</span>
-                      </div>
-                      <div className="h-80 xl:h-96">
-                          <Line data={capacityChartData} options={capacityChartOptions} />
-                      </div>
-                    </motion.div>
-                )}
-              </motion.div>
-            </div>
+      <motion.div
+        initial={{ opacity: 0, x: 40 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6, delay: 0 }}
+        className="mb-6 -mx-1 sm:-mx-3"
+      >
+        {/* Active Networks Section */}
+        <motion.div 
+          className="my-1"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Active Networks</h3>
+            <div className="h-px flex-1 bg-gradient-to-r from-gray-300 dark:from-gray-700 to-transparent ml-4" />
+          </div>
           
-            {/* {networkStats?.models && (
-              <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700"
-              >
-                  <h3 className="text-lg font-semibold mb-4 text-black dark:text-white">Available Models (API)</h3>
-                  <div className="flex flex-wrap gap-2">
-                  {networkStats.models.map((model, index) => (
-                      <span
-                      key={index}
-                      className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
-                      >
-                      {model}
-                      </span>
-                  ))}
+          <div className="flex flex-wrap gap-2 pb-2">
+            {/* Tensorlink - Active Network */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+              className="relative group flex-1 min-w-[200px] max-w-[325px]"
+            >
+              <div className="relative flex items-center bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 dark:from-emerald-950/30 dark:via-green-950/30 dark:to-teal-950/30 rounded-xl px-4 py-0 border border-green-200 dark:border-green-800/50 shadow-sm hover:shadow-lg cursor-pointer transition-all duration-300 overflow-hidden">
+                {/* Animated gradient background */}
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-green-400/0 via-green-400/10 to-green-400/0 dark:from-green-500/0 dark:via-green-500/10 dark:to-green-500/0"
+                  animate={{ 
+                    x: ['-100%', '100%']
+                  }}
+                  transition={{ 
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+                
+                {/* Pulse effect */}
+                <motion.div 
+                  className="absolute inset-0 bg-green-400/5 dark:bg-green-500/5"
+                  animate={{ 
+                    opacity: [0.3, 0.6, 0.3]
+                  }}
+                  transition={{ 
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+                
+                <div className="relative flex items-center gap-3 w-full">
+                  {/* Animated status indicator */}
+                  <div className="relative flex items-center justify-center">
+                    <motion.div
+                      className="absolute w-5 h-5 bg-green-500 dark:bg-green-400 rounded-full"
+                      animate={{ 
+                        scale: [1, 1.8, 1],
+                        opacity: [0.6, 0, 0.6]
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeOut"
+                      }}
+                    />
+                    <div className="relative w-3 h-3 bg-green-500 dark:bg-green-400 rounded-full shadow-lg shadow-green-500/50" />
                   </div>
-              </motion.div>
-            )} */}
-        </div>
+                  
+                  <div className="flex items-center justify-between flex-1 gap-3">
+                    <div className="flex flex-col py-1">
+                      <span className="text-green-900 dark:text-green-100 font-bold text-base">Tensorlink</span>
+                      <span className="text-xs text-slate-500 dark:text-slate-500">On-demand AI Compute</span>
+                    </div>
+                    
+                    <motion.span 
+                      className="text-xs font-bold text-green-700 dark:text-green-300 bg-green-200 dark:bg-green-900/60 px-3 py-1 rounded-full border border-green-300 dark:border-green-700 shadow-sm"
+                      animate={{ 
+                        scale: [1, 1.05, 1]
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    >
+                      Online
+                    </motion.span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
 
-        {/* Last Updated */}
-        {networkHistory?.metadata && (
-        <div className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center pb-10">
-            Last updated: {new Date(networkHistory.metadata.generated_at_iso).toLocaleString()}
+            {/* Coming Soon */}
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+              className="flex items-center bg-gradient-to-br from-slate-50 to-gray-100 dark:from-slate-900/30 dark:to-gray-900/30 rounded-xl px-4 py-1 border border-slate-200 dark:border-slate-800 shadow-sm"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-slate-300 dark:bg-slate-600 rounded-full" />
+                <div className="flex flex-col">
+                  <span className="text-slate-600 dark:text-slate-300 font-semibold text-sm">More networks</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-500 italic">Coming soon...</span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+        </motion.div>
+
+        <div className="border border-gray-400 rounded-xl p-4 md:px-2 px-3 bg-neutral-50 dark:bg-zinc-900 shadow-sm min-h-[500px]">
+          {/* Header section */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-1 px-3">
+            <h1 className="font-extrabold text-xl sm:text-2xl text-neutral-800 dark:text-white">
+              Tensorlink Network Analytics
+            </h1>
+          </div>
+
+          {/* Charts Container - Three charts in grid */}
+          <motion.div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1 mt-4 rounded-lg md:-mx-0 -mx-2">
+            {/* User Activity Chart */}
+            {userChartData && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-3 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
+              >
+                <Line data={userChartData} options={userChartOptions} />
+              </motion.div>
+            )}
+
+            {/* Jobs Chart */}
+            {jobsChartData && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-3 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
+              >
+                <Line data={jobsChartData} options={jobsChartOptions} />
+              </motion.div>
+            )}
+
+            {/* Capacity Chart - Spans full width at bottom */}
+            {capacityChartData && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="bg-neutral-100 dark:bg-neutral-900 rounded-2xl p-3 shadow-lg border-2 border-neutral-400 dark:border-neutral-700 h-[370px]"
+              >
+                <Line data={capacityChartData} options={capacityChartOptions} />
+              </motion.div>
+            )}
+          </motion.div>
+
+          <ModelDemand
+            modelDemandData={modelDemandData}
+            loading={loading}
+            error={error}
+          />
         </div>
-        )}
+      </motion.div>
     </div>
-    );
+  );
 };
 
 export default NetworkDashboard;

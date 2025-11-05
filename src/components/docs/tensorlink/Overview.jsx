@@ -2,110 +2,167 @@ import React from "react";
 import styles, { layout } from "../../../style";
 import { NavButton } from "../..";
 
-
 const Overview = () => (
-  <section path="/docs/install" className="px-5 md:px-10 flex flex-col border-t dark:border-t-white border-t-black items-center h-full">
-    <div className="text-left px-5 xs:px-0 md:mt-10 max-w-[1280px] justify-center items-center">
-      <div className="flex items-center mb-6 mt-5">
-        <div className="bg-blue-600 h-8 w-2 mr-4 rounded-lg"></div>
-        <h1 className="text-xl sm:text-3xl dark:text-zinc-100 font-bold">Distributed Neural Networks with Tensorlink</h1>
+  <section 
+    path="/docs/install" 
+    className="px-10 flex flex-col border-t dark:border-neutral-800 border-neutral-200 items-center h-full"
+  >
+    <div className="text-left py-7 max-w-[1200px] w-full">
+      {/* Page Title */}
+      <div className="pb-4 mb-4 border-b dark:border-neutral-800 border-neutral-200">
+        <h1 className="text-4xl font-bold dark:text-white text-neutral-900 mb-2">
+          Overview
+        </h1>
+        <p className="text-lg dark:text-neutral-400 text-neutral-600">
+          Tensorlink: Distributed Neural Network Infrastructure for PyTorch
+        </p>
       </div>
-      <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>
-        Tensorlink is a Python library and computational platform that provides powerful tools and APIs for large-scale 
-        neural network training and inference in PyTorch. It enables users to work with complex models that exceed the memory 
-        limits of a single device, expanding access to cutting-edge deep learning. Tensorlink streamlines the parsing and 
-        distribution of models and provides a framework for accessing and sharing computation directly peer-to-peer, making 
-        powerful models available on demand and enabling users to easily donate or tap into idle compute.
-      </p>
-      <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>
-        By simplifying the parsing and distribution of models among peers, while also supporting pre-trained architectures from libraries like Hugging Face, Tensorlink 
-        enables seamless operation of complex distributed models. By leveraging techniques such as model sharding, parallel workflow execution, automated peer discovery, 
-        and a built-in incentive system, Tensorlink provides an efficient, decentralized alternative to traditional cloud-based ML services across consumer hardware. 
-        This significantly lowers the barrier to entry for both training and inference, empowering individuals and organizations to deploy state-of-the-art AI models without 
-        the need for costly, centralized infrastructure.
+
+      {/* Introduction Section */}
+      <div className="mb-12">
+        <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
+          Tensorlink is a decentralized computational platform that enables distributed inference and training of PyTorch models 
+          across a peer-to-peer network. It eliminates the need for dedicated AI hardware by allowing users to run, share, and access 
+          models through a distributed network while earning rewards for contributing compute resources. 
+        </p>
+        <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
+          Unlike existing services, Tensorlink provides native PyTorch integration alongside flexible API access, enabling seamless 
+          transitions between local and distributed execution. The platform integrates directly into PyTorch codebases through REST 
+          APIs for popular Hugging Face models and lightweight wrappers around core PyTorch objects like modules and optimizers. 
+          Nodes connect through a smart contract-secured peer-to-peer mesh, with GPU providers earning token rewards similar to 
+          Folding@Home or Gridcoin. Users can also expose their personal GPUs as private endpoints, allowing secure access to AI 
+          resources from external applications while maintaining complete data privacy.
+        </p>
+      </div>
+
+    {/* Key Features Section */}
+    <div className="mb-6">
+      <h2 className="text-2xl font-semibold dark:text-white text-neutral-900 mb-3 pb-2 border-b dark:border-neutral-800 border-neutral-200">
+        Key Features
+      </h2>
+      
+      <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-8">
+        Tensorlink serves diverse computational scenarios: running large language models without local GPU requirements, deploying 
+        private inference infrastructure on personal hardware accessible from any device, enabling agentic workflows with on-demand 
+        LLM APIs, and conducting distributed training with built-in model and data parallelism. Whether you're building web services 
+        that need cost-effective AI access, securing sensitive workloads on your own infrastructure, or experimenting with distributed 
+        fine-tuning on models too large for a single GPU, Tensorlink provides the tools to make it happen.
       </p>
 
-      <div className="flex items-center mb-6 mt-10">
-        <div className="bg-red-500 h-8 w-2 mr-4 rounded-lg"></div>
-        <h2 className="text-lg sm:text-2xl dark:text-zinc-100 font-bold">Key Features</h2>
+      <div className="space-y-8">
+        {/* On-demand Inference APIs */}
+        <div>
+          <h3 className="text-lg font-semibold dark:text-white text-neutral-900 mb-3">
+            REST API for Hugging Face
+          </h3>
+          <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 pl-4 border-l-2 dark:border-neutral-700 border-neutral-300">
+            This allows developers to maintain familiar workflows while operating models dynamically across a distributed compute network.
+            APIs are available in both free and paid tiers, with backend execution handled by worker nodes on the network.
+          </p>
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold dark:text-white text-neutral-900 mb-3">
+            <code className="bg-neutral-100 dark:bg-neutral-900 text-blue-600 dark:text-blue-400 px-2 py-1 rounded font-mono text-base">
+              DistributedModel
+            </code>
+          </h3>
+          <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 pl-4 border-l-2 dark:border-neutral-700 border-neutral-300">
+            A wrapper around <code className="bg-neutral-100 dark:bg-neutral-900 px-1.5 py-0.5 rounded text-sm font-mono">torch.nn.Module</code> objects 
+            designed to simplify the process of running models across one or many nodes. It automatically parses and distributes 
+            models across worker nodes, making efficient use of available compute while preserving the standard 
+            PyTorch model interface (<code className="bg-neutral-100 dark:bg-neutral-900 px-1.5 py-0.5 rounded text-sm font-mono">.forward</code>, 
+            <code className="bg-neutral-100 dark:bg-neutral-900 px-1.5 py-0.5 rounded text-sm font-mono">.backward</code>, 
+            <code className="bg-neutral-100 dark:bg-neutral-900 px-1.5 py-0.5 rounded text-sm font-mono">.parameters</code>).
+          </p>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold dark:text-white text-neutral-900 mb-3">
+            <code className="bg-neutral-100 dark:bg-neutral-900 text-blue-600 dark:text-blue-400 px-2 py-1 rounded font-mono text-base">
+              DistributedOptimizer
+            </code>
+          </h3>
+          <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 pl-4 border-l-2 dark:border-neutral-700 border-neutral-300">
+            Complements <code className="bg-neutral-100 dark:bg-neutral-900 px-1.5 py-0.5 rounded text-sm font-mono">DistributedModel</code> 
+            with synchronized parameter updates across nodes. Fully compatible with PyTorch and Hugging Face optimizers, 
+            ensuring seamless integration into diverse training pipelines.
+          </p>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold dark:text-white text-neutral-900 mb-3">
+            Public and Private Compute
+          </h3>
+          <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 pl-4 border-l-2 dark:border-neutral-700 border-neutral-300">
+            Tensorlink nodes connect through a smart contract-secured peer-to-peer mesh, creating a decentralized network where users can contribute idle GPU 
+            resources and earn token rewards. The network is incentivized through a token reward system which helps bootstrap GPU availabuility and keeps free-tier
+            services operational for the community. Private compute can also be exposed via endpoints to enable access to private AI compute in external applications, 
+            maintaining data privacy. For example, you can host an LLM on your home PC and access it securely from mobile or web applications through your own API key, 
+            ensuring your data never leaves your infrastructure.
+          </p>
+        </div>
       </div>
-      <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>
-        Tensorlink integrates directly into PyTorch codebases through lightweight wrappers around core PyTorch objects such as modules and optimizers. This allows developers 
-        to maintain familiar workflows while scaling models dynamically across a distributed compute network. By enabling collaboration and resource-sharing between users, 
-        Tensorlink brings the power of distributed training and inference to a broader community.
-      </p>
-      <h4 className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-10`}>
-          <strong><code className="bg-gray-200 dark:bg-gray-800 p-1 px-2 rounded">DistributedModel</code></strong>
-      </h4>
-      <ul className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5 list-disc ml-5`}>
-        A wrapper around `torch.nn.Module` objects designed to simplify the process of running models across multiple nodes. It automatically parses and distributes model submodules across worker nodes, making efficient use of available compute. Crucially, it preserves the standard PyTorch interface, including `forward`, `backward`, and `parameters` - allowing developers to integrate it into existing codebases with minimal friction. Tensorlink supports both model parallelism and data parallelism, and handles synchronization and communication between distributed components behind the scenes, streamlining complex workflows.
-      </ul>
-      <h4 className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-10`}>
-          <strong><code className="bg-gray-200 dark:bg-gray-800 p-1 px-2 rounded">DistributedOptimizer</code></strong>
-      </h4>
-      <ul className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5 list-disc ml-5`}>
-        The `DistributedOptimizer` is built to complement `DistributedModel`, providing synchronized parameter updates across distributed training nodes. It is fully compatible with PyTorch’s built-in optimizers as well as third-party optimizers used in Hugging Face transformers. This ensures seamless integration into diverse training pipelines and guarantees consistent updates in sharded or parallelized model training environments, improving training stability and reproducibility in distributed contexts.
-      </ul>
-      <h4 className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-10`}>
-          <strong>Public and Private Compute</strong>
-      </h4>
-      <ul className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5 list-disc ml-5`}>
-        By default, all Tensorlink nodes are connected through a smart contract-secured peer-to-peer mesh. This decentralized architecture enables users to share their idle computational resources and earn token-based rewards in return. The network supports both free and paid usage of resources, giving users flexible options depending on their compute needs and budget.
-      </ul>
-      <h4 className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-10`}>
-          <strong>On-demand Inference APIs</strong>
-      </h4>
-      <ul className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5 list-disc ml-5`}>
-        Tensorlink includes an API for on-demand inference using open-source Hugging Face pre-trained models. These APIs allow users to instantly access popular models in their applications.
-      </ul>
-      <h4 className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-10`}>
-          <strong>Data Privacy and Security</strong>
-      </h4>
-      <ul className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5 list-disc ml-5`}>
-        Tensorlink safeguards training data by obfuscating input data and fragmenting models. Privacy-preserving workflows are also supported.
-      </ul>
-      {/* <h4 className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-10`}>
-          <strong>Consensus (In Development):</strong>
-      </h4>
-      <ul className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5 list-disc ml-5`}>
-        The Proof-of-Learning (PoL) protocol ensures trust and reliability across the network through a dual-layered validation approach.
-      </ul>  
-      <h2 className={`${styles.subheading2} mt-10 pt-10 border-t dark:border-t-white border-t-black`}>
-        Privacy-Preserved Training
-      </h2>
-      <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>
-        Tensorlink offers specialized workflows for privacy-preserving training, safeguarding sensitive data by obfuscating input data and fragmenting models. Future advancements like homomorphic encryption could provide additional security layers.
-      </p> */}
-      <div className="flex items-center mb-6 mt-10">
-      <div className="bg-purple-500 h-8 w-2 mr-4 rounded-lg"></div>
-      <h2 className="text-lg sm:text-2xl dark:text-zinc-100 font-bold">Current Limitations</h2>
-    </div>  
-    <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>
-      As Tensorlink is still in its early release phase, users may encounter bugs, performance inconsistencies, and limited
-      network availability. As the network matures, these limitations are expected to be progressively addressed.
-    </p>
-    <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>
-      Currently, model support is focused on open-source Hugging Face models that do not require API keys. Safe and secure methods 
-      for custom model distribution are under development and will be available in future updates. There are also some practical 
-      constraints related to model size and resource allocation. Due to limited availability of public workers, tasks involving 
-      models larger than approximately 10 billion parameters may not perform optimally. Additionally, public inference and training 
-      jobs are currently restricted to a single worker, with data parallelism temporarily disabled for these tasks. However, data 
-      parallel acceleration remains available for local jobs and within private clusters (experimental).
-    </p>
-    <p className={`${styles.landingText2} sm:px-5 md:px-10 text-lg dark:text-gray-300 text-black mb-5 mt-5`}>    
-      Finally, internet latency and connection quality can significantly affect performance for public tasks over P2P, while API calls
-      are relatively unaffected. This may pose challenges for latency-sensitive or high-throughput training and inference scenarios in Python.
-      Fibre internet and over ethernet is recommended for the best performance.
-    </p>
-  </div>
+    </div>
+
+
+      {/* Limitations Section */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-semibold dark:text-white text-neutral-900 mb-6 pb-2 border-b dark:border-neutral-800 border-neutral-200">
+          Current Limitations
+        </h2>
+        
+        <div className="bg-amber-50 dark:bg-amber-950/20 border-l-4 border-amber-500 p-4 mb-6">
+          <p className="text-sm dark:text-amber-200 text-amber-900 font-medium mb-2">
+            Early Release Notice
+          </p>
+          <p className="text-sm dark:text-amber-100 text-amber-800">
+            As Tensorlink is still in its early release phase, users may encounter bugs, performance inconsistencies, 
+            and limited network availability. These limitations are expected to be progressively addressed as the network matures.
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <h4 className="text-base font-medium dark:text-white text-neutral-900 mb-2">
+              Model Support
+            </h4>
+            <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700">
+              Currently, model support is focused on open-source Hugging Face models that do not require API keys. 
+              Safe and secure methods for custom model distribution are under development and will be available in 
+              future updates.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="text-base font-medium dark:text-white text-neutral-900 mb-2">
+              Resource Constraints
+            </h4>
+            <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700">
+              Due to limited availability of public workers, tasks involving models larger than approximately 10 billion 
+              parameters may not be processed.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="text-base font-medium dark:text-white text-neutral-900 mb-2">
+              Network Performance
+            </h4>
+            <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700">
+              Internet latency and connection quality can significantly affect performance for distributed models over P2P, 
+              while API calls are relatively unaffected. This may pose challenges for latency-sensitive or high-throughput 
+              training and inference scenarios. Fiber internet and ethernet connections are recommended for the best performance.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
     
-    <div className="flex mt-16 mb-10 justify-between max-w-[1300px] w-full">
+    {/* Navigation */}
+    <div className="flex mt-8 mb-10 justify-between max-w-[1200px] w-full pt-8 border-t dark:border-neutral-800 border-neutral-200">
       <NavButton className="text-left" title="Home" subtitle="Previous" page="tensorlink" />
       <NavButton className="text-right" title="Getting Started" subtitle="Next" page="tensorlink/docs/install" />
     </div>
   </section>
-
-
 );
 
 export default Overview;

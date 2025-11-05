@@ -63,14 +63,14 @@ const MainHero = () => {
 
   return (
     <section className={`${styles.section}`}>
-      <div className={`items-center lg:px-0 px-20 rounded-md mt-10 ${styles.content} `}>
-        <div className={`${styles.contentBox} flex-row mt-2 mb-2`}>
+      <div className={`items-center lg:px-0 px-2 rounded-md mt-10 ${styles.content}`}>
+        <div className={`${styles.contentBox} flex-row mt-2 mb-2 -mx-5`}>
           <div className="min-w-[305px] mr-10 hidden md:block">
             <AnimatedLottie animationData={data} loop={true} />
           </div>
-          <div className="max-w-[310px] xs:max-w-2xl justify-center items-center" style={{ zIndex: 10 }}>
+          <div className="max-w-[320px] xs:max-w-2xl justify-center items-center" style={{ zIndex: 10 }}>
 
-            <div className="py-10 justify-items-left bg-gradient-to-bl from-gray-50 to-gray-100 dark:from-zinc-900 dark:to-zinc-950 px-8 xs:px-14 rounded-xl border border-gray-300 dark:border-gray-800 backdrop-blur-sm dark:shadow-black shadow-indigo-950 shadow-md">
+            <div className="py-10 justify-items-left bg-gradient-to-bl transition-all duration-300 from-gray-50 to-gray-100 dark:from-zinc-900 dark:to-zinc-950 px-8 xs:px-14 rounded-xl border border-gray-300 dark:border-gray-800 backdrop-blur-sm dark:shadow-black shadow-indigo-950 shadow-md">
               {/* Title */}
               <h2 className="text-[24px] ss:text-[32px] md:text-[40px] font-extrabold text-gray-800 dark:text-gray-200 leading-tight">
                 Unlocking  
@@ -79,7 +79,7 @@ const MainHero = () => {
 
               {/* Typing Animation */}
               <div className="text-[24px] ss:text-[32px] md:text-[40px] font-bold mb-2">
-                <span className="bg-gradient-to-r from-pink-500 to-gray-300 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
                   <span className={`typing ${isTyping ? "animate-typing" : ""}`}>
                     {currentWord}
                   </span>

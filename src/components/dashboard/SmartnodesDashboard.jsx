@@ -1,37 +1,59 @@
-import { MdDescription, MdLanguage, MdCheckCircle } from 'react-icons/md';
-import { NetworkDashboard, DashboardSwitcher, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton, DAODashboard } from "..";
+import { MdDescription, MdLanguage, MdAccountCircle, MdVerifiedUser } from 'react-icons/md';
+import { NetworkDashboard, DashboardSwitcher, AirdropIndicator, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton, DAODashboard } from "..";
 import styles, { layout } from "../../style";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Dummy data for local testing
 const dummyNetworkStats = {
   validators: 1,
-  workers: 1,
+  workers: 3,
   users: 0,
   jobs: 4,
   proposal: 1839,
   available_capacity: 9565387824,
   used_capacity: 15231271888,
-  models: ["Qwen/Qwen2.5-7B-Instruct"]
+  models: ["Qwen/Qwen3-8B"]
+};
+
+const dummyModelDemand = {
+    status: "success",
+    data: {
+        popular_models: [
+            {
+                model_name: "Qwen/Qwen3-8B",
+                recent_requests: 3,
+                total_requests: 3,
+                last_accessed: 1758814095.544846, 
+                has_distribution: true,
+                requests_per_day: 0.1,
+                last_accessed_human: "0 minutes ago"
+            }
+        ],
+        total_models_tracked: 1,
+        models_with_recent_activity: 1,
+        time_period_days: 30,
+        min_requests_threshold: 1,
+        generated_at: 1758814126.513382
+    }
 };
 
 const dummyNetworkHistory = {
   daily: {
     labels: ["2025-06-09","2025-06-10","2025-06-11","2025-06-12","2025-06-13","2025-06-14","2025-06-15","2025-06-16","2025-06-17","2025-06-18","2025-06-19","2025-06-20","2025-06-21","2025-06-22","2025-06-23","2025-06-24","2025-06-25","2025-06-26","2025-06-27","2025-06-28","2025-06-29","2025-06-30","2025-07-01","2025-07-02","2025-07-03","2025-07-04","2025-07-05","2025-07-06","2025-07-07","2025-07-08"],
     datasets: {
-      workers: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+      workers: [1,1,1,1,1,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,3,3,3,3,3],
       validators: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
       users: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
       jobs: [9,4,5,3,2,2,4,5,3,5,4,4,3,4,1,1,2,2,2,2,1,2,2,3,1,1,1,1,0,2],
       proposals: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-      total_capacity: [24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,0,24709234688,24709234688,24802164736,24802295808,24664014848,24664014848,24664014848,24664014848,0,0,24796659712],
-      used_capacity: [15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,0,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,0,0,15231271888]
+      total_capacity: [24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,24710348800,0,24709234688,24709234688,24802164736,24802295808,49420697600,49420697600,49420697600,49420697600,89420697600, 89420697600, 89420697600],
+      used_capacity: [15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,15231271888,0,15231271888,15231271888,15231271888,15231271888,24710348800,24710348800,24710348800,24710348800,24710348800, 49420697600, 49420697600]
     }
   },
   timestamps: [1749441600.0,1749528000.0,1749614400.0,1749700800.0,1749787200.0,1749873600.0,1749960000.0,1750046400.0,1750132800.0,1750219200.0,1750305600.0,1750392000.0,1750478400.0,1750564800.0,1750651200.0,1750737600.0,1750824000.0,1750910400.0,1750996800.0,1751083200.0,1751169600.0,1751256000.0,1751342400.0,1751428800.0,1751515200.0,1751601600.0,1751688000.0,1751774400.0,1751860800.0,1751947200.0],
   summary: {
     current: {
-      workers: 1,
+      workers: 3,
       validators: 0,
       users: 0,
       jobs: 3,
@@ -90,36 +112,121 @@ const SmartnodesDashboard = ({
     userAddress, 
     userBalance, 
     userLocked, 
-    userUnclaimed,
-    claimRewards,
     contract,
+    dao,
+    token,
+    coreAddress,
     tokenAddress,
-    multisigAddress,
+    coordinatorAddress,
+    daoAddress,
+    signer,
     connectToContract,
-    connectToCoinbaseWallet
+    connectToCoinbaseWallet,
+    activeMenu
  }) => {
     const DASHBOARD_TYPES = {
+        NODE: "node",
         SUPPLY_STATS: 'supply_stats',
         NETWORK: 'network',
         GOVERNANCE: 'governance',
     };
+    
     const dashboardConfig = [
         {
+            id: DASHBOARD_TYPES.NODE,
+            name: "Account",
+            icon: <MdAccountCircle />
+        },
+        {
             id: DASHBOARD_TYPES.NETWORK,
-            name: 'Active Networks',
+            name: 'Ecosystem',
             icon: <MdLanguage />
         },
         {
             id: DASHBOARD_TYPES.SUPPLY_STATS,
-            name: 'Contract Info',
+            name: 'Contract',
             icon: <MdDescription />
         },
         {
             id: DASHBOARD_TYPES.GOVERNANCE,
             name: 'Governance',
-            icon: <MdCheckCircle />
-        },
+            icon: <MdVerifiedUser />
+        }
     ];
+
+    // Storage key for persisting dashboard selection
+    const STORAGE_KEY = 'smartnodes_active_dashboard';
+
+    // Helper function to get saved dashboard from localStorage
+    const getSavedDashboard = () => {
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            // Validate that the saved value is a valid dashboard type
+            if (saved && Object.values(DASHBOARD_TYPES).includes(saved)) {
+                return saved;
+            }
+        } catch (error) {
+            console.warn('Error reading from localStorage:', error);
+        }
+        // Return default if no valid saved value
+        return DASHBOARD_TYPES.NETWORK;
+    };
+
+    // Helper function to save dashboard to localStorage
+    const saveDashboard = (dashboard) => {
+        try {
+            localStorage.setItem(STORAGE_KEY, dashboard);
+        } catch (error) {
+            console.warn('Error saving to localStorage:', error);
+        }
+    };
+
+    // State initialization - get from localStorage or use default
+    const [loading, setLoading] = useState(true);
+    const [networkStats, setNetworkStats] = useState(null);
+    const [networkHistory, setNetworkHistory] = useState(null);
+    const [modelDemand, setModelDemand] = useState(null);
+    const [activeDashboard, setActiveDashboard] = useState(getSavedDashboard());
+    const [useLocalData, setUseLocalData] = useState(true); // Toggle for local testing
+    const [error, setError] = useState(null);
+    const [userUnclaimed, setUserUnclaimed] = useState("-");
+    const [proposals, setProposals] = useState({
+        "f09b231df866b0cad1cb80ecd2877c80f519d1559cdbca22dddf36757cb4a19c": {
+            validators: [],
+            job_hashes: ["86a5f2d3b583f8f8ef7baac48a16d4a2a36d370575c78ed8de2bbebfdde89b48"],
+            job_capacities: [221823030],
+            workers: ["0x560fd8449eBAdAfE8168a560F656148F655459Ca"],
+            total_capacity: [24641994752],
+            total_workers: [1],
+            distribution_id: 1,
+            merkle_root: "a8f91bdcbb8a45852ace17fae6a36da4edc71f267737f6be008442b2a8d76036",
+            workers_hash: "db991787d5936e9a20e62084516ad73523339e79bbf6fc4fbadaefb0dba78772",
+            capacities_hash: "84a89de7dea777efe1af81da8d654dd3870fdc317283c1f52bfe9c89338b7e61"
+        },
+        "2041668305650f3c0076bc510a17efb7f233a26b1e8eeef57f008fef3ce8d7f3": {
+            validators: [],
+            job_hashes: [
+            "75d2c3444c96712a1d448f393fa0ef35137b5f632d089c2df355896c635adbd6",
+            "981e34217cf920b640142c5d4a4991da00369ff2da745b79b9e5607d5d636264"
+            ],
+            job_capacities: [443615273],
+            workers: ["0x560fd8449eBAdAfE8168a560F656148F655459Ca"],
+            total_capacity: [0],
+            total_workers: [0],
+            distribution_id: 2,
+            merkle_root: "4817c90023edb8e2464c9bbeeeb1e79b36d228fa679d1fa0248ba03a26d8742c",
+            workers_hash: "db991787d5936e9a20e62084516ad73523339e79bbf6fc4fbadaefb0dba78772",
+            capacities_hash: "45e9f4d72e026e96e14d019d21be2ede672209c890fe9f5a561d9c8da210a0a2"
+        }
+        }
+    ); 
+    const [claimInfo, setClaimInfo] = useState([]);    
+
+    // Custom setter that also saves to localStorage
+    const updateActiveDashboard = (dashboard) => {
+        setActiveDashboard(dashboard);
+        saveDashboard(dashboard);
+    };
 
     // Function to render active dashboard
     const renderActiveDashboard = () => {
@@ -127,17 +234,14 @@ const SmartnodesDashboard = ({
         switch (activeDashboard) {
             case DASHBOARD_TYPES.SUPPLY_STATS:
                 return (
+
                     <SupplyStatsCard 
                         supplyStats={supplyStats}
-                        userAddress={userAddress}
-                        userBalance={userBalance}
-                        userLocked={userLocked}
-                        userUnclaimed={userUnclaimed}
-                        claimRewards={claimRewards}
-                        contract={contract}
-                        ConnectWalletButton={ConnectWalletButton}
                         tokenAddress={tokenAddress}
-                        multisigAddress={multisigAddress}
+                        coordinatorAddress={coordinatorAddress}
+                        coreAddress={coreAddress}
+                        daoAddress={daoAddress}
+                        proposals={proposals}
                     />
                 );
             case DASHBOARD_TYPES.NETWORK:
@@ -146,28 +250,48 @@ const SmartnodesDashboard = ({
                     fetchNetworkData={fetchNetworkData}
                     networkStats={networkStats}
                     networkHistory={networkHistory}
+                    modelDemandData={modelDemand}
                     error={error}
                 />;
-            
             case DASHBOARD_TYPES.GOVERNANCE:
-                return <DAODashboard 
+                return <DAODashboard dao={dao} token={token} signer={signer}/>;
+            
+            case DASHBOARD_TYPES.NODE:
+                return <div>
+                    <Account 
+                        handleActionClick={handleActionClick}
+                        userAddress={userAddress}
+                        userBalance={userBalance}
+                        userLocked={userLocked}
+                        userUnclaimed={userUnclaimed}
+                        connectToContract={connectToContract} 
+                        connectToCoinbaseWallet={connectToCoinbaseWallet} 
+                        contract={contract} 
+                        claimData={claimInfo}
+                    />
+                    <NodeDashboard 
+                        claimInfo={claimInfo}
+                        userAddress={userAddress}
+                        contract={contract}
+                        fetchNetworkData={fetchNetworkData}
+                        setUserUnclaimed={setUserUnclaimed}
+                    />
+                </div>
+            
+            default:
+                return <NetworkDashboard
                     loading={loading}
                     fetchNetworkData={fetchNetworkData}
                     networkStats={networkStats}
                     networkHistory={networkHistory}
+                    modelDemandData={modelDemand}
                     error={error}
-                />
+                />;
         }
     };
 
-    const [loading, setLoading] = useState(true);
-    const [networkStats, setNetworkStats] = useState(null);
-    const [networkHistory, setNetworkHistory] = useState(null);
-    const [activeDashboard, setActiveDashboard] = useState(DASHBOARD_TYPES.NETWORK);
-    const [useLocalData, setUseLocalData] = useState(true); // Toggle for local testing
-    const [error, setError] = useState(null);
-
     const API_BASE_URL = "https://smartnodes.ddns.net/tensorlink-api";
+    // const API_BASE_URL = "http://192.168.2.54:64747";
     
     const fetchNetworkData = async () => {
         try {
@@ -178,6 +302,7 @@ const SmartnodesDashboard = ({
                 setTimeout(() => {
                     setNetworkStats(dummyNetworkStats);
                     setNetworkHistory(dummyNetworkHistory);
+                    setModelDemand(dummyModelDemand);
                     setError(null);
                     setLoading(false);
                 }, 1000);
@@ -185,9 +310,10 @@ const SmartnodesDashboard = ({
             }
             
             // Fetch both stats and history from API
-            const [statsResponse, historyResponse] = await Promise.all([
+            const [statsResponse, historyResponse, models] = await Promise.all([
                 fetch(`${API_BASE_URL}/stats`),
-                fetch(`${API_BASE_URL}/network-history`)
+                fetch(`${API_BASE_URL}/network-history?days=60`),
+                fetch(`${API_BASE_URL}/model-demand`)
             ]);
 
             if (!statsResponse.ok || !historyResponse.ok) {
@@ -196,9 +322,12 @@ const SmartnodesDashboard = ({
 
             const statsData = await statsResponse.json();
             const historyData = await historyResponse.json();
-            
+            const modelData = await models.json();
+
+            fetchProposals();
             setNetworkStats(statsData);
             setNetworkHistory(historyData);
+            setModelDemand(modelData);
             setError(null);
         } catch (err) {
             console.error('Error fetching network data:', err);
@@ -207,6 +336,24 @@ const SmartnodesDashboard = ({
             setLoading(false);
         }
     };
+
+    const fetchRewards = async () => {
+        if (userAddress !== "-") {
+            const response = await fetch(`${API_BASE_URL}/claim-info?node_address=${userAddress}`);
+            console.log(response);
+            if (!response.ok) throw new Error(`Failed to find worker rewards.`);
+            
+            const unclaimed = await response.json();
+            setClaimInfo(unclaimed);
+        }
+    };
+
+    const fetchProposals = async () => {
+        const response = await fetch(`${API_BASE_URL}/proposal-history`);
+        if (!response.ok) throw new Error(`Failed to find proposals.`);
+        const p = await response.json();
+        setProposals(p);
+    }
 
     const handleActionClick = (actionId) => {
         switch (actionId) {
@@ -225,48 +372,66 @@ const SmartnodesDashboard = ({
     useEffect(() => {
         fetchNetworkData();
         
-        // Refresh data every 2 minutes
-        const interval = setInterval(fetchNetworkData, 120000);
+        // Refresh data every 10 minutes
+        const interval = setInterval(fetchNetworkData, 600000);
         return () => clearInterval(interval);
     }, []);
 
+    const titleRef = useRef(null);
+
+    useEffect(() => {
+        // Scroll so that the title is at the very top of the page
+        if (titleRef.current) {
+            titleRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }, []);
+
+    useEffect(() => {
+        if (userAddress !== "-") {
+            fetchRewards();
+        }
+    }, [userAddress]);
+
+    const handleAirdropAction = () => {
+        console.log("Learn more about airdrop clicked");
+    };
+
+    const handleAirdropClose = () => {
+        setShowAirdropBanner(false);
+        // Optional: Save to localStorage to remember user preference
+        localStorage.setItem('airdrop_banner_dismissed', 'true');
+    };
+
+    // Check if user previously dismissed the banner
+    useEffect(() => {
+        const dismissed = localStorage.getItem('airdrop_banner_dismissed');
+        if (dismissed === 'true') {
+            setShowAirdropBanner(false);
+        }
+    }, []);
+
     return (
-        <section className={`bg-gray-300 dark:bg-zinc-900 flex mt-5 flex-col border-t dark:border-t-white border-t-black items-center pb-10
+        <section 
+            id="dashboard"
+            ref={titleRef}
+            className={`bg-zinc-100 dark:bg-zinc-900 flex mt-3 flex-col border-t dark:border-t-white border-t-black items-center pb-5
                                 border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
-            <div className="mt-5 max-w-[1380px] items-center w-full flex-wrap">
-                <h1 className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-700 border dark:border-white border-black p-5 text-left px-6 md:mt-2 max-w-[830px] mb-6`}>
-                    Smartnodes <span className="font-normal text-gray-400" style={{color: "#f7a6a0"}}>(testnet)</span> Dashboard
+            <div className="mt-3 max-w-[1380px] items-center w-full flex-wrap">
+                <div className="w-full max-w-[1380px]">
+                    <AirdropIndicator />
+                </div>
+                <h1 
+                    className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-900 border dark:border-neutral-500 border-black p-2 xs:p-5 text-left px-6 md:mt-2 max-w-[830px] mb-3`}>
+                    Smartnodes <span className="font-normal text-gray-400" style={{color: "rgba(105, 220, 100, 1)"}}>(testnet)</span> Dashboard
                 </h1>
 
-                <NetworkSummary networkStats={networkStats} />
-
-                <Account 
-                    handleActionClick={handleActionClick}
-                    userAddress={userAddress}
-                    userBalance={userBalance}
-                    userLocked={userLocked}
-                    userUnclaimed={userUnclaimed}
-                    claimRewards={claimRewards}
-                    connectToContract={connectToContract} 
-                    connectToCoinbaseWallet={connectToCoinbaseWallet} 
-                    contract={contract} 
-                />
-
-                <NodeDashboard 
-                    userAddress={userAddress}
-                    contract={contract}
-                />
-
-                <h1 className={`${styles.subheading2} text-neutral-800 dark:text-neutral-50 py-3 border-t mt-7`}>
-                    {/* Toggle Panel */}
-                    Network Statistics                    
-                </h1>
+                <NetworkSummary networkStats={networkStats} activeMenu={activeMenu}/>
                 
-                {/* Dashboard Switcher */}
+                {/* Dashboard Switcher - now uses updateActiveDashboard */}
                 <DashboardSwitcher 
                     dashboardConfig={dashboardConfig} 
                     activeDashboard={activeDashboard}
-                    setActiveDashboard={setActiveDashboard}
+                    setActiveDashboard={updateActiveDashboard}
                 />
 
                 {/* Render Active Dashboard */}

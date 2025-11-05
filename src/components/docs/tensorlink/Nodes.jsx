@@ -1,7 +1,6 @@
 import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
-import styles, { layout } from "../../../style";
 import { NavButton } from "../..";
 
 const privateNetworkExample = `from tensorlink import UserNode, ValidatorNode, WorkerNode, DistributedModel
@@ -55,61 +54,86 @@ worker.cleanup()
 validator.cleanup()`;
 
 const Nodes = () => (
-  <section className="px-5 sm:px-5 md:px-10 flex flex-col border-t dark:border-t-white border-t-black items-center">
-    <div className="text-left justify-center items-center sm:max-w-[1280px]">
-      <div className="flex items-center ml-1 mb-6 mt-16">
-        <div className="bg-blue-600 h-8 w-2 mr-4 rounded-lg"></div>
-        <h1 className="text-xl sm:text-3xl dark:text-zinc-100 font-bold">Nodes & Communication</h1>
-      </div>
-      
-      <p className={`${styles.landingText2} sm:px-5 md:px-10  dark:text-gray-300 text-black mb-5 mt-5`}>
-        Tensorlink enables secure, distributed computing across local, private, and public networks. Each node, whether a 
-        <strong> User</strong>, <strong>Worker</strong>, or <strong>Validator</strong>, plays a role in powering collaborative machine learning workflows.
-        By default, the DistributedModel processes spawns a User node in the background, which automatically connects your workflow 
-        to tensorlink's public GPU resources. However, these nodes can be customized for running local and private workloads.
-      </p>
+  <section className="px-5 md:px-10 flex flex-col border-t dark:border-neutral-800 border-neutral-200 items-center h-full">
+    <div className="text-left py-7 max-w-[1200px] w-full">
 
-      <div className="flex items-center ml-1 mb-6 mt-16">
-        <h2 className="text-lg sm:text-2xl ml-3 dark:text-zinc-100 font-bold">Node Types</h2>
-      </div>
-      
-      <p className={`${styles.landingText2} sm:px-5 md:px-10 dark:text-gray-300 text-black mb-5 mt-5`}>
-        Tensorlink utilizes three primary node classes, each tailored to fulfill distinct roles within a distributed machine learning workflow. 
-        These nodes collaborate to ensure efficient coordination, resource sharing, and job validation. Nodes can operate on a public, smart 
-        contract-secured network for shared access or on a private network for localized jobs on dedicated machines.
-      </p>
-      <ul className={`${styles.landingText2} sm:px-5 md:px-10 dark:text-gray-300 text-black mb-5 mt-5 list-disc ml-5`}>
-        <li>
-          <code>UserNode</code>: Initiates jobs and facilitates communication to works for distributed models.
-        </li>
-        <li>
-          <code>WorkerNode</code>: Processes model segments and provides training or inference outputs to the UserNode.
-        </li>
-        <li>
-          <code>ValidatorNode</code>: Ensures job security, validates tasks, and upholds network integrity.
-        </li>
-      </ul>
-
-      <div className="flex items-center ml-1 mb-6 mt-16">
-        <div className="bg-blue-600 h-8 w-2 mr-4 rounded-lg"></div>
-        <h2 className="text-lg sm:text-2xl ml-3 dark:text-zinc-100 font-bold">Private Workload Example</h2>
+      {/* Title */}
+      <div className="pb-4 mb-4 border-b dark:border-neutral-800 border-neutral-200">
+        <h1 className="text-4xl font-bold dark:text-white text-neutral-900 mb-2">
+          Nodes & Communication
+        </h1>
+        <p className="text-lg dark:text-neutral-400 text-neutral-600">
+          Local, private, and public networks for collaborative ML workflows
+        </p>
       </div>
 
-      <p className={`${styles.landingText2} sm:px-5 md:px-10  dark:text-gray-300 text-black mb-5 mt-5`}>
-        The following example demonstrates how nodes could interact for fully closed job on a group of devices,
-        all simulated in the same script for this example:
-      </p>    
+      {/* Intro */}
+      <div className="mb-12">
+        <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700">
+          Tensorlink enables secure, distributed computing across local, private, and public networks. 
+          Each node—whether a <strong>User</strong>, <strong>Worker</strong>, or <strong>Validator</strong>—plays a role 
+          in powering collaborative machine learning workflows.
+        </p>
+        <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mt-4">
+          By default, the <code className="bg-neutral-100 dark:bg-neutral-900 px-2 py-0.5 rounded font-mono text-sm">DistributedModel</code> 
+          spawns a User node in the background, automatically connecting to Tensorlink's public GPU resources. 
+          Nodes can also be customized for local and private workloads.
+        </p>
+      </div>
 
-      <div className="max-w-[250px] xs:max-w-[400px] sm:max-w-[600px] md:max-w-full">
-        <SyntaxHighlighter language="python" className="flex overflow-scroll max-w-full" style={vscDarkPlus}>
-          {privateNetworkExample}
-        </SyntaxHighlighter>
+      {/* Node Types */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-semibold dark:text-white text-neutral-900 mb-3 pb-2 border-b dark:border-neutral-800 border-neutral-200">
+          Node Types
+        </h2>
+        <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
+          Tensorlink provides three primary node classes for distributed machine learning workflows. 
+          Nodes can operate on a public, contract-secured network for shared access, or on a private 
+          network for localized jobs.
+        </p>
+        <ul className="list-disc pl-6 text-base dark:text-neutral-300 text-neutral-700 space-y-2">
+          <li>
+            <code className="bg-neutral-100 dark:bg-neutral-900 px-1 rounded font-mono">UserNode</code> – Initiates jobs 
+            and coordinates distributed model communication.
+          </li>
+          <li>
+            <code className="bg-neutral-100 dark:bg-neutral-900 px-1 rounded font-mono">WorkerNode</code> – Processes model 
+            segments and provides training or inference outputs to the UserNode.
+          </li>
+          <li>
+            <code className="bg-neutral-100 dark:bg-neutral-900 px-1 rounded font-mono">ValidatorNode</code> – Ensures 
+            security, validates tasks, and upholds network integrity.
+          </li>
+        </ul>
+      </div>
+
+      {/* Private Example */}
+      <div className="mb-12">
+        <h2 className="text-2xl font-semibold dark:text-white text-neutral-900 mb-3 pb-2 border-b dark:border-neutral-800 border-neutral-200">
+          Private Workload Example
+        </h2>
+        <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-4">
+          The following example demonstrates how nodes can interact for a fully private job on a group of devices, 
+          simulated in the same script for simplicity:
+        </p>
+        <div className="w-full overflow-x-auto">
+          <div className="max-w-[90vw] sm:max-w-[600px] md:max-w-full mx-auto rounded-lg">
+            <SyntaxHighlighter
+              language="python"
+              style={vscDarkPlus}
+              className="text-xs sm:text-sm md:text-base p-2 sm:p-4 rounded-lg"
+            >
+              {privateNetworkExample}
+            </SyntaxHighlighter>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div className="flex mt-10 mb-10 justify-between max-w-[1300px] w-full">
-      <NavButton title="Inference APIs" subtitle="Previous" page="tensorlink/docs/api" />
-      <NavButton title="Mining" subtitle="Next" page="tensorlink/docs/mining" />
+    {/* Navigation */}
+    <div className="flex mt-8 mb-10 justify-between max-w-[1200px] w-full pt-8 border-t dark:border-neutral-800 border-neutral-200">
+      <NavButton className="text-left" title="Inference APIs" subtitle="Previous" page="tensorlink/docs/api" />
+      <NavButton className="text-right" title="Mining" subtitle="Next" page="tensorlink/docs/mining" />
     </div>
   </section>
 );

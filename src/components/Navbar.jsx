@@ -30,17 +30,17 @@ const Navbar = () => {
   const handleActiveMenu = () => setActiveMenu(!activeMenu);
 
   return (
-    <motion.nav className="w-full flex z-20 pt-5 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}>
+    <motion.nav className="w-full flex z-20 pt-4 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}>
       {/* Logo and menu for desktop */}
       {!activeMenu ? (
         <div
-          className={`flex flex-row bg-gray-400 rounded-xl px-3 py-0 cursor-pointer`}
+          className={`flex flex-row bg-slate-300 rounded-xl px-3 py-0 cursor-pointer`}
           style={{ zIndex: 100000 }}
           onClick={() => {
               setActiveMenu(!activeMenu);
           }}
         >
-          <img src={logoSrc} alt="task" className="w-auto h-auto max-w-[325px] max-h-[160px] hidden md:block" />
+          <img src={logoSrc} alt="task" className="w-auto h-auto max-w-[235px] max-h-[150px] hidden md:block" />
           <img src={smallLogoSrc} alt="task" className="w-[70px] h-[70px] md:hidden mb-1 my-1.5" />
         </div>      
       ) : (
@@ -48,13 +48,13 @@ const Navbar = () => {
       )}
 
       {/* Desktop navbar */}
-      <ul className="list-none md:flex hidden justify-end px-5 items-center flex-1">
+      <ul className="list-none md:flex hidden justify-end px-5 py-1 items-center flex-1">
         {navLinks.map((nav, index) => (
           <li
             key={nav.id}
             className={`font-poppins font-normal cursor-pointer text-[16px] ${
               active === nav.title ? "dark:text-white text-black" : "dark:text-dimWhite text-gray-500"
-            } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"}`}
+            } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"} ${nav.title === "Dashboard" ? "transition-transform duration-300 hover:scale-105" : ""}`}
             onClick={() => setActive(nav.title)}
             style={{ zIndex: 10000 }}
           >
@@ -79,7 +79,7 @@ const Navbar = () => {
                     : "scale-y-0 opacity-0 -translate-y-2 pointer-events-none"
                   }
                 `}>
-                  <ul className="px-2 py-2">
+                  <ul className="p-1">
                     {nav.networks.map((networkObj, idx) => (
                       <li
                         key={networkObj.link}
@@ -102,6 +102,15 @@ const Navbar = () => {
                   </ul>
                 </div>
               </div>
+          ) : nav.title == "Dashboard" ? (
+              <a 
+                href="/app#dashboard"
+                className="relative px-4 py-2 rounded-lg font-semibold text-white overflow-hidden group"
+              >
+                <span className="relative z-10">{nav.title}</span>
+                <span className="absolute inset-0 bg-gradient-to-r rounded-lg from-purple-500/60 via-blue-500/60 to-pink-500/60 animate-gradient-x group-hover:from-purple-500/70 group-hover:via-blue-500/70 group-hover:to-pink-500/70 transition-all duration-300"></span>
+                <span className="absolute inset-0 bg-gradient-to-r rounded-lg from-purple-500/60 via-blue-500/60 to-pink-500/60 blur-md opacity-75 animate-gradient-x group-hover:opacity-100 group-hover:blur-md transition-all duration-300"></span>
+              </a>
             ) : (
               <a href={`/${nav.id}`}>{nav.title}</a>
             )}
@@ -123,7 +132,7 @@ const Navbar = () => {
         <div
           className={`
             absolute top-16 right-0 mx-4 mt-4 min-w-[140px]
-            border border-gray-300 p-6 dark:bg-slate-500 bg-slate-200
+            border border-gray-300 p-6 dark:bg-slate-600 bg-slate-200
             rounded-xl shadow-xl z-30
             transform origin-top transition-all duration-300 ease-out
             ${toggle ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0 pointer-events-none"}
@@ -156,10 +165,10 @@ const Navbar = () => {
                     
                     {/* Enhanced Mobile Networks Dropdown */}
                     <div className={`
-                      ml-4 mt-2 bg-gray-800 rounded-lg shadow-lg overflow-hidden
+                      ml-4 bg-gray-800 rounded-lg shadow-lg overflow-hidden
                       transform origin-top transition-all duration-300 ease-out
                       ${networksOpen 
-                        ? "scale-y-100 opacity-100 max-h-96 pointer-events-auto" 
+                        ? "scale-y-100 opacity-100 max-h-96 pointer-events-auto mt-4" 
                         : "scale-y-0 opacity-0 max-h-0 pointer-events-none"
                       }
                     `}>
@@ -189,6 +198,10 @@ const Navbar = () => {
                       </ul>
                     </div>
                   </div>
+                ) : nav.title == "Dashboard" ? (
+                  <a href="/app#dashboard">
+                    {nav.title}
+                  </a>
                 ) : (
                   <a href={`/${nav.id}`}>{nav.title}</a>
                 )}

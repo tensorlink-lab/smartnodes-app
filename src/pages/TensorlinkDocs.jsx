@@ -20,17 +20,16 @@ const TensorlinkDocs = () => {
   const Disclaimer2 = () => (
     <div className="bg-yellow-100 mt-1 p-4 border-l-4 border-yellow-500 sm:text-sm text-xs">
       <p className="text-yellow-800 dark:text-black font-medium">
-        Model availability on the public network is currently limited. If you have a capable machine, please consider <a href="/mining" className="text-blue-600 dark:text-blue-400 underline">running a node</a> to support the project.
+        Model availability on the public network is currently limited. If you have a capable machine, please consider <a href="/tensorlink/docs/mining" className="text-blue-600 dark:text-blue-400 underline">running a node</a> to support the project.
         For questions, feedback, or to get involved, join the discussion on <a href="https://discord.gg/aCW2kTNzJ2" className="text-blue-600 dark:text-blue-400 underline">Discord</a>.
       </p>
     </div>
   );
 
   return (
-    <div>
+    <div className="bg-white dark:bg-neutral-900 pt-1 mt-3 border-t border-t-black dark:border-t-white">
       <Disclaimer1 />
       <Disclaimer2 />
-
       <Routes>
         <Route index element={<Overview />} />
         <Route path="overview" element={<Overview />} />

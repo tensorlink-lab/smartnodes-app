@@ -1,81 +1,262 @@
-import { motion } from 'framer-motion';
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MdHowToVote, MdGavel, MdAdd, MdClose } from "react-icons/md";
 
-// Mock styles object for demonstration
-const styles = {
-  subheading: "text-2xl font-bold",
-  subheading2: "text-2xl font-bold"
-};
+const DAODashboard = ({ dao, token, signer }) => {
+  const [proposals, setProposals] = useState([]);
+  const [selectedProposal, setSelectedProposal] = useState(null);
+  const [voteAmount, setVoteAmount] = useState("");
+  const [voteSupport, setVoteSupport] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
 
-const DAODashboard = ({
-  loading,
-  fetchNetworkData,
-  networkStats,
-  networkHistory,
-  error
-}) => {
-  const [isDarkMode, setIsDarkMode] = useState(
-    document.documentElement.classList.contains('dark')
-  );
+  // Proposal creation state
+  const [target, setTarget] = useState("");
+  const [calldata, setCalldata] = useState("");
+  const [value, setValue] = useState("0");
+  const [description, setDescription] = useState("");
+
+  // === Load Proposals ===
+  const fetchProposals = async () => {
+    if (!dao) return;
+    const count = await dao.proposalCount();
+    const loaded = [];
+    for (let i = 1; i <= count; i++) {
+      const p = await dao.proposals(i);
+      const [forVotes, againstVotes] = await dao.getProposalVotes(i);
+      const state = await dao.state(i);
+
+      loaded.push({
+        id: i,
+        title: p.description,
+        description: p.description,
+        proposer: p.proposer,
+        startTime: new Date(Number(p.startTime) * 1000),
+        endTime: new Date(Number(p.endTime) * 1000),
+        forVotes: Number(forVotes),
+        againstVotes: Number(againstVotes),
+        status: state,
+      });
+    }
+    setProposals(loaded);
+  };
+
   useEffect(() => {
-    const observer = new MutationObserver(() => {
-      const isDark = document.documentElement.classList.contains('dark');
-      setIsDarkMode(isDark); // trigger re-render
-    });
+    fetchProposals();
+  }, [dao]);
 
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class'],
-    });
+  // === DAO Actions ===
+  const castVote = async () => {
+    if (!dao || !selectedProposal) return;
+    setLoading(true);
+    try {
+      // First approve the DAO to spend voting tokens
+      await (await token.approve(dao.target, voteAmount)).wait();
 
-    return () => observer.disconnect();
-  }, []);
+      // Then vote
+      await (await dao.vote(selectedProposal.id, voteSupport, voteAmount)).wait();
+      await fetchProposals();
+      setSelectedProposal(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const queueProposal = async (proposalId) => {
+    setLoading(true);
+    try {
+      await (await dao.queue(proposalId)).wait();
+      await fetchProposals();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const executeProposal = async (proposalId) => {
+    setLoading(true);
+    try {
+      await (await dao.execute(proposalId)).wait();
+      await fetchProposals();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createProposal = async () => {
+    if (!dao) return;
+    setLoading(true);
+    try {
+      await (
+        await dao.propose(
+          [target],
+          [calldata],
+          [value],
+          description
+        )
+      ).wait();
+      await fetchProposals();
+      setShowCreate(false);
+      setTarget("");
+      setCalldata("");
+      setValue("0");
+      setDescription("");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="w-full mt-2 max-w-[1380px] space-y-2">
-      <div className="mb-6">
+    <div className="p-4">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl sm:text-2xl dark:text-white font-bold pb-[900px]">DAO Dashboard (coming soon)</h1>
+        {/* <button
+          onClick={() => setShowCreate(true)}
+          className="flex items-center bg-blue-500 text-white px-3 py-2 rounded-lg shadow-md"
+        >
+          <MdAdd className="mr-1" /> New Proposal
+        </button> */}
+      </div>
 
-        <h1 className={`${styles.subheading2} dark:text-white py-3`}>
-          Active Networks
-        </h1>
-        
-        <div className="">
-            {/* Tensorlink Network Status */}
-            <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4 mb-2 px-2">
-                <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="flex items-center bg-green-100 dark:bg-green-800/30 rounded-lg p-3 border-2 border-gray-300 dark:border-neutral-400 shadow-md"
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {proposals.map((p) => (
+          <motion.div
+            key={p.id}
+            className="bg-white shadow-md p-4 rounded-xl"
+            whileHover={{ scale: 1.02 }}
+          >
+            <h2 className="text-lg font-semibold">{p.title}</h2>
+            <p>{p.description}</p>
+            <p>Status: {p.status}</p>
+            <p>
+              For: {p.forVotes} | Against: {p.againstVotes}
+            </p>
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={() => setSelectedProposal(p)}
+                className="px-2 py-1 bg-green-500 text-white rounded-md flex items-center"
+              >
+                <MdHowToVote className="mr-1" /> Vote
+              </button>
+              <button
+                onClick={() => queueProposal(p.id)}
+                className="px-2 py-1 bg-yellow-500 text-white rounded-md flex items-center"
+              >
+                <MdAdd className="mr-1" /> Queue
+              </button>
+              <button
+                onClick={() => executeProposal(p.id)}
+                className="px-2 py-1 bg-purple-600 text-white rounded-md flex items-center"
+              >
+                <MdGavel className="mr-1" /> Execute
+              </button>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* === Vote Modal === */}
+      <AnimatePresence>
+        {selectedProposal && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="bg-white p-6 rounded-xl shadow-xl w-96">
+              <h2 className="text-lg font-bold">
+                Vote on {selectedProposal.title}
+              </h2>
+              <input
+                type="number"
+                placeholder="Vote amount"
+                value={voteAmount}
+                onChange={(e) => setVoteAmount(e.target.value)}
+                className="w-full border p-2 mt-2"
+              />
+              <div className="flex gap-2 mt-2">
+                <button
+                  onClick={() => setVoteSupport(true)}
+                  className={`flex-1 px-3 py-2 rounded ${
+                    voteSupport ? "bg-green-500 text-white" : "bg-gray-200"
+                  }`}
                 >
-                </motion.div>
+                  For
+                </button>
+                <button
+                  onClick={() => setVoteSupport(false)}
+                  className={`flex-1 px-3 py-2 rounded ${
+                    !voteSupport ? "bg-red-500 text-white" : "bg-gray-200"
+                  }`}
+                >
+                  Against
+                </button>
+              </div>
+              <div className="flex justify-end gap-2 mt-4">
+                <button onClick={() => setSelectedProposal(null)}>
+                  <MdClose />
+                </button>
+                <button onClick={castVote} disabled={loading}>
+                  {loading ? "Voting..." : "Submit Vote"}
+                </button>
+              </div>
             </div>
-
-            {/* Section header for Tensorlink data */}
-            <div className="mb-4 mt-5">
-                <div className="flex items-center justify-center">
-                <div className="flex-1 h-px bg-green-300 dark:bg-green-600"></div>
-                <div className="mx-4 text-sm text-green-600 dark:text-green-400 font-medium bg-green-100 dark:bg-green-800/50 px-3 py-1 rounded-full">
-                    Tensorlink Network Analytics
-                </div>
-                <div className="flex-1 h-px bg-green-300 dark:bg-green-600"></div>
-                </div>
-            </div>
-
-            {/* Charts Container - Side by side on large screens */}
-            <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4 rounded-lg">
-              </motion.div>
-            </div>
-        </div>
-
-        {/* Last Updated */}
-        {networkHistory?.metadata && (
-        <div className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center pb-10">
-            Last updated: {new Date(networkHistory.metadata.generated_at_iso).toLocaleString()}
-        </div>
+          </motion.div>
         )}
+      </AnimatePresence>
+
+      {/* === Proposal Creation Modal === */}
+      <AnimatePresence>
+        {showCreate && (
+          <motion.div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="bg-white p-6 rounded-xl shadow-xl w-96">
+              <h2 className="text-lg font-bold mb-2">Create Proposal</h2>
+              <input
+                type="text"
+                placeholder="Target contract"
+                value={target}
+                onChange={(e) => setTarget(e.target.value)}
+                className="w-full border p-2 mt-2"
+              />
+              <input
+                type="text"
+                placeholder="Calldata (hex-encoded)"
+                value={calldata}
+                onChange={(e) => setCalldata(e.target.value)}
+                className="w-full border p-2 mt-2"
+              />
+              <input
+                type="text"
+                placeholder="ETH value (wei)"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                className="w-full border p-2 mt-2"
+              />
+              <textarea
+                placeholder="Proposal description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="w-full border p-2 mt-2"
+              />
+              <div className="flex justify-end gap-2 mt-4">
+                <button onClick={() => setShowCreate(false)}>
+                  <MdClose />
+                </button>
+                <button onClick={createProposal} disabled={loading}>
+                  {loading ? "Creating..." : "Submit Proposal"}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-    );
+  );
 };
 
 export default DAODashboard;

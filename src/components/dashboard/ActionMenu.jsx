@@ -1,10 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
-  MdAdd, 
+  MdSettings, 
   MdWork, 
   MdPersonAdd, 
   MdVerifiedUser,
-  MdClose,
 } from 'react-icons/md';
 
 const ActionMenu = () => {
@@ -31,7 +30,7 @@ const ActionMenu = () => {
       id: 'create-validator',
       name: 'Create Validator',
       icon: <MdVerifiedUser className="text-xl" />,
-      color: 'bg-blue-400 hover:bg-blue-600',
+      color: 'bg-red-400 hover:bg-red-600',
       description: 'Create Validator'
     }
   ];
@@ -112,22 +111,24 @@ const ActionMenu = () => {
         })}
       </div>
 
-      {/* Main FAB Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        className={`
-          relative w-10 xs:w-12 h-10 xs:h-12 rounded-full shadow-xl
-          flex items-center justify-center text-white text-2xl
-          transform transition-all duration-300
-          outline-none ring-4 ring-blue-300/50
-          ${isOpen ? 'bg-red-500 hover:bg-red-600 rotate-45' : 'bg-blue-600 hover:bg-blue-700'}
-          ${isHovered || isOpen ? 'scale-110' : 'scale-100'}
-        `}
-      >
-        {isOpen ? <MdClose /> : <MdAdd />}
-      </button>      
+      {/* Main FAB Button with Gear Icon */}
+      <div className="relative group">
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className={`
+            relative w-8 xs:w-10 h-8 xs:h-10 rounded-full shadow-xl
+            flex items-center justify-center text-white text-2xl
+            transform transition-all duration-300
+            outline-none ring-4 ring-blue-300/50
+            bg-blue-600 hover:bg-blue-700 m-1
+            ${isHovered || isOpen ? 'scale-110' : 'scale-100'}
+          `}
+        >
+          <MdSettings className={`transition-transform duration-500 ${isOpen ? 'rotate-180' : 'rotate-0'}`} />
+        </button>
+      </div>         
     </div>
   );
 };

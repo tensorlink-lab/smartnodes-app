@@ -1,23 +1,19 @@
 import {
   ai,
-  reddit,
   job,
   telescope,
   blocks,
   community,
   linkedin,
   twitter,
-  airbnb,
-  binance,
   discord,
-  coinbase,
-  dropbox,
+  x,
 } from "../assets";
 import { MdHome } from "react-icons/md";
+import { Cpu, Zap, Lock } from "lucide-react";
 
 export const overview = {
-  // info: "Share your unused computing power, earn rewards, and help users and researchers tackle challenges in AI, science, and beyond. Smartnodes enables the creation of volunteer data processing networks by transforming idle hardware into collaborative compute nodes, building inclusive, scalable infrastructure capable of achieving what was previously out of reach.",
-  info: "Smartnodes transforms globally distributed hardware into a programmable, composable layer for big data and compute. By exposing resources through APIs and Python libraries, developers can stream, process, and analyze data across a secure peer-to-peer network, unlocking scalable and collaborative infrastructure for machine learning and scientific computing.",
+  info: "Smartnodes takes decentralized physical infrastructure (DePIN) to the next level by making it modular and flexible. It transforms globally distributed hardware into a programmable, composable layer for computation and data collection. Developers can securely access these shared resources through APIs and Python libraries, unlocking scalable infrastructure without needing expensive local hardware.",
 };
 
 export const portals = [
@@ -63,6 +59,10 @@ export const sideLinks = [
         icon: MdHome,
         sublinks: [{ id: "overview", name: "Overview" }],
       },
+      {
+        name: "Whitepaper",
+        id: "https://github.com/smartnodes-lab/smartnodes-core/blob/main/whitepaper.md",
+      },
     ],
   },
   {
@@ -86,11 +86,6 @@ export const sideLinks = [
           { id: "mining", name: "Mining" },
           // { id: "wallet", name: "Wallet Config"},
         ],
-      },
-      {
-        name: "localhostGPT",
-        id: "tensorlink/localhostGPT",
-        icon: MdHome,
       },
     ],
   },
@@ -146,35 +141,23 @@ export const features = [
     id: "1",
     title: "Plug-and-Play",
     content:
-      "Easily tap into distributed computational resources through model wrappers that integrate with existing PyTorch workflows, offloading model compute behind the scenes.",
+      "Effortlessly offload heavy computation to distributed nodes with PyTorch-ready model wrappers that integrate behind the scenes.",
+    icon: Cpu,
   },
   {
     id: "2",
     title: "On-demand Inference",
     content:
-      "Access free and paid APIs for inference with pre-trained Hugging Face models, or deploy your own models and expose them as live API endpoints.",
+      "Run inference or train models on distributed hardware through simple APIs. Deploy Hugging Face or custom models without managing GPUs.",
+    icon: Zap,
   },
   {
     id: "3",
-    title: "Scale & Privacy",
+    title: "Scalable & Private",
     content:
-      "Automatically shards oversized models across multiple devices, enabling large-scale inference and options for privacy-enhanced inference pipelines.",
+      "Securely distribute and execute large models across multiple nodes for fast, efficient, and privacy enhanced workloads.",
+    icon: Lock,
   },
-
-  // {
-  //   id: "",
-  //   title: "Accessibility",
-  //   content: "Lower financial and technical barriers to AI training, making advanced computational resources more accessible and affordable for all.",
-  // }
-  //     title: "Trustless, Automated, Decision-Making",
-  //     content:
-  //       "Machine-to-Human interfaces that enhance decentralized and automated systems using \
-  //       the power of collective human intelligence.",
-  //     expanded_content: [
-  //       "Allows both people and machines to utilize the collective intelligence of humans \
-  //       via API calls.",
-  //       "Potential use-cases for moderating decentralized apps (e.g. social media, insurance, etc), \
-  //       optimizing AI models, and much more!",
 ];
 
 export const feedback = [
@@ -224,24 +207,6 @@ export const feedback = [
   // },
 ];
 
-export const stats = [
-  {
-    id: "stats-1",
-    title: "User Active",
-    value: "3800+",
-  },
-  {
-    id: "stats-2",
-    title: "Trusted by Company",
-    value: "230+",
-  },
-  {
-    id: "stats-3",
-    title: "Transaction",
-    value: "$230M+",
-  },
-];
-
 export const footerLinks = [
   {
     title: "About",
@@ -250,10 +215,10 @@ export const footerLinks = [
         name: "Home",
         link: "/",
       },
-      // {
-      //   name: "Litepaper",
-      //   link: "https://github.com/smartnodes-lab/smartnodes",
-      // },
+      {
+        name: "Litepaper",
+        link: "https://github.com/smartnodes-lab/smartnodes",
+      },
       {
         name: "GitHub",
         icon: linkedin,
@@ -286,11 +251,11 @@ export const footerLinks = [
         icon: discord,
         link: "https://discord.gg/aCW2kTNzJ2",
       },
-      // {
-      //   name: "LinkedIn",
-      //   icon: linkedin,
-      //   link: "https://www.linkedin.com/company/smartnodes-lab",
-      // }
+      {
+        name: "LinkedIn",
+        icon: linkedin,
+        link: "https://www.linkedin.com/company/smartnodes-lab",
+      },
     ],
   },
   {
@@ -301,15 +266,16 @@ export const footerLinks = [
         link: "https://buymeacoffee.com/smartnodes",
       },
       {
-        name: "Bitcoin: bc1qg6klkt3z77wdlgusz5lujulr5ezayvqsw8m4r5",
+        name: "Bitcoin",
         link: "bc1qg6klkt3z77wdlgusz5lujulr5ezayvqsw8m4r5",
       },
       {
-        name: "Ethereum: 0x1Bc3a15dfFa205AA24F6386D959334ac1BF27336",
+        name: "Ethereum",
         link: "0x1Bc3a15dfFa205AA24F6386D959334ac1BF27336",
       },
       {
-        name: "Solana: 3urnEem9JcdYB7t5ysVpk62fh2M8cU6RsmM9PoJaDiJV",
+        name: "Solana",
+        link: "3urnEem9JcdYB7t5ysVpk62fh2M8cU6RsmM9PoJaDiJV",
       },
     ],
   },
@@ -323,31 +289,12 @@ export const socialMedia = [
   },
   {
     id: "social-media-3",
-    icon: twitter,
-    link: "https://www.twitter.com/smartnodes_lab",
-  },
-  // {
-  //   id: "social-media-4",
-  //   icon: linkedin,
-  //   link: "https://www.linkedin.com/company/smartnodes-lab",
-  // }
-];
-
-export const clients = [
-  {
-    id: "client-1",
-    logo: airbnb,
+    icon: x,
+    link: "https://www.x.com/smartnodes_lab",
   },
   {
-    id: "client-2",
-    logo: binance,
-  },
-  {
-    id: "client-3",
-    logo: coinbase,
-  },
-  {
-    id: "client-4",
-    logo: dropbox,
+    id: "social-media-4",
+    icon: linkedin,
+    link: "https://www.linkedin.com/company/smartnodes-lab",
   },
 ];
