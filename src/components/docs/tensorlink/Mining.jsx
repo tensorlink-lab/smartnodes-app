@@ -16,7 +16,7 @@ const Mining = () => (
           Contribute compute to Tensorlink by running a worker node.
         </p>
       </div>
-
+      
       {/* Intro */}
       <p className="text-base leading-relaxed dark:text-neutral-300 text-neutral-700 mb-5">
         Contributing compute to Tensorlink is as simple as downloading the node software and running a script. 

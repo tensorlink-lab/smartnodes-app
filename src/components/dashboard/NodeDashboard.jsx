@@ -330,6 +330,20 @@ const NodeDashboard = ({
               </h2>
               <ActionMenu />
             </div>
+
+            {/* Worker Node Tutorial Link */}
+            <div className="mb-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2 text-sm text-blue-700 dark:text-blue-300">
+              💡 New to Tensorlink? Learn how to set up your own 
+              <a 
+                href="/tensorlink/docs/mining" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="underline font-semibold hover:text-blue-500 mx-1"
+              >
+                Worker Node
+              </a>
+              in just a few minutes.
+            </div>
             
             {/* Add Node Input */}
             <div className="flex gap-2 mb-4">
