@@ -38,6 +38,8 @@ const NodeDashboard = ({
   const [trackedNodes, setTrackedNodes] = useState([]);
   const [nodeSearchLoading, setNodeSearchLoading] = useState(false);
   const [nodeSearchError, setNodeSearchError] = useState('');
+  const [claimableRewards, setClaimableRewards] = useState([]);
+  const [fetchingClaims, setFetchingClaims] = useState(false);
   
   const mockActiveNodes = [
     {
@@ -89,10 +91,117 @@ const NodeDashboard = ({
     const savedNodes = getStoredTrackedNodes();
     if (savedNodes.length > 0) {
       setTrackedNodes(savedNodes);
-    } else {
-      setTrackedNodes(trackedNodes);
     }
   }, []);
+
+  // Fetch claimable rewards for all tracked nodes
+  useEffect(() => {
+    if (trackedNodes.length > 0 && userAddress !== "-") {
+      fetchClaimableRewards();
+    }
+  }, [trackedNodes, userAddress]);
+
+  const fetchClaimableRewards = async () => {
+    setFetchingClaims(true);
+    try {
+      const allClaims = [];
+      
+      for (const node of trackedNodes) {
+        try {
+          // Fetch claim data from your API endpoint
+          const response = await fetch(`/api/rewards/claimable?pubKeyHash=${node.pubKeyHash}&address=${userAddress}`);
+          
+          if (response.ok) {
+            const data = await response.json();
+            if (data.claimable && data.claimable.length > 0) {
+              allClaims.push({
+                nodeId: node.pubKeyHash,
+                claims: data.claimable
+              });
+            }
+          }
+        } catch (err) {
+          console.warn(`Failed to fetch claims for node ${node.pubKeyHash}:`, err);
+        }
+      }
+      
+      setClaimableRewards(allClaims);
+    } catch (error) {
+      console.error('Failed to fetch claimable rewards:', error);
+    } finally {
+      setFetchingClaims(false);
+    }
+  };
+
+  const handleClaimRewards = async (nodeId, claims) => {
+    if (!contract) {
+      alert('Please connect your wallet first');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Prepare arrays for batch claim
+      const distributionIds = claims.map(claim => claim.distributionId);
+      const capacities = claims.map(claim => claim.capacity);
+      const merkleProofs = claims.map(claim => claim.merkleProof);
+
+      // Call the smart contract
+      const tx = await contract.batchClaimMerkleRewards(
+        distributionIds,
+        capacities,
+        merkleProofs
+      );
+
+      // Wait for transaction confirmation
+      await tx.wait();
+
+      // Update UI
+      alert('Rewards claimed successfully!');
+      
+      // Refresh claims data
+      await fetchClaimableRewards();
+      
+      // Refresh network data if available
+      if (fetchNetworkData) {
+        await fetchNetworkData();
+      }
+    } catch (error) {
+      console.error('Claim failed:', error);
+      alert(`Failed to claim rewards: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleClaimSingleReward = async (nodeId, claim) => {
+    if (!contract) {
+      alert('Please connect your wallet first');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const tx = await contract.claimMerkleRewards(
+        claim.distributionId,
+        claim.capacity,
+        claim.merkleProof
+      );
+
+      await tx.wait();
+      alert('Reward claimed successfully!');
+      
+      await fetchClaimableRewards();
+      if (fetchNetworkData) {
+        await fetchNetworkData();
+      }
+    } catch (error) {
+      console.error('Claim failed:', error);
+      alert(`Failed to claim reward: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Storage helper functions
   const getStoredTrackedNodes = () => {
@@ -241,6 +350,8 @@ const NodeDashboard = ({
   const NodeCard = ({ node }) => {
     const isActive = node.data?.isActive ?? false;
     const nodeType = node.data?.type || node.type || 'unknown';
+    const nodeClaims = claimableRewards.find(c => c.nodeId === node.pubKeyHash);
+    const totalClaimable = nodeClaims?.claims.reduce((sum, claim) => sum + parseFloat(claim.amount || 0), 0) || 0;
     
     return (
       <motion.div 
@@ -308,6 +419,40 @@ const NodeDashboard = ({
             </div>
           </div>
         )}
+
+        {/* Claimable Rewards Section */}
+        {nodeClaims && nodeClaims.claims.length > 0 && (
+          <div className="mt-3 pt-3 border-t border-gray-300 dark:border-gray-600">
+            <div className="flex items-center justify-between mb-2">
+              <div>
+                <p className="text-xs text-gray-500 dark:text-gray-400">Claimable Rewards</p>
+                <p className="font-bold text-green-600 dark:text-green-400 text-lg">
+                  {totalClaimable.toFixed(4)} SNO
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {nodeClaims.claims.length} distribution{nodeClaims.claims.length > 1 ? 's' : ''}
+                </p>
+              </div>
+              <button
+                onClick={() => handleClaimRewards(node.pubKeyHash, nodeClaims.claims)}
+                disabled={loading || !contract}
+                className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
+              >
+                {loading ? (
+                  <>
+                    <MdRefresh className="animate-spin" />
+                    Claiming...
+                  </>
+                ) : (
+                  <>
+                    <MdCheckCircle />
+                    Claim All
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        )}
       </motion.div>
     );
   };
@@ -328,7 +473,17 @@ const NodeDashboard = ({
                 <MdComputer className="text-blue-500" />
                 My Nodes ({trackedNodes.length})
               </h2>
-              <ActionMenu />
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={fetchClaimableRewards}
+                  disabled={fetchingClaims || trackedNodes.length === 0}
+                  className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Refresh claims"
+                >
+                  <MdRefresh className={fetchingClaims ? 'animate-spin' : ''} size={20} />
+                </button>
+                <ActionMenu />
+              </div>
             </div>
 
             {/* Worker Node Tutorial Link */}
@@ -385,8 +540,8 @@ const NodeDashboard = ({
               <div className="flex flex-col items-center gap-3">
                 <AnimatePresence>
                   {trackedNodes.map((node) => (
-                    <div className="w-full">
-                      <NodeCard key={node.pubKeyHash} node={node} />
+                    <div className="w-full" key={node.pubKeyHash}>
+                      <NodeCard node={node} />
                     </div>
                   ))}
                 </AnimatePresence>
@@ -410,62 +565,6 @@ const NodeDashboard = ({
           userAddress={userAddress}
           setUnclaimed={setUserUnclaimed}
         />
-
-        {/* User Jobs Section */}
-        {/* <div className="space-y-4 mt-2">
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-300 dark:border-gray-600">
-            <h2 className="text-lg font-bold flex items-center gap-2 mb-4 dark:text-white">
-              <MdAssignment className="text-purple-500" />
-              Your Jobs ({userJobs.length})
-            </h2>
-            
-            {userJobs.length > 0 ? (
-              <div className="space-y-3">
-                {userJobs.map((job) => (
-                  <div key={job.id} className="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-semibold dark:text-white">{job.type}</h3>
-                      <div className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        job.status === 'running' ? 'bg-orange-100 text-orange-800' :
-                        job.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        'bg-blue-100 text-blue-800'
-                      }`}>
-                        {job.status.toUpperCase()}
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{job.description}</p>
-                    <div className="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-                      <span>{job.id}</span>
-                      <span>{job.started}</span>
-                      <span>{job.cost}</span>
-                    </div>
-                    {job.status === 'running' && (
-                      <div className="mt-2">
-                        <div className="bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                          <div 
-                            className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${job.progress}%` }}
-                          ></div>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-1">{job.progress}% complete</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-4">
-                <MdAssignment className="text-6xl text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 dark:text-gray-400">
-                  {!isUserRegistered 
-                    ? 'Sign up as a user to view jobs'
-                    : 'No jobs yet. Create your first job!'
-                  }
-                </p>
-              </div>
-            )}
-          </div>
-        </div> */}
 
         <AnimatePresence>
           {showSignupModal && <div>Signup Modal</div>}
