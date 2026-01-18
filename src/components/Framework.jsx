@@ -32,58 +32,48 @@ const Framework = () => {
   ];
 
   return (
-    <section
-      id="framework"
-      className="py-16 px-2 sm:px-6 lg:px-8 max-w-7xl mx-auto" zIndex={100}
-    > 
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-zinc-900 dark:to-slate-900 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden z-100">
-        <div className="relative rounded-2xl border border-gray-200 dark:border-gray-700 shadow-xl overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-zinc-900 dark:to-slate-900">
-          <div className="flex flex-col lg:flex-row">
-            {/* Left Column */}
-            <div className="flex-1 px-5 pt-8 md:px-12 md:pt-12">
-              <h2 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-gray-900 dark:text-gray-100 leading-tight mb-6">
-                A Modular <br />
-                <span className="bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
-                  Node Framework
-                </span>
-                <br />
-                for{" "}
-                <span className="bg-gradient-to-r from-yellow-500 to-yellow-300 bg-clip-text text-transparent">
-                  Python
-                </span>
-              </h2>
-              <p className="text-gray-600 dark:text-gray-300 text-md leading-relaxed mb-8 max-w-xl">
-                Transform any device into a network participant with our powerful, extensible Python framework. 
-                
-              </p>
-            </div>
+    <section id="framework" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto" style={{ zIndex: 100 }}>
+      <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
+        
+        {/* Left Column - Header */}
+        <div className="space-y-6">
+          <h2 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-slate-900 dark:text-slate-100 leading-tight">
+            A Modular{" "}
+            <span className="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-500 dark:to-blue-600 bg-clip-text text-transparent">
+              Node Framework
+            </span>
+            {" "}for{" "}
+            <span className="bg-gradient-to-r from-yellow-600 to-yellow-500 dark:from-yellow-500 dark:to-yellow-400 bg-clip-text text-transparent">
+              Python
+            </span>
+          </h2>
+          <p className="text-slate-600 dark:text-slate-400 text-md lg:text-xl leading-relaxed max-w-xl">
+            Transform any device into a network participant with our powerful, extensible Python framework.
+          </p>
+        </div>
 
-            {/* Right Column - Features */}
-            <div className="flex-1 p-2 sm:p-5 lg:pl-8">
-              <div className="space-y-2">
-                {features.map((feature, index) => (
-                  <div 
-                    key={index}
-                    className="group p-3 rounded-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg"
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-start sm:space-x-4 space-y-3 sm:space-y-0">
-                      <div className="flex-shrink-0 p-3 rounded-lg bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300 max-w-[48px]">
-                        {feature.icon}
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-md md:text-lg text-gray-900 dark:text-gray-100 mb-1">
-                          {feature.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm md:text-md dark:text-gray-300 leading-relaxed">
-                          {feature.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+        {/* Right Column - Features */}
+        <div className="space-y-3">
+          {features.map((feature, index) => (
+            <div 
+              key={index}
+              className="group p-3 rounded-md bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-300 hover:shadow-lg backdrop-blur-sm"
+            >
+              <div className="flex items-start space-x-4">
+                <div className="flex-shrink-0 p-2.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300">
+                  {feature.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-md text-slate-900 dark:text-slate-100 mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

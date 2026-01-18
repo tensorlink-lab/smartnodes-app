@@ -72,7 +72,7 @@ nvidia-smi`}
             tensorlink-miner
           </code>{" "}
           from the latest {" "}
-          <a href="https://github.com/smartnodes-lab/tensorlink/releases" className="text-blue-500 underline">
+          <a href="https://github.com/mattjhawken/tensorlink/releases" className="text-blue-500 underline">
             release.
           </a>
         </p>
@@ -185,7 +185,7 @@ nvidia-smi`}
           Discord
         </a>
         . You can also report bugs or request features on{" "}
-        <a href="https://github.com/smartnodes-lab/tensorlink/issues" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+        <a href="https://github.com/mattjhawken/tensorlink/issues" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
           GitHub Issues
         </a>.
       </p>

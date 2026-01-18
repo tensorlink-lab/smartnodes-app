@@ -111,14 +111,13 @@ const Example = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          hf_name: "Qwen/Qwen2.5-7B-Instruct",
+          hf_name: "Qwen/Qwen3-8B",
           message: userMessage.content,
           max_length: 1024,
           max_new_tokens: 256,
           temperature: 0.7,
           do_sample: true,
           num_beams: 4,
-          // Include chat history in the API request (undefined won't be sent)
           ...(historyPayload && { history: historyPayload }),
         }),
       });
@@ -188,14 +187,15 @@ const Example = () => {
       <div className="relative">
         <div className="bg-zinc-200 dark:bg-zinc-950 rounded-t-2xl px-6 sm:px-12 py-5 md:pt-8 border-x border-t border-gray-300 dark:border-gray-800 shadow-lg">          
           <div className="max-w-3xl mb-10">
-            <h2 className="font-bold text-3xl sm:text-4xl md:text-5xl text-gray-900 dark:text-gray-100 mb-6 leading-tight">
-              Peer-to-peer<br />
+            <h2 className="font-bold text-2xl sm:text-3xl md:text-4xl text-gray-900 dark:text-gray-100 mb-6 leading-tight">
+              The Distributed<br />
               <span className="text-blue-400">Machine Learning</span><br />
-              <span className="text-red-400">Infrastructure</span>
+              <span className="text-red-400">Toolkit</span>
             </h2>
 
-            <p className="text-gray-700 dark:text-gray-300 text-sm md:text-lg mb-8">
-              Tensorlink is a Python library and computational platform that provides powerful AI tools and APIs for PyTorch models.
+            <p className="text-gray-700 dark:text-gray-300 text-sm md:text-md mb-8">
+              Tensorlink is a Python library and peer-to-peer platform for running, training, and deploying PyTorch models across
+              distributed hardware. Access powerful AI infrastructure without relying on centralized cloud services.
             </p>
             
             <div className="flex flex-wrap gap-3">

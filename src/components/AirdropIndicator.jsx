@@ -3,8 +3,8 @@ import { MdClose, MdRocket } from 'react-icons/md';
 
 const AirdropIndicator = ({ 
     localStorageKey = "airdropClosed", // key to store close state
-    title = "Testnet & Airdrop Now Live!",
-    description = "Run a Tensorlink node to earn rewards!",
+    title = "Testnet Now Live!",
+    description = "Run a Tensorlink node to support the network.",
     actionText = "Learn More",
     closable = true,
     closeOnAction = false, // NEW: close permanently on action click

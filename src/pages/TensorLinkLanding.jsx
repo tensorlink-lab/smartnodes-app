@@ -1,23 +1,55 @@
 import styles from "../style";
-import React, { useEffect } from "react";
 import { useStateContext } from "../contexts/contextProvider";
-import { Example, ToPortal, WhyTensorlink, ParticleBackground } from '../components';
+import { Example, ToPortal, UseCases, WhyTensorlink } from '../components';
+import { Helmet } from "react-helmet-async";
+
 
 const TensorLinkLanding = () => {
   const { setActiveMenu } = useStateContext();
 
   return (
-    <div className={`z-20 min-h-screen flex-col ${styles.flexCenter} min-w-full`}>
-      <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0 }}>
-        <ParticleBackground />
+    <>
+      <Helmet>
+        <title>Tensorlink</title>
+        <meta
+          name="description"
+          content="Tensorlink enables distributed neural network training using Smartnodes."
+        />
+        <link rel="canonical" href="https://smartnodes.ca/tensorlink" />
+        <script type="application/ld+json">
+          {`
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Smartnodes",
+                "item": "https://smartnodes.ca/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Tensorlink",
+                "item": "https://smartnodes.ca/tensorlink"
+              }
+            ]
+          }
+          `}
+        </script>
+      </Helmet>
+
+      <div className={`z-20 min-h-screen flex-col ${styles.flexCenter} min-w-full`}>
+        <div className="z-10 mt-5 sm:mt-0 flex-col min-w-full">
+          <Example />
+          <WhyTensorlink />
+          <UseCases />
+          <ToPortal />
+        </div>
       </div>
-      <div className="z-10 mt-5 sm:mt-0 flex-col min-w-full">
-        <Example />
-        <WhyTensorlink />
-        <ToPortal />
-      </div>
-    </div>
-  )
-}
+    </>
+  );
+};
 
 export default TensorLinkLanding;

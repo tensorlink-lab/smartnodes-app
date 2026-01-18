@@ -22,7 +22,7 @@ const SmartnodesOverview = () => (
               Testnet Now Live on Tensorlink
             </h3>
             <p className="text-sm text-green-800 dark:text-green-200 mb-3">
-              Join the testnet to participate in the airdrop and earn future mainnet rewards by providing AI compute resources.
+              Join the testnet to support the development and stress test of Smartnodes and Tensorlink!
             </p>
             <a 
               href="/tensorlink/docs/mining" 

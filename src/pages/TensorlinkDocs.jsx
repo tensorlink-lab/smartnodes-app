@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Routes, Outlet, Route } from "react-router-dom";
 import { Overview, WalletSetup, ApiExample, Community, Mining, GettingStarted, ModelExample, Nodes } from "../components";
 import { useStateContext } from "../contexts/contextProvider";
+import { Helmet } from "react-helmet-async";
 
 const TensorlinkDocs = () => {
   const { setActiveMenu } = useStateContext();
@@ -27,22 +28,61 @@ const TensorlinkDocs = () => {
   );
 
   return (
-    <div className="bg-white dark:bg-neutral-900 pt-1 mt-3 border-t border-t-black dark:border-t-white">
-      <Disclaimer1 />
-      <Disclaimer2 />
-      <Routes>
-        <Route index element={<Overview />} />
-        <Route path="overview" element={<Overview />} />
-        <Route path="install" element={<GettingStarted />} />
-        <Route path="model" element={<ModelExample />} />
-        <Route path="api" element={<ApiExample />} />
-        <Route path="nodes" element={<Nodes />} />
-        <Route path="mining" element={<Mining />} />
-        <Route path="community" element={<Community />} />
-        <Route path="wallet" element={<WalletSetup />} />
-      </Routes>
-      {/* <Outlet /> */}
-    </div>
+    <>
+      <Helmet>
+        <title>Smartnodes › Tensorlink Docs</title>
+        <meta
+          name="description"
+          content="Documentation for Tensorlink, including setup, API usage, running nodes, and more."
+        />
+        <link rel="canonical" href="https://smartnodes.ca/tensorlink/docs" />
+        <script type="application/ld+json">
+          {`
+          {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Smartnodes",
+                "item": "https://smartnodes.ca/"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Tensorlink",
+                "item": "https://smartnodes.ca/tensorlink"
+              }
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Docs",
+                "item": "https://smartnodes.ca/tensorlink/docs"
+              }
+            ]
+          }
+          `}
+        </script>
+      </Helmet>
+
+      <div className="bg-white dark:bg-neutral-900 pt-1 mt-3 border-t border-t-black dark:border-t-white">
+        <Disclaimer1 />
+        <Disclaimer2 />
+        <Routes>
+          <Route index element={<Overview />} />
+          <Route path="overview" element={<Overview />} />
+          <Route path="install" element={<GettingStarted />} />
+          <Route path="model" element={<ModelExample />} />
+          <Route path="api" element={<ApiExample />} />
+          <Route path="nodes" element={<Nodes />} />
+          <Route path="mining" element={<Mining />} />
+          <Route path="community" element={<Community />} />
+          <Route path="wallet" element={<WalletSetup />} />
+        </Routes>
+        {/* <Outlet /> */}
+      </div>
+    </>
   );
 };
 

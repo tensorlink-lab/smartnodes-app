@@ -85,16 +85,16 @@ const SupplyStatsCard = ({
   };
 
   const emissionsData = [
-    { date: "Sep 2025", genesis_nodes: 4000000, dao: 0, worker: 0, validator: 0},
-    { date: "Sep 2026", genesis_nodes: 4000000, dao: 2458687.5, worker: 41797687.5, validator: 4917375},
-    { date: "Sep 2027", genesis_nodes: 4000000, dao: 3933900, worker: 66876300, validator: 7867800},
-    { date: "Sep 2028", genesis_nodes: 4000000, dao: 4819027.5, worker: 81923467.5, validator: 9638055},
-    { date: "Sep 2029", genesis_nodes: 4000000, dao: 5350104, worker: 90951768, validator: 10700208},
-    { date: "Sep 2030", genesis_nodes: 4000000, dao: 5668749.9, worker: 96368748.3, validator: 11337499.8},
-    { date: "Sep 2031", genesis_nodes: 4000000, dao: 5859762.6, worker: 99615964.2, validator: 11719525.2},
-    { date: "Sep 2032", genesis_nodes: 4000000, dao: 6015807.3, worker: 102268724.1, validator: 12031614.6},
-    { date: "Sep 2033", genesis_nodes: 4000000, dao: 6171852, worker: 104921484, validator: 12343704},
-    { date: "Sep 2034", genesis_nodes: 4000000, dao: 6327896.7, worker: 107574243.9, validator: 12655793.4},
+    { date: "Dec 2025", genesis_nodes: 4000000, dao: 0, worker: 0, validator: 0},
+    { date: "Dec 2026", genesis_nodes: 4000000, dao: 2458687.5, worker: 41797687.5, validator: 4917375},
+    { date: "Dec 2027", genesis_nodes: 4000000, dao: 3933900, worker: 66876300, validator: 7867800},
+    { date: "Dec 2028", genesis_nodes: 4000000, dao: 4819027.5, worker: 81923467.5, validator: 9638055},
+    { date: "Dec 2029", genesis_nodes: 4000000, dao: 5350104, worker: 90951768, validator: 10700208},
+    { date: "Dec 2030", genesis_nodes: 4000000, dao: 5668749.9, worker: 96368748.3, validator: 11337499.8},
+    { date: "Dec 2031", genesis_nodes: 4000000, dao: 5859762.6, worker: 99615964.2, validator: 11719525.2},
+    { date: "Dec 2032", genesis_nodes: 4000000, dao: 6015807.3, worker: 102268724.1, validator: 12031614.6},
+    { date: "Dec 2033", genesis_nodes: 4000000, dao: 6171852, worker: 104921484, validator: 12343704},
+    { date: "Dec 2034", genesis_nodes: 4000000, dao: 6327896.7, worker: 107574243.9, validator: 12655793.4},
   ];
 
   const isSmallScreen = useMediaQuery({ maxWidth: 600 });

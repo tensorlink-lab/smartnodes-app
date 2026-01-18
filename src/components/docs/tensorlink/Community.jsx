@@ -23,7 +23,7 @@ const Community = () => (
         <ul className="list-disc pl-6 text-base leading-relaxed dark:text-neutral-300 text-neutral-700">
           <li>
             <strong>Report Issues:</strong> Submit bugs or features on{" "}
-            <a href="https://github.com/smartnodes-lab/tensorlink" className="text-blue-500 underline">
+            <a href="https://github.com/mattjhawken/tensorlink" className="text-blue-500 underline">
               GitHub
             </a>.
           </li>
@@ -44,7 +44,7 @@ const Community = () => (
         </h2>
         <ul className="list-disc pl-6 text-base leading-relaxed dark:text-neutral-300 text-neutral-700">
           <li><a href="https://twitter.com/smartnodes_lab" className="text-blue-500 underline">X: @smartnodes_lab</a></li>
-          <li><a href="https://github.com/smartnodes-lab/tensorlink" className="text-blue-500 underline">GitHub: smartnodes-lab/tensorlink</a></li>
+          <li><a href="https://github.com/mattjhawken/tensorlink" className="text-blue-500 underline">GitHub: mattjhawken/tensorlink</a></li>
           <li><a href="https://discord.gg/aCW2kTNzJ2" className="text-blue-500 underline">Discord: Join our community</a></li>
         </ul>
       </div>

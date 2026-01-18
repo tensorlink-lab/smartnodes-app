@@ -139,23 +139,23 @@ export const navLinks = [
 export const features = [
   {
     id: "1",
-    title: "Plug-and-Play",
+    title: "Access Larger Models",
     content:
-      "Effortlessly offload heavy computation to distributed nodes with PyTorch-ready model wrappers that integrate behind the scenes.",
+      "Execute models that exceed your local VRAM by automatically sharding across network nodes. Train 70B+ parameter models on consumer hardware.",
     icon: Cpu,
   },
   {
     id: "2",
-    title: "On-demand Inference",
+    title: "Deploy in Seconds",
     content:
-      "Run inference or train models on distributed hardware through simple APIs. Deploy Hugging Face or custom models without managing GPUs.",
+      "Load any Hugging Face model or custom PyTorch architecture with a few lines of code. No Docker, no Kubernetes, no infrastructure setup.",
     icon: Zap,
   },
   {
     id: "3",
-    title: "Scalable & Private",
+    title: "Own Your Compute",
     content:
-      "Securely distribute and execute large models across multiple nodes for fast, efficient, and privacy enhanced workloads.",
+      "Route workloads exclusively to your own devices for complete privacy, or tap into the public network. Your data, your choice.",
     icon: Lock,
   },
 ];

@@ -6,6 +6,7 @@ import daoAbiArtifact from '../assets/SmartnodesDAO.json';
 import { SmartnodesDashboard } from "../components";
 import { ethers } from 'ethers';
 import { CoinbaseWalletSDK } from "@coinbase/wallet-sdk";
+import { Helmet } from "react-helmet-async";
 
 const SmartnodesApp = ({ activeMenu }) => {
   // Utility function
@@ -25,11 +26,11 @@ const SmartnodesApp = ({ activeMenu }) => {
   
   // Contract addresses
   const CONTRACT_ADDRESSES = {  
-    token: '0x9b38874d53c99861CbB87B25c54C1Fc2e5827fED',
-    timelock: '0x18261818ed1bEfB24B70153a373b8351D9ed8e7e',
-    dao: '0x21758f11900F2737a47617731CAaB7EA84332EE5',
-    core: '0x36e13F23F90E226074A66324209A23F754a86c0B',
-    coordinator: '0xcB9b80dF839c9850970832Da4bcD3faE895D3Ff4'
+    token: "0x292b81C6e88f7718920a291fB1D458D2Fcca43B9",
+    timelock: "0x67e62c88Ef494Dc81b10EEBE015b7089aDBecce8",
+    dao: "0xd44d8b830C408AE6D22c6C6aA80a49e5025C6D13",
+    core: '0xa75445942d5EB9BA073afF2694e2CA41bFB1297C',
+    coordinator: "0xe7FE9E44165dE24D5acFd78ff06A81512494000a"
   };
 1
   // ABIs
@@ -153,8 +154,8 @@ const SmartnodesApp = ({ activeMenu }) => {
         { title: "Circulating Supply", amount: formattedSupply - formattedLocked, suffix: "SNO" },
         { title: "Locked", amount: formattedLocked, suffix: "SNO" },
         { title: "Unclaimed Rewards", amount: formattedUnclaimed, suffix: "SNO" },
-        { title: "State Reward", amount: 45000, suffix: "SNO" },
-        { title: "State Time", amount: 8, suffix: "hours" },
+        { title: "State Reward", amount: 135000, suffix: "SNO" },
+        { title: "State Time", amount: 24, suffix: "hours" },
         { title: "DAO Treasury", amount: formattedDao, suffix: "SNO" }
       ]);
 
@@ -348,26 +349,28 @@ const SmartnodesApp = ({ activeMenu }) => {
   };
 
   return (
-    <SmartnodesDashboard 
-      supplyStats={supplyStats}
-      userAddress={userAddress}
-      userBalance={userBalance}
-      userLocked={userLocked}
-      contract={tokenContract}
-      tokenAddress={CONTRACT_ADDRESSES.token}
-      coordinatorAddress={CONTRACT_ADDRESSES.coordinator}
-      coreAddress={CONTRACT_ADDRESSES.core}
-      dao={daoContract}
-      daoAddress={CONTRACT_ADDRESSES.dao}
-      connectToContract={connectToContract}
-      connectToCoinbaseWallet={connectToCoinbaseWallet}
-      status={status}
-      error={error}
-      isWalletConnected={isWalletConnected}
-      signer={signer}
-      token={tokenContract}
-      activeMenu={activeMenu}
-    />
+    <>
+      <SmartnodesDashboard 
+        supplyStats={supplyStats}
+        userAddress={userAddress}
+        userBalance={userBalance}
+        userLocked={userLocked}
+        contract={tokenContract}
+        tokenAddress={CONTRACT_ADDRESSES.token}
+        coordinatorAddress={CONTRACT_ADDRESSES.coordinator}
+        coreAddress={CONTRACT_ADDRESSES.core}
+        dao={daoContract}
+        daoAddress={CONTRACT_ADDRESSES.dao}
+        connectToContract={connectToContract}
+        connectToCoinbaseWallet={connectToCoinbaseWallet}
+        status={status}
+        error={error}
+        isWalletConnected={isWalletConnected}
+        signer={signer}
+        token={tokenContract}
+        activeMenu={activeMenu}
+      />
+    </>
   );
 };
 

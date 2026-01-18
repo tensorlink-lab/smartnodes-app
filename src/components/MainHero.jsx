@@ -1,75 +1,65 @@
-import { React } from "react";
-import styles from "../style";
 import AnimatedLottie from "./animations/AnimatedLottie";
 import heroAnimation from "../assets/cloud-network.json";
-import { python_logo } from "../assets";
-import { Link } from "react-router-dom";
-import { AirdropIndicator } from ".";
+import React, { useState, useEffect } from "react";
+
+// Mock data for demonstration
+const styles = {
+  section: "flex justify-center items-center",
+  animatedIcon: "w-full h-full"
+};
 
 const MainHero = () => {
   return (
-    <div>
-      <div className="mt-5 px-2 -mb-5 flex justify-center">
-        <AirdropIndicator />
-      </div>
-      <section id="home" className={`${styles.section} rounded-md xs:px-4 px-12 lg:mx-12`}>
-        <div className="dark:bg-gradient-to-br dark:from-zinc-900 transition-all duration-500 flex-col dark:to-slate-900 bg-gradient-to-br from-zinc-50 to-gray-100 rounded-xl border border-gray-300 dark:border-gray-800 backdrop-blur-sm dark:shadow-black shadow-indigo-950 shadow-lg">
-          <div className="md:flex-row flex-col px-5 sm:px-0 flex sm:mx-5 z-20">
-            {/* Left Column - Title & Description */}
-            <div className="flex-1 w-full flex-col items-center max-w-xl sm:min-w-[350px] z-0 mx-3 sm:mx-5 md:mx-10 py-6 mb-5">
-              {/* Title */}
-              <h1 className="flex-1 font-poppins font-extrabold lg:text-[56px] xs:text-[36px] ss:text-[46px] text-[32px] text-gray-900 dark:text-gray-100 ss:leading-[80.8px] leading-[55px] mt-3">
-                <span className="inline bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent">
-                  Shared Power 
-                </span>
-                <br/>
-                <span className="inline">for </span>
-                <span className="inline bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
-                  Big Problems
-                </span>
-              </h1>
+    <div style={{ zIndex: 100 }}>
+      <section className="relative max-w-7xl mx-auto py-12">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center border border-black dark:border-gray-200 rounded-2xl p-8 bg-white/50 dark:bg-black/20 backdrop-blur-md">
+          {/* Left Column - Content */}
+          <div className="space-y-8 lg:pr-10 md:ml-5">
+            {/* Title */}
+            <h1 className="font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
+              <span className="bg-gradient-to-r from-purple-500 to-purple-700 dark:from-purple-400 dark:to-purple-600 bg-clip-text text-transparent">
+                Shared Power
+              </span>
+              <br />
+              <span className="text-slate-900 dark:text-slate-100">for </span>
+              <span className="bg-gradient-to-r from-blue-600 to-blue-800 dark:from-blue-500 dark:to-blue-700 bg-clip-text text-transparent">
+                Big Problems
+              </span>
+            </h1>
 
-              {/* Subtitle */}
-              <div className="mt-6 mr-2">
-                <p className="text-gray-700 dark:text-gray-300 text-md xs:text-lg leading-relaxed max-w-lg">
-                  Smartnodes connects devices around the world into collaborative, peer-to-peer compute and data collection networks. 
-                  By uniting shared hardware, Smartnodes helps power AI, scientific research, and large-scale 
-                  computations, turning everyday devices into contributors to global problem-solving.
-                </p>
-              </div>
+            {/* Subtitle */}
+            <p className="text-slate-600 dark:text-slate-400 text-md lg:text-xl leading-relaxed max-w-xl">
+              Smartnodes connects devices around the world into collaborative, peer-to-peer compute and data collection networks. 
+              By uniting shared hardware, we power AI, scientific research, and large-scale computations.
+            </p>
 
-              {/* Enhanced CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 mt-10">
-                <a
-                  href="/app"
-                  className="group inline-flex items-center justify-center p-3 text-white bg-gradient-to-r from-gray-900 to-black hover:from-gray-800 hover:to-gray-900 rounded-lg text-sm md:text-base font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
-                >
-                  <svg className="w-4 h-4 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                  Dashboard
-                </a>
-                <a
-                  href="/docs"
-                  className="group inline-flex items-center justify-center p-3 text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 rounded-lg text-sm md:text-base font-semibold transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
-                >
-                  <svg className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                  Documentation
-                </a>
-              </div>
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <a
+                href="/app"
+                className="group inline-flex items-center justify-center px-4 py-2 text-white bg-slate-900 dark:bg-slate-100 dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-105"
+              >
+                <svg className="w-4 h-4 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                Dashboard
+              </a>
+              <a
+                href="/docs"
+                className="group inline-flex items-center justify-center px-4 py-2 text-blue-600 dark:text-blue-400 border-2 border-blue-600 dark:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950 rounded-lg font-semibold transition-all duration-200"
+              >
+                <svg className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Documentation
+              </a>
             </div>
+          </div>
 
-            {/* Right Column - Animation */}
-            <div className='flex-1 items-center mt-1 max-w-3xl relative'>
-              <div className={`${styles.animatedIcon} align-middle relative`} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <AnimatedLottie animationData={heroAnimation}/>
-              </div>
-              
-              {/* Enhanced gradient background */}
-              <div style={{ zIndex: -1 }} className="absolute w-[40%] dark:h-[45%] h-[35%] left-0 opacity-30 white__gradient dark:black__gradient top-80"/>
-              <div style={{ zIndex: -2 }} className="absolute w-[30%] h-[30%] right-0 opacity-20 bg-gradient-to-l from-purple-400 to-blue-500 dark:from-purple-600 dark:to-blue-800 rounded-full blur-3xl top-60"/>
+          {/* Right Column - Animation */}
+          <div className="relative hidden lg:flex lg:h-[500px] items-center justify-center">
+            <div className="w-full max-w-lg sm:hidden md:block">
+              <AnimatedLottie animationData={heroAnimation} />
             </div>
           </div>
         </div>

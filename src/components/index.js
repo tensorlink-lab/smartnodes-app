@@ -41,6 +41,7 @@ import ToPortal from "./ToPortal";
 import ClaimRewardsComponent from "./dashboard/Rewards";
 import { ProposalsTable, ProposalsBarChart } from "./dashboard/ProposalsChart";
 import NotFound from "./NotFound";
+import UseCases from "./TensorlinkUseCases";
 
 export {
   NotFound,
@@ -87,4 +88,5 @@ export {
   ConnectWalletButton,
   SupplyStatsCard,
   Community,
+  UseCases,
 };
