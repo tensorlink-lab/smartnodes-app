@@ -12,7 +12,7 @@ const MainHero = () => {
   return (
     <div style={{ zIndex: 100 }}>
       <section className="relative max-w-7xl mx-auto py-12">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center border border-black dark:border-gray-200 rounded-2xl p-8 bg-white/50 dark:bg-black/20 backdrop-blur-md">
+        <div className="grid md:grid-cols-2 gap-8 lg:gap-16 items-center border border-black dark:border-gray-200 rounded-2xl p-8 bg-white/50 dark:bg-black/20 backdrop-blur-md">
           {/* Left Column - Content */}
           <div className="space-y-8 lg:pr-10 md:ml-5">
             {/* Title */}
@@ -55,10 +55,9 @@ const MainHero = () => {
               </a>
             </div>
           </div>
-
           {/* Right Column - Animation */}
-          <div className="relative hidden lg:flex lg:h-[500px] items-center justify-center">
-            <div className="w-full max-w-lg sm:hidden md:block">
+          <div className="relative hidden md:flex h-[400px] items-center justify-center">
+            <div className="w-full max-w-lg">
               <AnimatedLottie animationData={heroAnimation} />
             </div>
           </div>

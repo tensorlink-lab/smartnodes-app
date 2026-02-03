@@ -9,7 +9,7 @@ const FeedbackCard = ({ content, name, title, img, blur, link }) => {
   // Determine background color based on title (to create variety like in WhyTensorlink)
   const getBackgroundColor = () => {
     if (title.toLowerCase().includes("tensor") || title.toLowerCase().includes("train")) {
-      return isHovered ? "bg-neutral-500 dark:bg-neutral-900" : "bg-blue-900";
+      return isHovered ? "bg-neutral-500 dark:bg-neutral-900" : "bg-neutral-900";
     } else if (title.toLowerCase().includes("data") || title.toLowerCase().includes("smart")) {
       return isHovered ? "bg-red-100" : "bg-red-100";
     } else {
@@ -27,7 +27,7 @@ const FeedbackCard = ({ content, name, title, img, blur, link }) => {
       <div 
         className={`relative rounded-lg p-3 xs:p-5 transition-all duration-300 border border-gray-400 dark:border-gray-700 h-full shadow-lg
           ${blur ? 'opacity-50' : ''} 
-          ${isHovered ? 'shadow-lg transform -translate-y-1' : 'bg-zinc-100 dark:bg-gray-800 hover:shadow-md'}
+          ${isHovered ? 'shadow-lg transform -translate-y-1' : 'bg-zinc-100 dark:bg-zinc-900 hover:shadow-md'}
           ${blur ? 'bg-gray-200 dark:bg-gray-700' : isHovered ? getBackgroundColor() : 'bg-white dark:bg-gray-800'}
         `}
       >
@@ -53,7 +53,7 @@ const FeedbackCard = ({ content, name, title, img, blur, link }) => {
           </div>
         </div>
         
-        <p className={`mt-3 px-2 sm:mt-4 ${isHovered ? 'text-white' : 'text-gray-700 dark:text-gray-300'} text-md leading-relaxed line-clamp-4 sm:line-clamp-5`}>
+        <p className={`mt-3 px-2 sm:mt-4 ${isHovered ? 'text-white' : 'text-gray-700 dark:text-gray-300'} text-sm sm:text-md md:text-lg leading-relaxed line-clamp-4 sm:line-clamp-5`}>
           {content}
         </p>
         

@@ -4,7 +4,7 @@ import { Example, ToPortal, UseCases, WhyTensorlink } from '../components';
 import { Helmet } from "react-helmet-async";
 
 
-const TensorLinkLanding = () => {
+const TensorLinkLanding = ({ activeMenu }) => {
   const { setActiveMenu } = useStateContext();
 
   return (
@@ -42,7 +42,7 @@ const TensorLinkLanding = () => {
 
       <div className={`z-20 min-h-screen flex-col ${styles.flexCenter} min-w-full`}>
         <div className="z-10 mt-5 sm:mt-0 flex-col min-w-full">
-          <Example />
+          <Example activeMenu={activeMenu}/>
           <WhyTensorlink />
           <UseCases />
           <ToPortal />

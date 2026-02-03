@@ -13,7 +13,7 @@ const Opportunity = () => (
           Rewarding
           <br className="sm:block hidden" /> Users.
         </h2>
-        <p className="text-gray-700 dark:text-gray-200 sm:text-md text-lg leading-relaxed max-w-xl mt-5" style={{ lineHeight: '1.75' }}>
+        <p className="text-gray-700 dark:text-gray-200 sm:text-md text-sm leading-relaxed max-w-xl mt-5" style={{ lineHeight: '1.75' }}>
           Share your resources, get rewarded. Users can leverage their computational power or dedicated hardware to complete tasks and earn SNO, the native payment
           and rewards token powering the network. Smartnodes creates a dynamic ecosystem where users are rewarded for enabling decentralized 
           infrastructure and advancing open, peer-driven computation.

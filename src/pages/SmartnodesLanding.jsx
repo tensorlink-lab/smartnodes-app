@@ -16,7 +16,7 @@ const SmartnodesLanding = () => {
         <ParticleBackground />
       </div>
       <div 
-        className="md:mt-1 mt-5 flex-col md:mx-20 lg:mx-20 transition-transform duration-300"
+        className="md:mt-1 mt-5 flex-col md:mx-5 lg:mx-14 transition-transform duration-300"
         style={{ zIndex: 1000000000000 }}
       >
         <MainHero />

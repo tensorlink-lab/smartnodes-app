@@ -63,15 +63,11 @@ const MainHero2 = () => {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
-      <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      <div className="grid gap-8 lg:gap-16 items-center">
         
-        {/* Left Column - Animation */}
-        <div className="hidden lg:flex items-center justify-center">
-          <div className="w-full max-w-sm relative">
-            <AnimatedLottie animationData={data} loop={true} />
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 dark:from-blue-900/10 dark:to-purple-900/10 rounded-full blur-3xl -z-10" />
-          </div>
-        </div>
+        {/* Left Column - Spacer */}
+        <div className="hidden lg:block" />
+
 
         {/* Right Column - Content */}
         <div className="space-y-4">
@@ -89,7 +85,7 @@ const MainHero2 = () => {
           </div>
 
           {/* Description */}
-          <p className="text-slate-600 dark:text-slate-400 text-md lg:text-xl leading-relaxed max-w-2xl">
+          <p className="text-slate-600 dark:text-slate-400 text-md lg:text-lg leading-relaxed max-w-2xl">
             {overview.info}
           </p>
 

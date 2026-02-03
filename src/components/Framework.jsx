@@ -47,7 +47,7 @@ const Framework = () => {
               Python
             </span>
           </h2>
-          <p className="text-slate-600 dark:text-slate-400 text-md lg:text-xl leading-relaxed max-w-xl">
+          <p className="text-slate-600 dark:text-slate-400 text-md lg:text-lg leading-relaxed max-w-xl">
             Transform any device into a network participant with our powerful, extensible Python framework.
           </p>
         </div>

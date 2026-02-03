@@ -28,7 +28,7 @@ const portals = [
 
 const GetStarted = () => (
   <section 
-    className="relative z-20 w-full overflow-hidden py-16 bg-zinc-200 dark:bg-neutral-900"
+    className="relative z-20 w-full overflow-hidden py-16 mb-20 bg-zinc-200 dark:bg-neutral-900"
     id="get-started"
   >
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20">
