@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";  
 import { MdOutlineCancel } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa";
@@ -9,16 +9,27 @@ import { sideLinks } from "../constants";
 
 const Sidebar = ({ open, close }) => {
     const { activeMenu, setActiveMenu } = useStateContext();
-    const [openMenuId, setOpenMenuId] = useState(null);  // Track which menu is open
+    const [openMenuId, setOpenMenuId] = useState(() => {
+        return localStorage.getItem("tensorlink_sidebar_open");
+    });  // Track which menu is open
     const navigate = useNavigate();
 
     const toggleMenu = (id) => {
         setOpenMenuId(prevId => (prevId === id ? null : id));
     };
 
+    useEffect(() => {
+        if (openMenuId) {
+            localStorage.setItem("tensorlink_sidebar_open", openMenuId);
+        } else {
+            localStorage.removeItem("tensorlink_sidebar_open");
+        }
+    }, [openMenuId]);
+
+
     return (
         <div
-            className="fixed inset-y-0 left-0 w-[245px] bg-slate-100 dark:bg-zinc-800 overflow-y-auto overflow-x-hidden border-r border-gray-500"
+            className="fixed inset-y-0 left-0 w-[240px] bg-slate-100 dark:bg-zinc-800 overflow-y-auto overflow-x-hidden border-r border-gray-500"
             style={{ zIndex: 1000000 }}
         >
             <div className="flex justify-between items-center p-3 mb-5">
@@ -47,7 +58,7 @@ const Sidebar = ({ open, close }) => {
                                 onClick={() => {
                                     if (link.sublinks && link.sublinks.length > 0) {
                                         toggleMenu(link.id);
-                                    } else if (item.title === "Links" || link.name === "Whitepaper") {
+                                    } else if (item.title === "Links" || link.name === "Whitepaper" || link.name === "localhostGPT") {
                                         window.location.href = link.id;
                                     } else {
                                         navigate(`/${link.id}`);

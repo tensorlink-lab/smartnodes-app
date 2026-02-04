@@ -3,7 +3,7 @@ import { logo } from "../assets";
 import { footerLinks, socialMedia } from "../constants";
 
 const Footer = () => (
-  <section className="px-5 md:px-10 flex flex-col border-t dark:border-neutral-400 border-neutral-600 items-center bg-neutral-50 dark:bg-neutral-950 w-full pb-6"
+  <section className="px-5 md:px-10 flex flex-col border-t dark:border-neutral-400 border-neutral-600 items-center bg-neutral-50 dark:bg-neutral-950 w-full pb-6 backdrop-blur-md"
   style={{zIndex: 1000}}>
     {/* Top Section */}
     <div className="flex flex-col md:flex-row justify-between w-full max-w-[1200px] py-10 gap-10">

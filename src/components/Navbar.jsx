@@ -30,7 +30,7 @@ const Navbar = () => {
   const handleActiveMenu = () => setActiveMenu(!activeMenu);
 
   return (
-    <motion.nav className="w-full flex z-20 pt-4 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}>
+    <motion.nav className="w-full flex z-20 pt-2 sm:pt-4 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}>
       {/* Logo and menu for desktop */}
       {!activeMenu ? (
         <div
@@ -41,7 +41,7 @@ const Navbar = () => {
           }}
         >
           <img src={logoSrc} alt="task" className="w-auto h-auto max-w-[235px] max-h-[150px] hidden md:block" />
-          <img src={smallLogoSrc} alt="task" className="w-[70px] h-[70px] md:hidden mb-1 my-1.5" />
+          <img src={smallLogoSrc} alt="task" className="w-[60px] h-[60px] md:hidden mb-1 my-1.5" />
         </div>      
       ) : (
         <div></div>
@@ -126,7 +126,7 @@ const Navbar = () => {
         <img
           src={toggle ? close : menu}
           alt="menu"
-          className="w-[28px] h-[28px] object-contain cursor-pointer"
+          className="w-[24px] h-[24px] object-contain cursor-pointer"
           onClick={() => setToggle(!toggle)}
         />
         <div

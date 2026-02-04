@@ -22,6 +22,7 @@ import WalletSetup from "./docs/tensorlink/WalletSetup";
 import GettingStarted from "./docs/tensorlink/GettingStarted";
 import Overview from "./docs/tensorlink/Overview";
 import Nodes from "./docs/tensorlink/Nodes";
+import Installation from "./docs/tensorlink/Installation";
 import ConnectWalletButton from "./dashboard/ConnectWallet";
 import LocalhostGPT from "./LocalhostGPT";
 import Mining from "./docs/tensorlink/Mining";
@@ -41,8 +42,12 @@ import ToPortal from "./ToPortal";
 import ClaimRewardsComponent from "./dashboard/Rewards";
 import { ProposalsTable, ProposalsBarChart } from "./dashboard/ProposalsChart";
 import NotFound from "./NotFound";
+import UseCases from "./TensorlinkUseCases";
+import ChatMessage from "./ChatMessage";
 
 export {
+  ChatMessage,
+  Installation,
   NotFound,
   ProposalsTable,
   ProposalsBarChart,
@@ -87,4 +92,5 @@ export {
   ConnectWalletButton,
   SupplyStatsCard,
   Community,
+  UseCases,
 };

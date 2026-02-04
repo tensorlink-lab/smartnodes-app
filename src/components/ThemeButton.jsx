@@ -4,22 +4,24 @@ import { dark1, dark2 } from "../assets";
 const ThemeButton = () => {
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark");
 
-    useEffect(() => {
-        if (theme === "dark") {
-            document.documentElement.classList.add("dark");
+    const toggleTheme = () => {
+        const newTheme = theme === "dark" ? "light" : "dark";
+        setTheme(newTheme);
+        localStorage.setItem("theme", newTheme);
+        
+        // Apply theme to document
+        if (newTheme === "dark") {
+        document.documentElement.classList.add("dark");
         } else {
-            document.documentElement.classList.remove("dark");
+        document.documentElement.classList.remove("dark");
         }
-        // Store the theme preference in local storage
-        localStorage.setItem("theme", theme);
-    }, [theme]);
-
-    const handleThemeSwitch = () => {
-        setTheme(theme === "dark" ? "light" : "dark");
-    }
+        
+        // Dispatch custom event for other components
+        window.dispatchEvent(new Event("themeChange"));
+    };
 
     return (
-        <button onClick={handleThemeSwitch} className="">
+        <button onClick={toggleTheme} className="">
             <img src={dark1} alt={theme === "dark" ? "Light Logo" : "Dark Logo"} className="w-[28px] dark:bg-gray-300 rounded-xl"/>
         </button>
     )

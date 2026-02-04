@@ -4,9 +4,9 @@ import { data } from "../assets";
 import { overview } from "../constants";
 import AnimatedLottie from "./animations/AnimatedLottie";
 
-const MainHero = () => {
+const MainHero2 = () => {
   const words = ["Resource Sharing", "Global Collaboration", "Idle Hardware", "Edge Computing", "IoT Devices"];
-  const animationDuration = 900; // Adjust the duration for typing and pause
+  const animationDuration = 900;
   const [currentWord, setCurrentWord] = useState(" ");
   const [isTyping, setIsTyping] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -50,10 +50,10 @@ const MainHero = () => {
                     currentIndex = nextIndex;
                     typeDeleteText();
                   }, animationDuration);
-                }, animationDuration * 3.5); // Longer pause after typing word
+                }, animationDuration * 3.5);
               }
             }, animationDuration / next.length);
-          }, animationDuration / 1.5); // Short pause after deleting word
+          }, animationDuration / 1.5);
         }
       }, animationDuration / current.length);
     };
@@ -62,46 +62,44 @@ const MainHero = () => {
   }, []);
 
   return (
-    <section className={`${styles.section}`}>
-      <div className={`items-center lg:px-0 px-2 rounded-md mt-10 ${styles.content}`}>
-        <div className={`${styles.contentBox} flex-row mt-2 mb-2 -mx-5`}>
-          <div className="min-w-[305px] mr-10 hidden md:block">
-            <AnimatedLottie animationData={data} loop={true} />
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+      <div className="grid gap-8 lg:gap-16 items-center">
+        
+        {/* Left Column - Spacer */}
+        <div className="hidden lg:block" />
+
+
+        {/* Right Column - Content */}
+        <div className="space-y-4">
+          {/* Title */}
+          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100 leading-tight">
+            Unlocking Value From
+          </h2>
+
+          {/* Typing Animation */}
+          <div className="text-3xl sm:text-4xl font-bold min-h-[1.2em]">
+            <span className="bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-500 dark:to-blue-400 bg-clip-text text-transparent">
+              {currentWord}
+            </span>
+            <span className="animate-pulse text-blue-400 dark:text-blue-500 ml-1">|</span>
           </div>
-          <div className="max-w-[320px] xs:max-w-2xl justify-center items-center" style={{ zIndex: 10 }}>
 
-            <div className="py-10 justify-items-left bg-gradient-to-bl transition-all duration-300 from-gray-50 to-gray-100 dark:from-zinc-900 dark:to-zinc-950 px-8 xs:px-14 rounded-xl border border-gray-300 dark:border-gray-800 backdrop-blur-sm dark:shadow-black shadow-indigo-950 shadow-md">
-              {/* Title */}
-              <h2 className="text-[24px] ss:text-[32px] md:text-[40px] font-extrabold text-gray-800 dark:text-gray-200 leading-tight">
-                Unlocking  
-                <br /> Value From
-              </h2>
+          {/* Description */}
+          <p className="text-slate-600 dark:text-slate-400 text-md lg:text-lg leading-relaxed max-w-2xl">
+            {overview.info}
+          </p>
 
-              {/* Typing Animation */}
-              <div className="text-[24px] ss:text-[32px] md:text-[40px] font-bold mb-2">
-                <span className="bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent">
-                  <span className={`typing ${isTyping ? "animate-typing" : ""}`}>
-                    {currentWord}
-                  </span>
-                </span>
-                <span className="animate-pulse font-light leading-tight text-gray-400">
-                  |
-                </span>
-              </div>
-
-              {/* Paragraph */}
-              <p className="text-gray-800 dark:text-gray-200 text-md md:text-lg leading-relaxed py-2">
-                {overview.info}
-              </p>
-
-              {/* Call to Action */}
-              {/* <a
-                href="/app"
-                className="mt-5 inline-block px-4 py-3 text-white bg-orange-600 border border-gray-700 hover:bg-blue-600 rounded-md text-sm md:text-base font-semibold transition duration-300 ease-in-out"
-              >
-                Network Dashboard
-              </a> */}
-            </div>
+          {/* CTA Button */}
+          <div className="pt-4">
+            <a
+              href="/app"
+              className="inline-flex items-center px-6 py-3.5 text-white bg-slate-900 dark:bg-slate-100 dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-white rounded-lg font-semibold transition-all duration-200 hover:shadow-lg hover:scale-105"
+            >
+              Network Dashboard
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
@@ -109,4 +107,4 @@ const MainHero = () => {
   );
 };
 
-export default MainHero;
+export default MainHero2;

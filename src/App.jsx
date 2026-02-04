@@ -1,5 +1,21 @@
 import { TensorlinkDocs, Smartnodes, SmartnodesDocs, SmartnodesLanding, SmartnodesApp, TensorLinkLanding } from "./pages";
-import { Navbar, WalletSetup, Footer, NotFound, Sidebar, Overview, ApiExample, SmartnodesOverview, GettingStarted, ModelExample, Nodes, Mining, Community } from "./components";
+import { 
+  Navbar, 
+  WalletSetup, 
+  Footer, 
+  NotFound, 
+  Sidebar, 
+  Overview, 
+  Installation, 
+  ApiExample, 
+  SmartnodesOverview, 
+  GettingStarted,
+   ModelExample, 
+   Nodes, 
+   Mining, 
+   Community,
+  LocalhostGPT
+} from "./components";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useStateContext } from "./contexts/contextProvider";
@@ -48,7 +64,7 @@ const App = () => {
   useWindowSizeHandler(setActiveMenu);
 
   return (
-    <div className="relative flex-row min-h-screen bg-gray-200 dark:bg-zinc-900">
+    <div className="relative flex-row min-h-screen bg-zinc-100 dark:bg-zinc-900">
       <BrowserRouter>
         {/* Sidebar - now properly fixed */}
         {activeMenu && <Sidebar />}
@@ -69,13 +85,14 @@ const App = () => {
               </Route>
 
               {/* TensorLink routes - properly nested */}
-              <Route path="tensorlink" element={<TensorLinkLanding />} />
-              
+              <Route path="tensorlink" element={<TensorLinkLanding activeMenu={activeMenu} />} />
+
               {/* Docs routes */}
               <Route path="tensorlink/docs" element={<TensorlinkDocs />}>
                 <Route index element={<Overview />} />
                 <Route path="overview" element={<Overview />} />
-                <Route path="install" element={<GettingStarted />} />
+                <Route path="start" element={<GettingStarted />} />
+                <Route path="install" element={<Installation />} />
                 <Route path="wallet" element={<WalletSetup />} />
                 <Route path="model" element={<ModelExample />} />
                 <Route path="api" element={<ApiExample />} />

@@ -2,9 +2,9 @@ const styles = {
   boxWidth: "xl:max-w-[1280px] w-full",
 
   heading:
-    "font-poppins font-bold text-[26px] xs:text-[34px] sm:text-[44px] lg:text-[60px] text-gray-700 dark:text-white w-full ",
+    "font-poppins font-bold text-[26px] xs:text-[34px] sm:text-[44px] lg:text-[50px] text-gray-700 dark:text-white w-full ",
   heading2:
-    "font-poppins font-bold text-[30px] xs:text-[38px] sm:text-[50px] lg:text-[70px] text-gray-700 dark:text-white w-full ",
+    "font-poppins font-bold text-[30px] xs:text-[38px] sm:text-[50px] lg:text-[50px] text-gray-700 dark:text-white w-full ",
   subheading:
     "font-poppins font-bold text-[24px] xs:text-[30px] md:text-[40px] lg:text-[45px] text-gray-700 dark:text-white w-full ",
   subheading2:

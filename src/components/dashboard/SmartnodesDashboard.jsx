@@ -31,7 +31,7 @@ const dummyModelDemand = {
         ],
         total_models_tracked: 1,
         models_with_recent_activity: 1,
-        time_period_days: 30,
+        time_period_days: 90,
         min_requests_threshold: 1,
         generated_at: 1758814126.513382
     }
@@ -101,7 +101,7 @@ const dummyNetworkHistory = {
   metadata: {
     total_days_available: 43,
     total_weeks_available: 0,
-    requested_days: 30,
+    requested_days: 90,
     generated_at: 1751993624.323103,
     generated_at_iso: "2025-07-08T12:53:44.323103"
   }
@@ -187,7 +187,7 @@ const SmartnodesDashboard = ({
     const [networkHistory, setNetworkHistory] = useState(null);
     const [modelDemand, setModelDemand] = useState(null);
     const [activeDashboard, setActiveDashboard] = useState(getSavedDashboard());
-    const [useLocalData, setUseLocalData] = useState(true); // Toggle for local testing
+    const [useLocalData, setUseLocalData] = useState(false); // Toggle for local testing
     const [error, setError] = useState(null);
     const [userUnclaimed, setUserUnclaimed] = useState("-");
     const [proposals, setProposals] = useState({
@@ -312,7 +312,7 @@ const SmartnodesDashboard = ({
             // Fetch both stats and history from API
             const [statsResponse, historyResponse, models] = await Promise.all([
                 fetch(`${API_BASE_URL}/stats`),
-                fetch(`${API_BASE_URL}/network-history?days=60`),
+                fetch(`${API_BASE_URL}/network-history?days=90`),
                 fetch(`${API_BASE_URL}/model-demand`)
             ]);
 
@@ -417,9 +417,9 @@ const SmartnodesDashboard = ({
             className={`bg-zinc-100 dark:bg-zinc-900 flex mt-3 flex-col border-t dark:border-t-white border-t-black items-center pb-5
                                 border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
             <div className="mt-3 max-w-[1380px] items-center w-full flex-wrap">
-                <div className="w-full max-w-[1380px]">
+                {/* <div className="w-full max-w-[1380px]">
                     <AirdropIndicator />
-                </div>
+                </div> */}
                 <h1 
                     className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-900 border dark:border-neutral-500 border-black p-2 xs:p-5 text-left px-6 md:mt-2 max-w-[830px] mb-3`}>
                     Smartnodes <span className="font-normal text-gray-400" style={{color: "rgba(105, 220, 100, 1)"}}>(testnet)</span> Dashboard
