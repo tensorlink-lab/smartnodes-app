@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Network, Zap, Shield, MessageSquare } from "lucide-react";
-import { LocalhostGPT } from ".";
+import { Users, Cpu, Code, MessageSquare } from "lucide-react";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 import "prismjs/components/prism-javascript";
@@ -8,19 +7,19 @@ import "prismjs/components/prism-python";
 
 const features = [
   {
-    icon: Network,
-    title: "Private & Global Networks",
-    content: "Tap into a global peer-to-peer compute layer for public workloads, or spin up your own distributed AI network across personal GPUs."
+    icon: Code,
+    title: "For Developers",
+    content: "Free & Paid APIs for your apps. Build chat interfaces, automation tools, or AI products without compute costs. Route queries to your own hardware or use sharded public models for privacy."
   },
   {
-    icon: Zap,
-    title: "Distributed Performance",
-    content: "Run inference and training across multiple devices with pipeline and model parallelism, connect via API or PyTorch."
+    icon: Cpu,
+    title: "For GPU Owners",
+    content: "Run a node to contribute compute and earn rewards through our blockchain-based system, and turn idle hardware into your own private AI server."
   },
   {
-    icon: Shield,
-    title: "Trustless Infrastructure",
-    content: "Keep full control of input data using specialized hybrid distributed models infrastructure that doesn’t depend on centralized cloud providers."
+    icon: Users,
+    title: "For Everyone",
+    content: "Access powerful AI models through simple APIs. No setup, no technical knowledge required, just start building."
   }
 ];
 
@@ -63,7 +62,6 @@ if TRAIN:
 const Example = ({ activeMenu }) => {
   const [copiedApi, setCopiedApi] = useState(false);
   const [copiedPytorch, setCopiedPytorch] = useState(false);
-  const [showChatbot, setShowChatbot] = useState(false);
 
   useEffect(() => {
     Prism.highlightAll();
@@ -80,19 +78,6 @@ const Example = ({ activeMenu }) => {
     }
   };
 
-  useEffect(() => {
-    if (showChatbot) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [showChatbot]);
-
-
   return (
     <section className="relative w-full h-full">
       <section className="w-full max-w-7xl mx-auto sm:px-4 px-2 py-6">
@@ -105,7 +90,8 @@ const Example = ({ activeMenu }) => {
                 <span className="text-red-400">Infrastructure</span>
               </h2>
               <p className="text-gray-700 dark:text-gray-300 text-sm md:text-md mb-5">
-                Tensorlink is a Python library and peer-to-peer platform for running, training, and deploying PyTorch models across distributed hardware. Access powerful AI infrastructure without relying on centralized cloud services.
+                Tensorlink is a Python library and peer-to-peer platform for running PyTorch models across distributed hardware. 
+                Remotely access powerful AI infrastructure through global compute or your own private hardware.
               </p>
               <div className="flex flex-wrap gap-2">
                 <a href="/tensorlink/docs" target="_blank" rel="noopener noreferrer">
@@ -119,11 +105,11 @@ const Example = ({ activeMenu }) => {
                   </button>
                 </a>
                 <button 
-                  onClick={() => setShowChatbot(true)}
+                  onClick={() => window.location.href = 'https://www.tensorlink.io'}
                   className="sm:px-3 sm:py-2 px-2 py-1 sm:text-md text-sm bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium rounded-lg border-2 border-neutral-400 transition-transform hover:scale-105 flex items-center gap-2"
                 >
                   <MessageSquare size={16} />
-                  Demo Chat
+                  Demo
                 </button>
               </div>
             </div>
@@ -268,29 +254,6 @@ const Example = ({ activeMenu }) => {
           </div>
         </div>
       </section>
-
-      {/* Chatbot Popup Modal */}
-      {showChatbot && (
-        <div
-          className={`fixed inset-y-0 right-0 z-50 flex items-center justify-center sm:p-4 bg-black bg-opacity-0 backdrop-blur-md transition-all duration-300
-          ${activeMenu ? "left-[245px]" : "left-0"}`}
-        >
-          <div className="w-full mt-10 sm:mt-32 sm:mb-20 h-[75vh] sm:h-[80vh] max-w-5xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden border-2 border-gray-300 dark:border-gray-700 flex flex-col">
-            <LocalhostGPT onClose={() => setShowChatbot(false)} />
-          </div>
-        </div>
-      )}
-
-      {/* Floating Action Button */}
-      {!showChatbot && (
-        <button
-          onClick={() => setShowChatbot(true)}
-          className="fixed bottom-6 right-6 w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-transform hover:scale-110 z-40"
-          aria-label="Open chatbot"
-        >
-          <MessageSquare size={24} />
-        </button>
-      )}
     </section>
   );
 };

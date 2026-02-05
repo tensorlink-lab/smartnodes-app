@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Code, Users, Cpu } from "lucide-react";
+import { Network, Zap, Shield } from "lucide-react";
 
 
 const WhyTensorlink = () => {
@@ -8,24 +8,24 @@ const WhyTensorlink = () => {
   const features = [
     {
       id: 'developers',
-      title: "For Developers",
-      description: "Free AI APIs for your apps. Build chat interfaces, automation tools, or AI products without compute costs. Route queries to your own hardware or use sharded public models for privacy.",
+      title: "Private & Global Networks",
+      description: "Tap into a global peer-to-peer compute layer for public workloads, or spin up your own distributed AI network across personal GPUs.",
       color: "bg-purple-500",
-      icon: Code
+      icon: Network
     },
     {
       id: 'owners',
-      title: "For GPU Owners",
-      description: "Run a node to contribute compute and earn rewards through our blockchain-based system, and turn idle hardware into your own private AI server.",
+      title: "Distributed Execution",
+      description: "Run inference and training across multiple devices via API or PyTorch, with built-in pipeline parallelism.",
       color: "bg-blue-500",
-      icon: Cpu
+      icon: Zap
     },
     {
       id: 'everyone',
-      title: "For Everyone",
-      description: "Access powerful AI models through simple APIs. No setup, no technical knowledge required, just start building.",
+      title: "Trustless Infrastructure",
+      description: "Keep full control of input data using specialized hybrid distributed models infrastructure that doesn't depend on centralized cloud providers.",
       color: "bg-red-400",
-      icon: Users
+      icon: Shield
     }
   ];
 
@@ -52,9 +52,9 @@ const WhyTensorlink = () => {
               </span>
             </h2>
             <p className="mt-6 text-md text-gray-700 dark:text-gray-300 max-w-xl leading-relaxed">
-              Running AI models shouldn't require expensive cloud services or high-end hardware. Tensorlink provides free APIs and 
-              distributed compute, transforming any computer into part of a global AI network. Access cutting-edge models without 
-              infrastructure headaches or cloud bills, and contribute your own GPU hardware for truly private AI.
+              Tensorlink provides free APIs and distributed compute, transforming any computer into part of a global 
+              AI network. Run a node on your own computer for truly private AI experience and earn rewards while
+              doing so.
             </p>
             
             <div className="mt-8">

@@ -33,32 +33,14 @@ const UseCases = () => {
       icon: DollarSign
     },
     {
-      id: "free-chatbots",
-      emoji: "🤖",
-      title: "Free AI Chat & Assistants",
-      description: "Build chatbots, helper bots, and AI assistants with zero API costs, perfect for personal projects and production apps alike.",
-      color: "bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-cyan-900/40 dark:to-cyan-800/30",
-      borderColor: "border-cyan-300 dark:border-cyan-700",
-      icon: Bot
-    },
-    {
-      id: "research",
-      emoji: "🔬",
-      title: "Research & Science",
-      description: "Train and experiment with large models without institutional budgets, democratizing AI research for independent scientists.",
-      color: "bg-gradient-to-br from-pink-100 to-pink-200 dark:from-pink-900/40 dark:to-pink-800/30",
-      borderColor: "border-pink-300 dark:border-pink-700",
-      icon: Sparkles
-    },
-    {
-      id: "agentic",
+      id: "free-agents",
       emoji: "⚡",
       title: "Agentic Workflows",
       description: "Deploy autonomous AI agents and complex workflows with distributed intelligence, build the next generation of automation.",
-      color: "bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-900/40 dark:to-orange-800/30",
-      borderColor: "border-orange-300 dark:border-orange-700",
+      color: "bg-gradient-to-br from-pink-100 to-pink-200 dark:from-pink-900/40 dark:to-pink-800/30",
+      borderColor: "border-pink-300 dark:border-pink-700",
       icon: Zap
-    }
+    },
   ];
 
   return (
