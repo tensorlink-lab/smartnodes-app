@@ -211,7 +211,7 @@ const SmartnodesOverview = () => (
           </p>
           <a 
             className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:underline font-medium" 
-            href="https://github.com/smartnodes-lab/smartnodes-core/blob/main/whitepaper.md"
+            href="https://github.com/tensorlink-lab/smartnodes-core/blob/main/whitepaper.md"
             target="_blank"
             rel="noopener noreferrer"
           >

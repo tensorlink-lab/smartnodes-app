@@ -59,7 +59,7 @@ const Navbar = () => {
             style={{ zIndex: 10000 }}
           >
             {nav.title === "GitHub" ? (
-              <a href="https://github.com/smartnodes-lab">{nav.title}</a>
+              <a href="https://github.com/tensorlink-lab">{nav.title}</a>
             ) : nav.title === "Networks" ? (
               <div className="relative">
                 <button
@@ -152,7 +152,7 @@ const Navbar = () => {
                 onClick={() => setActive(nav.title)}
               >
                 {nav.title === "GitHub" ? (
-                  <a href="https://github.com/smartnodes-lab">{nav.title}</a>
+                  <a href="https://github.com/tensorlink-lab">{nav.title}</a>
                 ) : nav.title === "Networks" ? (
                   <div className="relative">
                     <button

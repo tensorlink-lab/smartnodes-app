@@ -61,7 +61,7 @@ export const sideLinks = [
       },
       {
         name: "Whitepaper",
-        id: "https://github.com/smartnodes-lab/smartnodes-core/blob/main/whitepaper.md",
+        id: "https://github.com/tensorlink-lab/smartnodes-core/blob/main/whitepaper.md",
       },
     ],
   },
@@ -101,7 +101,7 @@ export const sideLinks = [
     links: [
       {
         name: "GitHub",
-        id: "https://github.com/smartnodes-lab",
+        id: "https://github.com/tensorlink-lab",
         icon: MdHome,
       },
       {
@@ -224,12 +224,12 @@ export const footerLinks = [
       },
       {
         name: "Litepaper",
-        link: "https://github.com/smartnodes-lab/smartnodes",
+        link: "https://github.com/tensorlink-lab/smartnodes",
       },
       {
         name: "GitHub",
         icon: linkedin,
-        link: "https://github.com/smartnodes-lab",
+        link: "https://github.com/tensorlink-lab",
       },
       // {
       //   name: "Create",
@@ -261,7 +261,7 @@ export const footerLinks = [
       {
         name: "LinkedIn",
         icon: linkedin,
-        link: "https://www.linkedin.com/company/smartnodes-lab",
+        link: "https://www.linkedin.com/company/tensorlink-lab",
       },
     ],
   },
@@ -302,6 +302,6 @@ export const socialMedia = [
   {
     id: "social-media-4",
     icon: linkedin,
-    link: "https://www.linkedin.com/company/smartnodes-lab",
+    link: "https://www.linkedin.com/company/tensorlink-lab",
   },
 ];

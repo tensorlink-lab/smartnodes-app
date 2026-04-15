@@ -10,11 +10,10 @@ import {
   ApiExample, 
   SmartnodesOverview, 
   GettingStarted,
-   ModelExample, 
-   Nodes, 
-   Mining, 
-   Community,
-  LocalhostGPT
+  ModelExample, 
+  Nodes, 
+  Mining, 
+  Community,
 } from "./components";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -53,12 +52,6 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem("username", id);
   }, [id]);
-
-  useEffect(() => {
-    if (location.pathname === '/localhostGPT') {
-      window.location.href = '/tensorlink/localhostGPT';
-    }
-  }, [location.pathname]);
 
   // Set activeMenu to true for desktop on initial load
   useWindowSizeHandler(setActiveMenu);

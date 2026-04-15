@@ -24,7 +24,6 @@ import Overview from "./docs/tensorlink/Overview";
 import Nodes from "./docs/tensorlink/Nodes";
 import Installation from "./docs/tensorlink/Installation";
 import ConnectWalletButton from "./dashboard/ConnectWallet";
-import LocalhostGPT from "./LocalhostGPT";
 import Mining from "./docs/tensorlink/Mining";
 import Community from "./docs/tensorlink/Community";
 import SmartnodesOverview from "./docs/smartnodes/SmartnodesOverview";
@@ -65,7 +64,6 @@ export {
   SmartnodesOverview,
   ApiExample,
   Mining,
-  LocalhostGPT,
   Button,
   Nodes,
   TensorlinkDashboard,
