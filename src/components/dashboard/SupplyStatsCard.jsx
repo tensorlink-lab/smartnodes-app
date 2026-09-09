@@ -1,4 +1,4 @@
-import React, { copyToClipboard, useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Chart as ChartJS,
@@ -15,7 +15,7 @@ import {
 import { Doughnut, Line } from 'react-chartjs-2';
 import { useMediaQuery } from "react-responsive";
 import { ProposalsTable, ProposalsBarChart } from "..";
-import { MdLink, MdLibraryAddCheck, MdMonetizationOn, MdVerified, MdCheck, MdLaunch, MdSecurity } from "react-icons/md";
+import { MdLink, MdLibraryAddCheck, MdMonetizationOn, MdVerified, MdCheck, MdContentCopy, MdLaunch, MdSecurity } from "react-icons/md";
 
 // Register Chart.js components
 ChartJS.register(
@@ -30,8 +30,8 @@ ChartJS.register(
   Filler
 );
 
-const SupplyStatsCard = ({ 
-  supplyStats, 
+const SupplyStatsCard = ({
+  supplyStats,
   tokenAddress,
   coordinatorAddress,
   coreAddress,
@@ -45,7 +45,9 @@ const SupplyStatsCard = ({
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [currentPage, setCurrentPage] = useState(0);
   const [activeView, setActiveView] = useState('capacity');
+  const [copiedKey, setCopiedKey] = useState('');
   const ITEMS_PER_PAGE = 10;
+
   useEffect(() => {
     const observer = new MutationObserver(() => {
       const isDark = document.documentElement.classList.contains('dark');
@@ -59,6 +61,19 @@ const SupplyStatsCard = ({
 
     return () => observer.disconnect();
   }, []);
+
+  // Copies an address to the clipboard and briefly flips that row's icon
+  // to a checkmark for feedback. (Previously imported — incorrectly — from
+  // "react", which doesn't export it, so every copy button threw on click.)
+  const copyToClipboard = async (value, key) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(''), 1500);
+    } catch (err) {
+      console.warn('Copy failed:', err);
+    }
+  };
 
   // Format with 3 significant figures + suffix
   const formatValue = (num) => {
@@ -99,9 +114,9 @@ const SupplyStatsCard = ({
 
   const isSmallScreen = useMediaQuery({ maxWidth: 600 });
   const [showEmissionsChart, setShowEmissionsChart] = useState(false);
-  
+
   // Check if data is still loading
-  let isLoading = !supplyStats || supplyStats.length < 3 || 
+  let isLoading = !supplyStats || supplyStats.length < 3 ||
                     supplyStats.some(item => item.amount === "-" || isNaN(Number(item.amount)));
 
   // Extract necessary amounts
@@ -115,9 +130,9 @@ const SupplyStatsCard = ({
 
   // Format number for display
   const formatNumber = (number) => {
-    return number.toLocaleString(undefined, { 
-      minimumFractionDigits: 0, 
-      maximumFractionDigits: 1 
+    return number.toLocaleString(undefined, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 1
     });
   };
 
@@ -135,16 +150,27 @@ const SupplyStatsCard = ({
     setShowTooltip(false);
   };
 
+  // Dashboard-wide accent palette, reused here so the supply breakdown reads
+  // as part of the same system as the Ecosystem charts.
+  const ACCENTS = {
+    locked: '#F472B6',
+    unclaimed: '#A78BFA',
+    circulating: '#60A5FA',
+    dao: '#34D399',
+    workers: '#4FD8C4',
+    validators: '#A78BFA',
+  };
+
   // Doughnut chart data
   const doughnutData = {
     labels: ['Locked', 'Unclaimed', 'Circulating', 'DAO'],
     datasets: [
       {
         data: [locked, unclaimed, circulatingSupply, dao],
-        backgroundColor: ['rgba(255, 100, 150, 1)', 'rgba(150, 70, 255, 1)', 'rgba(120, 160, 255, 1)', 'rgba(50, 200, 125, 1)'],
-        borderColor: ['#ffffff', '#ffffff', '#ffffff'],
-        borderWidth: 3,
-        hoverBorderWidth: 3,
+        backgroundColor: [ACCENTS.locked, ACCENTS.unclaimed, ACCENTS.circulating, ACCENTS.dao],
+        borderColor: 'transparent',
+        borderWidth: 0,
+        hoverBorderWidth: 0,
         hoverOffset: 8,
       },
     ],
@@ -157,8 +183,8 @@ const SupplyStatsCard = ({
       {
         label: 'Workers',
         data: emissionsData.map(d => d.worker),
-        backgroundColor: 'rgba(133, 222, 202, 0.6)',
-        borderColor: '#85deca',
+        backgroundColor: `${ACCENTS.workers}33`,
+        borderColor: ACCENTS.workers,
         borderWidth: 2,
         fill: 'origin',
         tension: 0.3,
@@ -166,8 +192,8 @@ const SupplyStatsCard = ({
       {
         label: 'Validators',
         data: emissionsData.map(d => d.validator),
-        backgroundColor: 'rgba(170, 247, 182, 0.8)',
-        borderColor: '#aaf7b6',
+        backgroundColor: `${ACCENTS.validators}4D`,
+        borderColor: ACCENTS.validators,
         borderWidth: 2,
         fill: '-1',
         tension: 0.3,
@@ -175,8 +201,8 @@ const SupplyStatsCard = ({
       {
         label: 'DAO',
         data: emissionsData.map(d => d.dao),
-        backgroundColor: 'rgba(113, 122, 222, 0.6)',
-        borderColor: '#aa9eca',
+        backgroundColor: `${ACCENTS.circulating}33`,
+        borderColor: ACCENTS.circulating,
         borderWidth: 2,
         fill: 'origin', // Fill from the bottom
         tension: 0.3,
@@ -184,23 +210,29 @@ const SupplyStatsCard = ({
     ],
   };
 
+  const axisColor = isDarkMode ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)';
+  const gridColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.08)';
+  const legendColor = isDarkMode ? '#EDEFF4' : '#111827';
+
   // Doughnut chart options
   const doughnutOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    cutout: '62%',
     plugins: {
       legend: {
         position: isSmallScreen ? 'bottom' : 'left',
         labels: {
-          color: isDarkMode ? "white" : "black",
+          color: legendColor,
           font: {
             family: 'Inter, system-ui, sans-serif',
             size: isSmallScreen ? 11 : 13,
           },
-          padding: isSmallScreen ? 10 : 30,
+          padding: isSmallScreen ? 10 : 24,
           usePointStyle: true,
           pointStyle: 'circle',
-          
+          boxWidth: 6,
+          boxHeight: 6,
         },
       },
       tooltip: {
@@ -217,11 +249,10 @@ const SupplyStatsCard = ({
         }
       }
     },
-    cutout: '40%',
     animation: {
       animateRotate: true,
       animateScale: true,
-      duration: 1000,
+      duration: 900,
       easing: 'easeInOutQuart',
     },
   };
@@ -234,19 +265,19 @@ const SupplyStatsCard = ({
       x: {
         stacked: true,
         ticks: {
-          color: isDarkMode ? "white" : "black",
+          color: axisColor,
           font: {
             size: isSmallScreen ? 10 : 12,
           },
         },
         grid: {
-          color: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
+          color: gridColor,
         },
       },
       y: {
         stacked: true,
         ticks: {
-          color: isDarkMode ? "white" : "black",
+          color: axisColor,
           font: {
             size: isSmallScreen ? 10 : 12,
           },
@@ -255,7 +286,7 @@ const SupplyStatsCard = ({
           }
         },
         grid: {
-          color: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
+          color: gridColor,
         },
       },
     },
@@ -263,13 +294,15 @@ const SupplyStatsCard = ({
       legend: {
         position: 'top',
         labels: {
-          color: isDarkMode ? "white" : "black",
+          color: legendColor,
           font: {
             family: 'Inter, system-ui, sans-serif',
-            size: isSmallScreen ? 12 : 14,
+            size: isSmallScreen ? 12 : 13,
           },
-          padding: 15,
+          padding: 12,
           usePointStyle: true,
+          boxWidth: 6,
+          boxHeight: 6,
         },
       },
       tooltip: {
@@ -293,8 +326,8 @@ const SupplyStatsCard = ({
       }
     },
     animation: {
-      duration: 1200,
-      easing: 'easeOutInQuart',
+      duration: 900,
+      easing: 'easeInOutQuart',
     },
     interaction: {
       intersect: false,
@@ -310,8 +343,44 @@ const SupplyStatsCard = ({
       animate={{ opacity: 1, scale: 1 }}
       className="flex justify-center items-center h-full"
     >
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4FD8C4]"></div>
     </motion.div>
+  );
+
+  // One row in the Contract Addresses card
+  const ContractRow = ({ icon, label, address, copyId }) => (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-center gap-2">
+        {icon}
+        <span className="text-sm font-medium text-gray-700 dark:text-[#9AA2B4]">{label}</span>
+        <MdVerified className="text-emerald-500 text-sm" />
+      </div>
+      <div className="flex items-center gap-2 rounded-lg border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/[0.02] px-3 py-2">
+        <code className="flex-1 break-all font-mono text-xs text-gray-600 dark:text-[#9AA2B4]">{address}</code>
+        <div className="flex shrink-0 gap-1">
+          <button
+            onClick={() => copyToClipboard(address, copyId)}
+            className="rounded-md p-1 text-gray-400 dark:text-[#8B93A7] transition-colors hover:bg-gray-100 dark:hover:bg-white/[0.06]"
+            title="Copy address"
+          >
+            {copiedKey === copyId ? (
+              <MdCheck className="text-sm text-emerald-500" />
+            ) : (
+              <MdContentCopy className="text-sm" />
+            )}
+          </button>
+          <a
+            href={`${explorerBase}${address}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-md p-1 text-gray-400 dark:text-[#8B93A7] transition-colors hover:bg-gray-100 dark:hover:bg-white/[0.06]"
+            title="View on explorer"
+          >
+            <MdLaunch className="text-sm text-[#60A5FA]" />
+          </a>
+        </div>
+      </div>
+    </div>
   );
 
   return (
@@ -330,68 +399,67 @@ const SupplyStatsCard = ({
               transform: 'translateX(-50%) translateY(-100%)',
               zIndex: 1000,
             }}
-            className="bg-gray-800 text-white px-3 py-2 rounded-lg text-sm whitespace-nowrap pointer-events-none shadow-lg"
+            className="rounded-lg border border-white/10 bg-gray-900 dark:bg-[#12151c] px-3 py-2 text-xs font-medium text-white whitespace-nowrap pointer-events-none shadow-lg"
           >
-            {showEmissionsChart 
-              ? "Switch to Supply Distribution" 
+            {showEmissionsChart
+              ? "Switch to Supply Distribution"
               : "Switch to Projected Emissions"
             }
-            <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900 dark:border-t-[#12151c]"></div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Main Supply Stats and Chart Row */}
-      <div className="flex md:flex-row flex-col mb-2">
-         {/* Left: Chart */}
-        <motion.div 
-          initial={{ opacity: 0, x: 0 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className={`flex flex-col items-center justify-center bg-neutral-200/20 dark:bg-neutral-900 rounded-xl border border-gray-600 dark:border-neutral-500 transition-all duration-500 
-            ${showEmissionsChart ? 'lg:max-w-[600px] md:max-w-[460px]' : 'lg:max-w-[490px] max-w-[420px]'} 
+      <div className="flex md:flex-row flex-col gap-2 mb-2">
+        {/* Left: Chart */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className={`flex flex-col rounded-2xl border border-gray-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.02] backdrop-blur-sm shadow-sm p-4 sm:p-6 transition-all duration-500
+            ${showEmissionsChart ? 'lg:max-w-[600px] md:max-w-[460px]' : 'lg:max-w-[490px] max-w-[420px]'}
             w-full`}
         >
-          <div className="w-full flex justify-between items-center px-4">
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="text-xl xs:text-2xl font-bold text-neutral-800 dark:text-white mt-3 sm:mt-2"
-            >
-              {showEmissionsChart ? "Projected Emissions (SNO)" : "Supply Distribution (SNO)"}
-            </motion.p>
+          <div className="w-full flex justify-between items-start">
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="h-px w-4 bg-gradient-to-r from-transparent to-[#4FD8C4]" />
+                <span className="text-[10px] tracking-[0.25em] uppercase text-gray-400 dark:text-[#8B93A7]">
+                  Supply
+                </span>
+              </div>
+              <p className="font-bold text-lg sm:text-xl text-neutral-900 dark:text-[#EDEFF4]">
+                {showEmissionsChart ? "Projected Emissions" : "Supply Distribution"}
+              </p>
+            </div>
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               aria-label="Toggle chart"
               onClick={() => setShowEmissionsChart(!showEmissionsChart)}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              className="mt-4 p-2 rounded-full hover:bg-gray-400 transition-colors relative"
+              className="rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-2 text-gray-500 dark:text-[#8B93A7] transition-colors hover:border-gray-300 dark:hover:border-white/20"
             >
-              <svg className="w-6 h-6 dark:text-gray-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
             </motion.button>
           </div>
 
-          <div style={{ width: '100%', height: isSmallScreen ? '240px' : '300px', paddingLeft: '60px', padding: isSmallScreen ? '0px' : '15px' }}>
+          <div className="mt-2" style={{ width: '100%', height: isSmallScreen ? '240px' : '300px' }}>
             <AnimatePresence mode="wait">
               {isLoading ? (
                 <LoadingSpinner />
               ) : (
                 <motion.div
                   key={showEmissionsChart ? 'line' : 'doughnut'}
-                  initial={{ opacity: 0, x: -200 }}
+                  initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.75 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.4 }}
                   style={{ width: '100%', height: '100%' }}
-                  className="p-3 overflow-visible"
                 >
                   {showEmissionsChart ? (
                     <Line data={lineData} options={lineOptions} />
@@ -399,204 +467,109 @@ const SupplyStatsCard = ({
                     <Doughnut data={doughnutData} options={doughnutOptions} />
                   )}
                 </motion.div>
-
               )}
             </AnimatePresence>
           </div>
         </motion.div>
 
         {/* Supply Stats */}
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className={`bg-neutral-100 dark:bg-neutral-900 rounded-xl border border-gray-600 dark:border-gray-500 p-2 xs:p-4 w-full max-w-[600px] mt-2 md:mt-0 md:ml-2
-            ${showEmissionsChart ? '' : ''}`}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.02] backdrop-blur-sm shadow-sm p-4 sm:p-6 w-full max-w-[600px]"
         >
-          <h2 className="text-xl xs:text-2xl font-bold text-gray-900 dark:text-white mb-2 xs:mb-3 py-1">Supply & Emissions</h2>
-          
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="h-px w-4 bg-gradient-to-r from-transparent to-[#34D399]" />
+            <span className="text-[10px] tracking-[0.25em] uppercase text-gray-400 dark:text-[#8B93A7]">
+              Overview
+            </span>
+          </div>
+          <h2 className="font-bold text-lg sm:text-xl text-neutral-900 dark:text-[#EDEFF4] mb-4">Supply &amp; Emissions</h2>
+
           {/* Total Supply - Featured */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="p-4 bg-gradient-to-r from-gray-100 to-gray-100 dark:from-zinc-800 dark:to-neutral-800 rounded-lg max-w-[285px] border border-gray-300 dark:border-gray-500"
-          >
-            <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Total Supply</p>
+          <div className="rounded-xl border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/[0.02] backdrop-blur-sm px-4 py-3 max-w-[260px] mb-3">
+            <p className="text-[10px] tracking-[0.2em] uppercase text-gray-400 dark:text-[#8B93A7] mb-1">Total Supply</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-2xl xs:text-3xl font-bold text-gray-900 dark:text-white">
+              <span className="text-2xl xs:text-3xl font-bold text-neutral-900 dark:text-[#EDEFF4]">
                 {formatNumber(totalSupply)}
               </span>
-              <span className="text-lg text-gray-500 dark:text-gray-400">SNO</span>
+              <span className="text-sm text-gray-400 dark:text-[#5B6272]">SNO</span>
             </div>
-          </motion.div>
+          </div>
 
           {/* Other Stats Grid */}
-          <div className="flex flex-wrap gap-1 xs:gap-2 mt-1 xs:mt-2 ">
+          <div className="flex flex-wrap gap-2">
             {supplyStats.filter(item => item.title !== "Total Supply").map((item, index) => (
-              <motion.div 
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                className="p-2 lg:p-3 border border-gray-300 dark:border-gray-500 bg-gray-100 dark:bg-zinc-800 rounded-lg max-w-[130px] md:min-w-[155px] lg:min-w-[150px] lg:max-w-[165px] flex-1"
+                className="flex-1 min-w-[130px] rounded-xl border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/[0.02] backdrop-blur-sm px-4 py-3"
               >
-                <p className="text-xs lg:text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">
+                <p className="text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7] mb-1">
                   {item.title}
                 </p>
-                <p className="text-md md:text-xl font-semibold text-gray-900 dark:text-white flex items-baseline gap-1">
+                <p className="text-lg font-semibold text-neutral-900 dark:text-[#EDEFF4] flex items-baseline gap-1">
                   {formatValue(item.amount)}
                   {item.suffix && (
-                    <span className="text-xs md:text-sm font-medium text-gray-500 dark:text-gray-400">
+                    <span className="text-xs font-medium text-gray-400 dark:text-[#5B6272]">
                       {item.suffix}
                     </span>
                   )}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
-
         </motion.div>
-    
       </div>
-        
-      {/* Proposals Section - Grid Layout */}
-      <div className="flex flex-col md:flex-row gap-2 mt-2 mx-auto">
-                {/* Contract Info */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+
+      {/* Proposals Section */}
+      <div className="flex flex-col md:flex-row gap-2 mt-2">
+        {/* Contract Info */}
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex-shrink-0 w-full md:w-[450px] bg-gray-200 dark:bg-zinc-800 rounded-lg min-w-[250px] max-w-[450px] dark:text-gray-200 p-5 border border-black/20 dark:border-gray-500"
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex-shrink-0 w-full md:w-[420px] min-w-[250px] max-w-[420px] rounded-2xl border border-gray-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.02] backdrop-blur-sm shadow-sm p-4 sm:p-6"
         >
-          <h1 className="font-bold text-xl md:text-2xl dark:text-white mb-3">Contract Addresses</h1>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="h-px w-4 bg-gradient-to-r from-transparent to-[#60A5FA]" />
+            <span className="text-[10px] tracking-[0.25em] uppercase text-gray-400 dark:text-[#8B93A7]">
+              Contracts
+            </span>
+          </div>
+          <h1 className="font-bold text-lg sm:text-xl text-neutral-900 dark:text-[#EDEFF4] mb-4">Contract Addresses</h1>
           <div className="space-y-3">
-            {/* Token Contract */}
-            <div className="flex flex-col space-y-1">
-              <div className="flex items-center gap-2">
-                <MdMonetizationOn className="text-green-500 text-lg" />
-                <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">Token Contract</span>
-                <MdVerified className="text-green-500 text-sm" />
-              </div>
-              <div className="flex items-center gap-3 p-2 bg-gray-100 dark:bg-gray-700 rounded-md">
-                <code className="text-xs font-mono flex-1 break-all">{tokenAddress}</code>
-                <div className="flex gap-1">
-                  <button
-                    onClick={() => copyToClipboard(tokenAddress, 'token')}
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
-                    title="Copy address"
-                  >
-                    <MdCheck className="text-green-500 text-sm" />
-                  </button>
-                  <a
-                    href={`${explorerBase}${tokenAddress}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
-                    title="View on explorer"
-                  >
-                    <MdLaunch className="text-blue-500 text-sm" />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Core Contract */}
-            <div className="flex flex-col space-y-1">
-              <div className="flex items-center gap-2">
-                <MdLink className="text-blue-500 text-lg" />
-                <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">Core Contract</span>
-                <MdVerified className="text-green-500 text-sm" />
-              </div>
-              <div className="flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-md">
-                <code className="text-xs font-mono flex-1 break-all">{coreAddress}</code>
-                <div className="flex gap-1">
-                  <button
-                    onClick={() => copyToClipboard(coreAddress, 'contract')}
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
-                    title="Copy address"
-                  >
-                    <MdCheck className="text-green-500 text-sm" />
-                  </button>
-                  <a
-                    href={`${explorerBase}${coreAddress}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
-                    title="View on explorer"
-                  >
-                    <MdLaunch className="text-blue-500 text-sm" />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* Multisig Contract */}
-            <div className="flex flex-col space-y-1">
-              <div className="flex items-center gap-2">
-                <MdSecurity className="text-red-500 text-lg" />
-                <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">Multisig Contract</span>
-                <MdVerified className="text-green-500 text-sm" />
-              </div>
-              <div className="flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-md">
-                <code className="text-xs font-mono flex-1 break-all">{coordinatorAddress}</code>
-                <div className="flex gap-1">
-                  <button
-                    onClick={() => copyToClipboard(coordinatorAddress, 'multisig')}
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
-                    title="Copy address"
-                  >
-                    <MdCheck className="text-green-500 text-sm" />
-                  </button>
-                  <a
-                    href={`${explorerBase}${coordinatorAddress}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
-                    title="View on explorer"
-                  >
-                    <MdLaunch className="text-blue-500 text-sm" />
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            {/* DAO Contract */}
-            <div className="flex flex-col space-y-1">
-              <div className="flex items-center gap-2">
-                <MdLibraryAddCheck className="text-purple-500 text-lg" />
-                <span className="font-semibold text-sm text-gray-700 dark:text-gray-300">DAO Contract</span>
-                <MdVerified className="text-green-500 text-sm" />
-              </div>
-              <div className="flex items-center gap-2 p-2 bg-gray-100 dark:bg-gray-700 rounded-md">
-                <code className="text-xs font-mono flex-1 break-all">{daoAddress}</code>
-                <div className="flex gap-1">
-                  <button
-                    onClick={() => copyToClipboard(daoAddress, 'token')}
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
-                    title="Copy address"
-                  >
-                    <MdCheck className="text-green-500 text-sm" />
-                  </button>
-                  <a
-                    href={`${explorerBase}${daoAddress}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded transition-colors"
-                    title="View on explorer"
-                  >
-                    <MdLaunch className="text-blue-500 text-sm" />
-                  </a>
-                </div>
-              </div>
-            </div>
+            <ContractRow
+              icon={<MdMonetizationOn className="text-emerald-500 text-base" />}
+              label="Token Contract"
+              address={tokenAddress}
+              copyId="token"
+            />
+            <ContractRow
+              icon={<MdLink className="text-[#60A5FA] text-base" />}
+              label="Core Contract"
+              address={coreAddress}
+              copyId="core"
+            />
+            <ContractRow
+              icon={<MdSecurity className="text-[#F472B6] text-base" />}
+              label="Multisig Contract"
+              address={coordinatorAddress}
+              copyId="multisig"
+            />
+            <ContractRow
+              icon={<MdLibraryAddCheck className="text-[#A78BFA] text-base" />}
+              label="DAO Contract"
+              address={daoAddress}
+              copyId="dao"
+            />
           </div>
         </motion.div>
-        
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, delay: 0.25 }}
           className="flex w-full min-w-0 flex-1"
         >
           <div className="w-full min-w-0">
@@ -615,16 +588,14 @@ const SupplyStatsCard = ({
 
       {/* Bottom Row: Table */}
       <div className="mt-2">
-        <motion.div>
-          <ProposalsTable
-            proposals={proposals}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            ITEMS_PER_PAGE={ITEMS_PER_PAGE}
-            isDarkMode={isDarkMode}
-            isSmallScreen={isSmallScreen}
-          />
-        </motion.div>
+        <ProposalsTable
+          proposals={proposals}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          ITEMS_PER_PAGE={ITEMS_PER_PAGE}
+          isDarkMode={isDarkMode}
+          isSmallScreen={isSmallScreen}
+        />
       </div>
     </div>
   );

@@ -1,25 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from "../../style.js";
-import { 
-  MdComputer, 
-  MdVerifiedUser, 
-  MdPerson, 
-  MdAdd, 
-  MdCheckCircle, 
+import {
+  MdComputer,
+  MdVerifiedUser,
+  MdAdd,
   MdError,
   MdRefresh,
-  MdTrendingUp,
-  MdSchedule,
-  MdAssignment,
-  MdSave,
-  MdPlayArrow,
   MdClose,
-  MdLogin
 } from 'react-icons/md';
 import { ConnectWalletButton, ClaimRewardsComponent, ActionMenu } from "..";
 
-const NodeDashboard = ({ 
+const NodeDashboard = ({
   claimInfo,
   userUnclaimed,
   setUserUnclaimed,
@@ -40,7 +32,7 @@ const NodeDashboard = ({
   const [nodeSearchError, setNodeSearchError] = useState('');
   const [claimableRewards, setClaimableRewards] = useState([]);
   const [fetchingClaims, setFetchingClaims] = useState(false);
-  
+
   const mockActiveNodes = [
     {
       pubKeyHash: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb1',
@@ -105,12 +97,12 @@ const NodeDashboard = ({
     setFetchingClaims(true);
     try {
       const allClaims = [];
-      
+
       for (const node of trackedNodes) {
         try {
           // Fetch claim data from your API endpoint
           const response = await fetch(`/api/rewards/claimable?pubKeyHash=${node.pubKeyHash}&address=${userAddress}`);
-          
+
           if (response.ok) {
             const data = await response.json();
             if (data.claimable && data.claimable.length > 0) {
@@ -124,7 +116,7 @@ const NodeDashboard = ({
           console.warn(`Failed to fetch claims for node ${node.pubKeyHash}:`, err);
         }
       }
-      
+
       setClaimableRewards(allClaims);
     } catch (error) {
       console.error('Failed to fetch claimable rewards:', error);
@@ -158,10 +150,10 @@ const NodeDashboard = ({
 
       // Update UI
       alert('Rewards claimed successfully!');
-      
+
       // Refresh claims data
       await fetchClaimableRewards();
-      
+
       // Refresh network data if available
       if (fetchNetworkData) {
         await fetchNetworkData();
@@ -190,7 +182,7 @@ const NodeDashboard = ({
 
       await tx.wait();
       alert('Reward claimed successfully!');
-      
+
       await fetchClaimableRewards();
       if (fetchNetworkData) {
         await fetchNetworkData();
@@ -231,7 +223,7 @@ const NodeDashboard = ({
     setLoading(true);
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       const newJob = {
         id: `job_${Date.now()}`,
         type: newJobType,
@@ -241,7 +233,7 @@ const NodeDashboard = ({
         cost: `${(Math.random() * 20 + 5).toFixed(1)} SNO`,
         description: newJobDescription
       };
-      
+
       setUserJobs([newJob, ...userJobs]);
       setNewJobType('');
       setNewJobDescription('');
@@ -269,7 +261,7 @@ const NodeDashboard = ({
 
     try {
       const response = await fetch(`/node-info?pubkey_hash=${nodeSearchQuery}`);
-      
+
       if (!response.ok) {
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('text/html')) {
@@ -284,18 +276,18 @@ const NodeDashboard = ({
       }
 
       const data = await response.json();
-      
+
       // Add to tracked nodes
       const newTrackedNode = {
         pubKeyHash: nodeSearchQuery,
         data: data,
         addedAt: Date.now()
       };
-      
+
       const updatedNodes = [...trackedNodes, newTrackedNode];
       setTrackedNodes(updatedNodes);
       storeTrackedNodes(updatedNodes);
-      
+
       // Clear search input
       setNodeSearchQuery('');
     } catch (error) {
@@ -346,111 +338,106 @@ const NodeDashboard = ({
     }
   };
 
-  
   const NodeCard = ({ node }) => {
     const isActive = node.data?.isActive ?? false;
     const nodeType = node.data?.type || node.type || 'unknown';
     const nodeClaims = claimableRewards.find(c => c.nodeId === node.pubKeyHash);
     const totalClaimable = nodeClaims?.claims.reduce((sum, claim) => sum + parseFloat(claim.amount || 0), 0) || 0;
-    
+
     return (
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-neutral-50 dark:bg-gray-700 p-2 sm:p-4 rounded-lg border border-gray-300 dark:border-gray-600"
+        exit={{ opacity: 0, scale: 0.97 }}
+        className="rounded-xl border border-gray-200 dark:border-white/10 bg-white/70 dark:bg-white/[0.02] backdrop-blur-sm px-4 py-3 shadow-sm"
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {nodeType === 'validator' ? (
-              <MdVerifiedUser className="text-green-500" size={20} />
+              <MdVerifiedUser className="text-[#34D399]" size={18} />
             ) : (
-              <MdComputer className="text-blue-500" size={20} />
+              <MdComputer className="text-[#60A5FA]" size={18} />
             )}
-            <h3 className="font-semibold dark:text-white text-sm">
+            <h3 className="font-semibold text-sm text-neutral-900 dark:text-[#EDEFF4]">
               {node.pubKeyHash.slice(0, 6)}...{node.pubKeyHash.slice(-4)}
             </h3>
           </div>
-          <div className="flex items-center gap-1">
-            <div className={`px-2 py-1 rounded-full text-[9px] xs:text-xs font-semibold ${
-              isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-            }`}>
+          <div className="flex items-center gap-1.5">
+            <span
+              className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-medium ${
+                isActive
+                  ? 'border-emerald-200 dark:border-emerald-400/20 bg-emerald-50 dark:bg-emerald-400/10 text-emerald-700 dark:text-emerald-300'
+                  : 'border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-gray-500 dark:text-[#8B93A7]'
+              }`}
+            >
+              {isActive && (
+                <span className="relative flex h-1.5 w-1.5 items-center justify-center">
+                  <motion.span
+                    className="absolute h-1.5 w-1.5 rounded-full bg-emerald-400"
+                    animate={{ scale: [1, 1.8, 1], opacity: [0.55, 0, 0.55] }}
+                    transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut" }}
+                  />
+                  <span className="relative h-1 w-1 rounded-full bg-emerald-400" />
+                </span>
+              )}
               {isActive ? 'ACTIVE' : 'OFFLINE'}
-            </div>
+            </span>
             <button
               onClick={() => handleRemoveNode(node.pubKeyHash)}
-              className="p-1 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
+              className="rounded-md p-1 text-gray-400 dark:text-[#5B6272] transition-colors hover:bg-gray-100 dark:hover:bg-white/[0.06] hover:text-red-500"
               title="Remove node"
             >
-              <MdClose className="text-red-600 dark:text-red-400" size={16} />
+              <MdClose size={15} />
             </button>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-3">
+        <div className="mt-3 grid grid-cols-2 gap-3">
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Last Seen</p>
-            <p className="font-semibold text-green-600 text-sm">{node.lastSeen || 'Just now'}</p>
+            <p className="text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7]">Last Seen</p>
+            <p className="mt-0.5 text-sm font-medium text-emerald-600 dark:text-emerald-400">{node.lastSeen || 'Just now'}</p>
           </div>
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Type</p>
-            <p className="font-semibold dark:text-white capitalize text-sm">{nodeType === "V" ? "Validator" : "Worker"}</p>
+            <p className="text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7]">Type</p>
+            <p className="mt-0.5 text-sm font-medium text-neutral-800 dark:text-[#EDEFF4]">{nodeType === "V" ? "Validator" : "Worker"}</p>
           </div>
         </div>
 
-        {nodeType === 'V' && node.data && (
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            {/* <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Peers</p>
-              <p className="font-semibold dark:text-white">{node.data.peers || 0}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Rewards</p>
-              <p className="font-semibold text-blue-600">{node.data.rewards || 0} SNO</p>
-            </div> */}
-          </div>
-        )}
-
         {nodeType === 'W' && node.data && (
-          <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="mt-3 grid grid-cols-2 gap-3">
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Rewards</p>
-              <p className="font-semibold text-blue-600">{node.data.rewards || 0} SNO</p>
+              <p className="text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7]">Rewards</p>
+              <p className="mt-0.5 text-sm font-medium text-[#60A5FA]">{node.data.rewards || 0} SNO</p>
             </div>
           </div>
         )}
 
-        {/* Claimable Rewards Section */}
+        {/* Claimable rewards */}
         {nodeClaims && nodeClaims.claims.length > 0 && (
-          <div className="mt-3 pt-3 border-t border-gray-300 dark:border-gray-600">
-            <div className="flex items-center justify-between mb-2">
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Claimable Rewards</p>
-                <p className="font-bold text-green-600 dark:text-green-400 text-lg">
-                  {totalClaimable.toFixed(4)} SNO
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {nodeClaims.claims.length} distribution{nodeClaims.claims.length > 1 ? 's' : ''}
-                </p>
-              </div>
-              <button
-                onClick={() => handleClaimRewards(node.pubKeyHash, nodeClaims.claims)}
-                disabled={loading || !contract}
-                className="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm"
-              >
-                {loading ? (
-                  <>
-                    <MdRefresh className="animate-spin" />
-                    Claiming...
-                  </>
-                ) : (
-                  <>
-                    <MdCheckCircle />
-                    Claim All
-                  </>
-                )}
-              </button>
+          <div className="mt-3 flex items-center justify-between border-t border-gray-100 dark:border-white/5 pt-3">
+            <div>
+              <p className="text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7]">Claimable Rewards</p>
+              <p className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
+                {totalClaimable.toFixed(4)} SNO
+              </p>
+              <p className="text-xs text-gray-400 dark:text-[#5B6272]">
+                {nodeClaims.claims.length} distribution{nodeClaims.claims.length > 1 ? 's' : ''}
+              </p>
             </div>
+            <button
+              onClick={() => handleClaimRewards(node.pubKeyHash, nodeClaims.claims)}
+              disabled={loading || !contract}
+              className="flex items-center gap-2 rounded-full bg-[#4FD8C4] px-4 py-2 text-sm font-medium text-[#0A0D13] transition-colors hover:bg-[#6EE2D1] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? (
+                <>
+                  <MdRefresh className="animate-spin" />
+                  Claiming...
+                </>
+              ) : (
+                'Claim All'
+              )}
+            </button>
           </div>
         )}
       </motion.div>
@@ -458,118 +445,113 @@ const NodeDashboard = ({
   };
 
   return (
-    <div className="mt-2 max-w-[1380px] items-center w-full flex-wrap">
-      <motion.div 
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="bg-neutral-100 mb-10 dark:bg-neutral-900 rounded-xl dark:text-gray-200 p-0 xs:p-4 overflow-x-auto border border-black dark:border-gray-400 grid max-w-[1300px] relative lg:grid-cols-2 gap-1"
+    <div className="w-full mt-2 max-w-[1380px]">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.1 }}
+        className="grid gap-4 lg:grid-cols-2 lg:gap-6 mb-6"
       >
-        {/* Tracked Nodes Section */}
-        <div>
-          <div className="bg-white dark:bg-zinc-800 rounded-lg p-2 sm:px-4 sm:pb-4 border border-gray-300 dark:border-gray-600">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold flex items-center gap-2 dark:text-white">
-                <MdComputer className="text-blue-500" />
+        {/* Tracked nodes */}
+        <div className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.02] backdrop-blur-sm shadow-sm p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="h-px w-4 bg-gradient-to-r from-transparent to-[#60A5FA]" />
+                <span className="text-[10px] tracking-[0.25em] uppercase text-gray-400 dark:text-[#8B93A7]">
+                  Monitoring
+                </span>
+              </div>
+              <h2 className="font-bold text-xl text-neutral-900 dark:text-[#EDEFF4] flex items-center gap-2">
+                <MdComputer className="text-[#60A5FA]" />
                 My Nodes ({trackedNodes.length})
               </h2>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={fetchClaimableRewards}
-                  disabled={fetchingClaims || trackedNodes.length === 0}
-                  className="p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="Refresh claims"
-                >
-                  <MdRefresh className={fetchingClaims ? 'animate-spin' : ''} size={20} />
-                </button>
-                <ActionMenu />
-              </div>
             </div>
-
-            {/* Worker Node Tutorial Link */}
-            <div className="mb-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg px-3 py-2 text-sm text-blue-700 dark:text-blue-300">
-              💡 New to Tensorlink? Learn how to set up your own 
-              <a 
-                href="/tensorlink/docs/mining" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="underline font-semibold hover:text-blue-500 mx-1"
-              >
-                Worker Node
-              </a>
-              in just a few minutes.
-            </div>
-            
-            {/* Add Node Input */}
-            <div className="flex gap-2 mb-4">
-              <input
-                type="text"
-                value={nodeSearchQuery}
-                onChange={(e) => setNodeSearchQuery(e.target.value)}
-                placeholder="Enter node ID to track..."
-                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[100px]"
-                onKeyPress={(e) => e.key === 'Enter' && handleNodeLookup()}
-              />
+            <div className="flex items-center gap-2">
               <button
-                onClick={handleNodeLookup}
-                disabled={nodeSearchLoading}
-                className="px-3.5 py-3 bg-blue-500 hover:bg-blue-600 text-white sm:text-xl rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                onClick={fetchClaimableRewards}
+                disabled={fetchingClaims || trackedNodes.length === 0}
+                className="rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-2 text-gray-500 dark:text-[#8B93A7] transition-colors hover:border-gray-300 dark:hover:border-white/20 disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Refresh claims"
               >
-                {nodeSearchLoading ? (
-                  <>
-                    <MdRefresh className="animate-spin" />
-                    Adding...
-                  </>
-                ) : (
-                  <>
-                    <MdAdd />
-                  </>
-                )}
+                <MdRefresh className={fetchingClaims ? 'animate-spin' : ''} size={18} />
               </button>
+              <ActionMenu />
             </div>
-
-            {nodeSearchError && (
-              <div className="flex items-center gap-2 p-3 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-lg mb-4">
-                <MdError />
-                <span>{nodeSearchError}</span>
-              </div>
-            )}
-
-            {/* Tracked Nodes List */}
-            {trackedNodes.length > 0 ? (
-              <div className="flex flex-col items-center gap-3">
-                <AnimatePresence>
-                  {trackedNodes.map((node) => (
-                    <div className="w-full" key={node.pubKeyHash}>
-                      <NodeCard node={node} />
-                    </div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <div className="text-center py-10 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                <MdComputer className="text-6xl text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 dark:text-gray-400 mb-2">
-                  No nodes tracked yet.
-                </p>
-                <p className="text-sm text-gray-400 dark:text-gray-500">
-                  Enter your node's ID above to start monitoring it.
-                </p>
-              </div>
-            )}
           </div>
+
+          {/* Tutorial banner */}
+          <div className="mb-4 rounded-xl border border-dashed border-[#4FD8C4]/30 bg-[#4FD8C4]/5 px-3.5 py-2.5 text-sm text-gray-600 dark:text-[#9AA2B4]">
+            New to Tensorlink? Learn how to set up your own{' '}
+            <a
+              href="/tensorlink/docs/mining"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-[#0FA894] dark:text-[#4FD8C4] underline underline-offset-2 hover:text-[#0c8a79] dark:hover:text-[#6EE2D1]"
+            >
+              Worker Node
+            </a>{' '}
+            in just a few minutes.
+          </div>
+
+          {/* Add node input */}
+          <div className="flex gap-2 mb-4">
+            <input
+              type="text"
+              value={nodeSearchQuery}
+              onChange={(e) => setNodeSearchQuery(e.target.value)}
+              placeholder="Enter node ID to track..."
+              className="min-w-[100px] flex-1 rounded-lg border border-gray-200 dark:border-white/10 bg-white dark:bg-white/[0.03] px-4 py-2.5 text-sm text-gray-900 dark:text-[#EDEFF4] placeholder:text-gray-400 dark:placeholder:text-[#5B6272] focus:outline-none focus:ring-2 focus:ring-[#4FD8C4]/40 focus:border-[#4FD8C4]/40"
+              onKeyPress={(e) => e.key === 'Enter' && handleNodeLookup()}
+            />
+            <button
+              onClick={handleNodeLookup}
+              disabled={nodeSearchLoading}
+              className="flex items-center gap-2 rounded-lg bg-[#4FD8C4] px-4 py-2.5 text-sm font-medium text-[#0A0D13] transition-colors hover:bg-[#6EE2D1] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {nodeSearchLoading ? <MdRefresh className="animate-spin" size={18} /> : <MdAdd size={18} />}
+            </button>
+          </div>
+
+          {nodeSearchError && (
+            <div className="mb-4 flex items-center gap-2 rounded-lg border border-red-200 dark:border-red-400/20 bg-red-50 dark:bg-red-400/10 px-3 py-2.5 text-sm text-red-700 dark:text-red-300">
+              <MdError className="shrink-0" />
+              <span>{nodeSearchError}</span>
+            </div>
+          )}
+
+          {/* Tracked nodes list */}
+          {trackedNodes.length > 0 ? (
+            <div className="flex flex-col gap-3">
+              <AnimatePresence>
+                {trackedNodes.map((node) => (
+                  <NodeCard key={node.pubKeyHash} node={node} />
+                ))}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <div className="rounded-xl border border-dashed border-gray-200 dark:border-white/10 py-10 text-center">
+              <MdComputer className="mx-auto mb-3 text-4xl text-gray-300 dark:text-[#3B4152]" />
+              <p className="mb-1 text-sm text-gray-500 dark:text-[#8B93A7]">
+                No nodes tracked yet.
+              </p>
+              <p className="text-xs text-gray-400 dark:text-[#5B6272]">
+                Enter your node's ID above to start monitoring it.
+              </p>
+            </div>
+          )}
         </div>
 
-        <ClaimRewardsComponent 
-          claimData={claimInfo} 
+        <ClaimRewardsComponent
+          claimData={claimInfo}
           userAddress={userAddress}
           setUnclaimed={setUserUnclaimed}
         />
-
-        <AnimatePresence>
-          {showSignupModal && <div>Signup Modal</div>}
-        </AnimatePresence>
       </motion.div>
+
+      <AnimatePresence>
+        {showSignupModal && <div>Signup Modal</div>}
+      </AnimatePresence>
     </div>
   );
 };

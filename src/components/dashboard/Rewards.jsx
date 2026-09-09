@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  MdCheckCircle, 
-  MdError,
+import {
   MdRefresh,
   MdAccountBalanceWallet,
-  MdVerifiedUser
 } from 'react-icons/md';
 
-const ClaimRewardsComponent = ({ 
+const ClaimRewardsComponent = ({
   userAddress,
   claimData,
   setUnclaimed,
-  ITEMS_PER_PAGE = 6 // Add this prop with default value
+  ITEMS_PER_PAGE = 6,
 }) => {
   const [loading, setLoading] = useState(false);
   const [totalRewards, setTotalRewards] = useState(0);
@@ -54,80 +51,88 @@ const ClaimRewardsComponent = ({
   }, [claimData]);
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-zinc-50 dark:bg-zinc-800 rounded-lg p-3 border border-gray-300 dark:border-gray-600"
+      className="rounded-2xl border border-gray-200 dark:border-white/10 bg-white/60 dark:bg-white/[0.02] backdrop-blur-sm shadow-sm p-4 sm:p-6"
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-2">
-        <h2 className="text-lg font-semibold flex items-center gap-2 dark:text-white">
-          <MdAccountBalanceWallet className="text-blue-500" />
-          Pending Rewards
-        </h2>
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="h-px w-4 bg-gradient-to-r from-transparent to-[#60A5FA]" />
+            <span className="text-[10px] tracking-[0.25em] uppercase text-gray-400 dark:text-[#8B93A7]">
+              Rewards
+            </span>
+          </div>
+          <h2 className="font-bold text-xl text-neutral-900 dark:text-[#EDEFF4] flex items-center gap-2">
+            <MdAccountBalanceWallet className="text-[#60A5FA]" />
+            Pending Rewards
+          </h2>
+        </div>
+        <p className="text-xs text-gray-400 dark:text-[#5B6272] font-mono">
           {formatAddress(userAddress)}
         </p>
       </div>
 
-      {/* Claims Table */}
+      {/* Claims table */}
       {loading ? (
-        <div className="text-center py-6">
-          <MdRefresh className="text-3xl text-gray-300 animate-spin mx-auto mb-2" />
-          <p className="text-gray-500 dark:text-gray-400 text-sm">Loading claim data...</p>
+        <div className="flex flex-col items-center justify-center py-10 text-gray-400 dark:text-[#5B6272]">
+          <MdRefresh className="text-3xl animate-spin mb-2" />
+          <p className="text-sm">Loading claim data...</p>
         </div>
       ) : claimData.length > 0 ? (
         <>
-          {/* Pagination Controls */}
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-600 dark:text-gray-400">
-              Page {currentPage + 1} of {totalPages} • Total: {claimData.length} claims
+          {/* Pagination controls */}
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <span className="text-xs text-gray-400 dark:text-[#5B6272]">
+              Page {currentPage + 1} of {totalPages} · {claimData.length} claims
             </span>
-            <div className="flex gap-1">
-              <button 
-                onClick={handlePrevPage} 
-                disabled={currentPage === 0} 
-                className="px-2 py-1 rounded-md text-xs font-semibold bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            <div className="inline-flex items-center gap-0.5 rounded-full border border-gray-200 dark:border-white/10 bg-white dark:bg-white/[0.03] p-0.5">
+              <button
+                onClick={handlePrevPage}
+                disabled={currentPage === 0}
+                className="rounded-full px-3 py-1 text-xs font-medium text-gray-500 dark:text-[#8B93A7] transition-colors hover:text-gray-800 dark:hover:text-[#EDEFF4] disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 ←
               </button>
-              <button 
-                onClick={handleNextPage} 
-                disabled={currentPage === totalPages - 1} 
-                className="px-2 py-1 rounded-md text-xs font-semibold bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-400 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages - 1}
+                className="rounded-full px-3 py-1 text-xs font-medium text-gray-500 dark:text-[#8B93A7] transition-colors hover:text-gray-800 dark:hover:text-[#EDEFF4] disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 →
               </button>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-white/10">
             <table className="w-full border-collapse text-sm">
               <thead>
-                <tr className="bg-gray-100 dark:bg-zinc-700 border-b border-gray-300 dark:border-gray-600">
-                  <th className="px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300">ID</th>
-                  <th className="px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-300">Worker</th>
-                  <th className="px-3 py-2 text-right font-semibold text-gray-700 dark:text-gray-300">Cap.</th>
-                  <th className="px-3 py-2 text-right font-semibold text-gray-700 dark:text-gray-300">Total</th>
-                  <th className="px-3 py-2 text-right font-semibold text-gray-700 dark:text-gray-300">Reward</th>
+                <tr className="border-b border-gray-200 dark:border-white/10">
+                  <th className="px-3 py-2.5 text-left text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7] font-medium">ID</th>
+                  <th className="px-3 py-2.5 text-left text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7] font-medium">Worker</th>
+                  <th className="px-3 py-2.5 text-right text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7] font-medium">Cap.</th>
+                  <th className="px-3 py-2.5 text-right text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7] font-medium">Total</th>
+                  <th className="px-3 py-2.5 text-right text-[10px] tracking-[0.15em] uppercase text-gray-400 dark:text-[#8B93A7] font-medium">Reward</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
+              <tbody className="divide-y divide-gray-100 dark:divide-white/5">
                 {currentClaims.map((claim) => {
                   const reward = ((claim.capacity / claim.total_capacity) * 6500).toFixed(2);
                   return (
-                    <tr 
+                    <tr
                       key={claim.distribution_id}
-                      className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                      className="transition-colors hover:bg-gray-50 dark:hover:bg-white/[0.03]"
                     >
-                      <td className="px-3 py-2 text-gray-900 dark:text-white font-medium">#{claim.distribution_id}</td>
-                      <td className="px-3 py-2 text-gray-600 dark:text-gray-300 font-mono">
+                      <td className="px-3 py-2.5 font-medium text-neutral-800 dark:text-[#EDEFF4]">#{claim.distribution_id}</td>
+                      <td className="px-3 py-2.5 font-mono text-gray-500 dark:text-[#9AA2B4]">
                         {formatAddress(claim.worker)}
                       </td>
-                      <td className="px-3 py-2 text-right text-blue-600 dark:text-blue-400">{claim.capacity}</td>
-                      <td className="px-3 py-2 text-right text-gray-600 dark:text-gray-300">{claim.total_capacity}</td>
-                      <td className="px-3 py-2 text-right text-green-600 dark:text-green-400">{reward}</td>
+                      <td className="px-3 py-2.5 text-right text-[#60A5FA]">{claim.capacity}</td>
+                      <td className="px-3 py-2.5 text-right text-gray-500 dark:text-[#9AA2B4]">{claim.total_capacity}</td>
+                      <td className="px-3 py-2.5 text-right font-medium text-emerald-600 dark:text-emerald-400">{reward}</td>
                     </tr>
                   );
                 })}
@@ -136,13 +141,13 @@ const ClaimRewardsComponent = ({
           </div>
         </>
       ) : (
-        <div className="flex flex-col items-center justify-center text-center bg-gray-100 dark:bg-slate-700 rounded-lg p-4 min-h-[270px] mt-7">
-          <MdAccountBalanceWallet className="text-4xl text-gray-300 mb-2" />
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-1">
+        <div className="flex flex-col items-center justify-center text-center rounded-xl border border-dashed border-gray-200 dark:border-white/10 py-12">
+          <MdAccountBalanceWallet className="text-4xl text-gray-300 dark:text-[#3B4152] mb-2" />
+          <p className="text-sm text-gray-500 dark:text-[#8B93A7] mb-1">
             No pending claims
           </p>
-          <p className="text-xs text-gray-400 dark:text-gray-500">
-            {userAddress === '-' 
+          <p className="text-xs text-gray-400 dark:text-[#5B6272]">
+            {userAddress === '-'
               ? 'Connect your wallet to view claims'
               : 'Check back later for new distributions'}
           </p>

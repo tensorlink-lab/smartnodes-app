@@ -1,6 +1,6 @@
 import { MdDescription, MdLanguage, MdAccountCircle, MdVerifiedUser } from 'react-icons/md';
 import { NetworkDashboard, DashboardSwitcher, AirdropIndicator, Account, NodeDashboard, NetworkSummary, SupplyStatsCard, ConnectWalletButton, DAODashboard } from "..";
-import styles, { layout } from "../../style";
+import styles from "../../style";
 import { useState, useEffect, useRef } from "react";
 
 // Dummy data for local testing
@@ -51,6 +51,41 @@ const dummyNetworkHistory = {
     }
   },
   timestamps: [1749441600.0,1749528000.0,1749614400.0,1749700800.0,1749787200.0,1749873600.0,1749960000.0,1750046400.0,1750132800.0,1750219200.0,1750305600.0,1750392000.0,1750478400.0,1750564800.0,1750651200.0,1750737600.0,1750824000.0,1750910400.0,1750996800.0,1751083200.0,1751169600.0,1751256000.0,1751342400.0,1751428800.0,1751515200.0,1751601600.0,1751688000.0,1751774400.0,1751860800.0,1751947200.0],
+  // GPU / device breakdown, mirroring what `include_device=true` returns
+  // from `/network-history`. Note `current` is realistically empty most of
+  // the time (benchmarking only happens when a device connects/reconnects)
+  // — the dashboard falls back to the most recent non-empty day in
+  // `gpu_model_breakdown_by_day` when that's the case, which is what this
+  // dummy data exercises.
+  device: {
+    labels: ["2025-07-06", "2025-07-07", "2025-07-08"],
+    datasets: {
+      avg_tflops: [null, 76.23, null],
+      avg_bandwidth_gb_s: [null, 841.16, null],
+      total_benchmarked: [0, 3, 0],
+    },
+    current: {
+      avg_tflops: null,
+      avg_bandwidth_gb_s: null,
+      total_benchmarked: 0,
+      by_gpu_model: {},
+      by_backend: {},
+    },
+    gpu_model_breakdown_by_day: {
+      "2025-07-06": {},
+      "2025-07-07": {
+        "NVIDIA RTX 4090": 1,
+        "NVIDIA A100 80GB": 1,
+        "NVIDIA GeForce RTX 3090": 1,
+      },
+      "2025-07-08": {},
+    },
+    backend_breakdown_by_day: {
+      "2025-07-06": {},
+      "2025-07-07": { cuda: 3 },
+      "2025-07-08": {},
+    },
+  },
   summary: {
     current: {
       workers: 3,
@@ -293,6 +328,13 @@ const SmartnodesDashboard = ({
     const API_BASE_URL = "https://tensorlink.ddns.net/tensorlink";
     // const API_BASE_URL = "http://192.168.2.54:64747";
     
+    // The /network-history endpoint caps `days` at 180 (Query(30, ge=1,
+    // le=180)). Rather than re-fetching per range click, we always request
+    // this single hardcoded window (plus weekly aggregates) and let
+    // NetworkDashboard slice/aggregate client-side for whatever range the
+    // user has selected.
+    const NETWORK_HISTORY_DAYS = 180;
+
     const fetchNetworkData = async () => {
         try {
             setLoading(true);
@@ -310,9 +352,12 @@ const SmartnodesDashboard = ({
             }
             
             // Fetch both stats and history from API
+            // `include_device=true` pulls in the GPU breakdown (current
+            // snapshot + per-day backend/GPU-model breakdowns, avg TFLOPS,
+            // avg bandwidth) alongside the usual participant/job/capacity data.
             const [statsResponse, historyResponse, models] = await Promise.all([
                 fetch(`${API_BASE_URL}/stats`),
-                fetch(`${API_BASE_URL}/network-history?days=90`),
+                fetch(`${API_BASE_URL}/network-history?days=${NETWORK_HISTORY_DAYS}&include_weekly=true&include_summary=true&include_device=true`),
                 fetch(`${API_BASE_URL}/v1/models/demand`)
             ]);
 
@@ -414,28 +459,37 @@ const SmartnodesDashboard = ({
         <section 
             id="dashboard"
             ref={titleRef}
-            className={`bg-zinc-100 dark:bg-zinc-900 flex mt-3 flex-col border-t dark:border-t-white border-t-black items-center pb-5
-                                border-b border-b-black dark:border-b-white px-1 xs:px-5`}>
-            <div className="mt-3 max-w-[1380px] items-center w-full flex-wrap">
+            className="flex flex-col items-center pb-5">
+            <div className="mt-3 w-full max-w-[1380px] flex-wrap items-center px-1 xs:px-5">
                 {/* <div className="w-full max-w-[1380px]">
                     <AirdropIndicator />
                 </div> */}
-                <h1 
-                    className={`${styles.subheading} md:text-3xl lg:text-4xl text-lg bg-gray-50 rounded-xl dark:bg-zinc-900 border dark:border-neutral-500 border-black p-2 xs:p-5 text-left px-6 md:mt-2 max-w-[830px] mb-3`}>
-                    Smartnodes <span className="font-normal text-gray-400" style={{color: "rgba(105, 220, 100, 1)"}}>(testnet)</span> Dashboard
-                </h1>
 
-                <NetworkSummary networkStats={networkStats} activeMenu={activeMenu}/>
-                
-                {/* Dashboard Switcher - now uses updateActiveDashboard */}
-                <DashboardSwitcher 
-                    dashboardConfig={dashboardConfig} 
-                    activeDashboard={activeDashboard}
-                    setActiveDashboard={updateActiveDashboard}
-                />
+                {/* Header */}
+                <div className="mb-6 flex items-center gap-3 px-1 md:mt-2">
+                    {/* <span className="hidden h-px w-8 bg-gradient-to-r from-transparent to-teal-400 sm:block" />
+                    <h1 className={`${styles.subheading2} !text-lg md:!text-2xl lg:!text-3xl !w-auto`}>
+                        Network Dashboard {" "}
+                        <span className="font-normal text-teal-400">(Testnet: Base Sepolia)</span>{" "}
+                    </h1>
+                    <span className="h-px flex-1 bg-gradient-to-r from-gray-300 to-transparent dark:from-white/10" /> */}
+                </div>
 
-                {/* Render Active Dashboard */}
-                {renderActiveDashboard()}
+                {/* Sidebar + main panel layout */}
+                <div className="flex w-full flex-col items-start gap-4 lg:gap-8">
+                    <DashboardSwitcher 
+                        dashboardConfig={dashboardConfig} 
+                        activeDashboard={activeDashboard}
+                        setActiveDashboard={updateActiveDashboard}
+                    />
+
+                    <div className="min-w-0 w-full flex-1">
+                        <NetworkSummary networkStats={networkStats} activeMenu={activeMenu}/>
+
+                        {/* Render Active Dashboard */}
+                        {renderActiveDashboard()}
+                    </div>
+                </div>
             </div>
         </section>
     );

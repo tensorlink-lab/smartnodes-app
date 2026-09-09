@@ -1,41 +1,41 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  MdSettings, 
-  MdWork, 
-  MdPersonAdd, 
+import {
+  MdSettings,
+  MdWork,
+  MdPersonAdd,
   MdVerifiedUser,
 } from 'react-icons/md';
 
-const ActionMenu = () => {
+const ActionMenu = ({ onActionClick }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const menuRef = useRef(null);
 
+  // Kept in the brand accent palette used across the dashboard (teal,
+  // purple, amber) rather than the old red/green/purple traffic-light set.
   const actions = [
     {
       id: 'request-job',
       name: 'Request Job',
-      icon: <MdWork className="text-xl" />,
-      color: 'bg-purple-400 hover:bg-purple-600',
-      description: 'Request Job'
+      icon: <MdWork size={18} />,
+      accent: '#A78BFA',
+      description: 'Request Job',
     },
     {
       id: 'create-user',
       name: 'Create User',
-      icon: <MdPersonAdd className="text-xl" />,
-      color: 'bg-green-400 hover:bg-green-600',
-      description: 'Create User'
+      icon: <MdPersonAdd size={18} />,
+      accent: '#4FD8C4',
+      description: 'Create User',
     },
     {
       id: 'create-validator',
       name: 'Create Validator',
-      icon: <MdVerifiedUser className="text-xl" />,
-      color: 'bg-red-400 hover:bg-red-600',
-      description: 'Create Validator'
-    }
+      icon: <MdVerifiedUser size={18} />,
+      accent: '#F59E0B',
+      description: 'Create Validator',
+    },
   ];
 
-  // Handle click outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -53,22 +53,22 @@ const ActionMenu = () => {
   }, [isOpen]);
 
   const handleActionClick = (actionId) => {
-    console.log(`Action clicked: ${actionId}`);
+    onActionClick?.(actionId);
     setIsOpen(false);
   };
 
   // Calculate positions for circular arrangement
   const getActionPosition = (index, total) => {
     const angle = (Math.PI / (total + 1)) * (index + 1) - (1.75 * Math.PI);
-    const radius = 70;
+    const radius = 68;
     const x = Math.cos(angle) * radius;
     const y = Math.sin(angle) * radius;
     return { x, y };
   };
 
   return (
-    <div ref={menuRef} className="ml-2 xs:ml-4" style={{ zIndex: 100000000 }}>
-      {/* Action Items in circular arrangement */}
+    <div ref={menuRef} className="relative ml-2 xs:ml-4" style={{ zIndex: 100000000 }}>
+      {/* Action items in circular arrangement */}
       <div className="relative z-50">
         {actions.map((action, index) => {
           const position = getActionPosition(index, actions.length);
@@ -77,33 +77,27 @@ const ActionMenu = () => {
             <div
               key={action.id}
               className={`absolute transition-all duration-300 group ${
-                isOpen 
-                  ? 'opacity-100 pointer-events-auto' 
-                  : 'opacity-0 pointer-events-none'
+                isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
               }`}
               style={{
-                transform: isOpen 
-                  ? `translate(${position.x}px, ${position.y}px)` 
-                  : 'translate(0, 0)',
-                transitionDelay: isOpen ? `${index * 100}ms` : '0ms'
+                transform: isOpen ? `translate(${position.x}px, ${position.y}px)` : 'translate(0, 0)',
+                transitionDelay: isOpen ? `${index * 80}ms` : '0ms',
               }}
             >
               <button
                 onClick={() => handleActionClick(action.id)}
-                className={`
-                  ${action.color} 
-                  w-12 h-12 rounded-full shadow-lg 
-                  flex items-center justify-center text-white
-                  transform transition-all duration-200
-                  hover:scale-110 hover:shadow-xl
-                  focus:outline-none focus:ring-2 focus:ring-white/30
-                `}
+                className="flex h-11 w-11 items-center justify-center rounded-full border shadow-lg backdrop-blur-sm transition-transform duration-200 hover:scale-110 focus:outline-none"
+                style={{
+                  backgroundColor: `${action.accent}1A`,
+                  borderColor: `${action.accent}40`,
+                  color: action.accent,
+                }}
               >
                 {action.icon}
               </button>
-              
+
               {/* Tooltip */}
-              <div className="absolute top-full left-1/2 transform -translate-x-[75%] mt-1 bg-black/80 text-white px-2 py-1 rounded text-xs font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+              <div className="pointer-events-none absolute left-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap rounded-md border border-white/10 bg-gray-900 dark:bg-[#12151c] px-2 py-1 text-[11px] font-medium text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100">
                 {action.description}
               </div>
             </div>
@@ -111,24 +105,17 @@ const ActionMenu = () => {
         })}
       </div>
 
-      {/* Main FAB Button with Gear Icon */}
-      <div className="relative group">
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          className={`
-            relative w-8 xs:w-10 h-8 xs:h-10 rounded-full shadow-xl
-            flex items-center justify-center text-white text-2xl
-            transform transition-all duration-300
-            outline-none ring-4 ring-blue-300/50
-            bg-blue-600 hover:bg-blue-700 m-1
-            ${isHovered || isOpen ? 'scale-110' : 'scale-100'}
-          `}
-        >
-          <MdSettings className={`transition-transform duration-500 ${isOpen ? 'rotate-180' : 'rotate-0'}`} />
-        </button>
-      </div>         
+      {/* Main trigger */}
+      <button
+        onClick={() => setIsOpen((o) => !o)}
+        className={`relative flex h-8 w-8 xs:h-10 xs:w-10 items-center justify-center rounded-full border transition-all duration-300 ${
+          isOpen
+            ? 'border-[#4FD8C4]/50 bg-[#4FD8C4]/10 text-[#4FD8C4]'
+            : 'border-gray-200 dark:border-white/10 bg-white dark:bg-white/[0.03] text-gray-500 dark:text-[#8B93A7] hover:border-gray-300 dark:hover:border-white/20'
+        }`}
+      >
+        <MdSettings className={`text-lg xs:text-xl transition-transform duration-500 ${isOpen ? 'rotate-180' : 'rotate-0'}`} />
+      </button>
     </div>
   );
 };

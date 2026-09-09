@@ -36,16 +36,13 @@ const Framework = () => {
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
           {/* Left column - Header */}
           <div>
-            <h2 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-[#EDEFF4] leading-tight mt-3">
-              A Modular{" "}
-              <span className="bg-gradient-to-r from-[#4FD8C4] to-[#A78BFA] bg-clip-text text-transparent">
-                Node Framework
-              </span>{" "}
-              for <span className="text-[#F2A65A]">Python</span>
+            <h2 className="font-bold text-3xl sm:text-4xl lg:text-5xl text-[#EDEFF4] leading-[1.15] mt-3 max-w-2xl">
+              A modular, resource-sharing ecosystem for{" "}
+              <span className="text-[#4FD8C4]">Python</span>
             </h2>
-            <p className="text-[#9AA2B4] text-base lg:text-lg leading-relaxed max-w-xl mt-6">
-              Transform any device into a network participant with our
-              powerful, extensible Python framework.
+            <p className="text-[#9AA2B4] text-base lg:text-lg leading-relaxed max-w-md mt-6">
+              Create dedicated networks for sharing compute, data, and models across 
+              peer-to-peer networks.
             </p>
           </div>
 
