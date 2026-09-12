@@ -1,6 +1,4 @@
 import Navbar from "./Navbar";
-import Example from "./Example";
-import TensorlinkApplications from "./TensorlinkApplications";
 import Footer from "./Footer";
 import Testimonials from "./Toolbox";
 import MainHero from "./MainHero";
@@ -16,16 +14,7 @@ import Button from "./Button";
 import TensorlinkDashboard from "./dashboard/TensorlinkDashboard";
 import SmartnodesDashboard from "./dashboard/SmartnodesDashboard";
 import SupplyStatsCard from "./dashboard/SupplyStatsCard";
-import ModelExample from "./docs/tensorlink/ModelExample";
-import ApiExample from "./docs/tensorlink/ApiExample";
-import WalletSetup from "./docs/tensorlink/WalletSetup";
-import GettingStarted from "./docs/tensorlink/GettingStarted";
-import Overview from "./docs/tensorlink/Overview";
-import Nodes from "./docs/tensorlink/Nodes";
-import Installation from "./docs/tensorlink/Installation";
 import ConnectWalletButton from "./dashboard/ConnectWallet";
-import Mining from "./docs/tensorlink/Mining";
-import Community from "./docs/tensorlink/Community";
 import SmartnodesOverview from "./docs/smartnodes/SmartnodesOverview";
 import NetworkDashboard from "./dashboard/NetworkDashboard";
 import NetworkSummary from "./dashboard/NetworkSummary";
@@ -37,22 +26,16 @@ import DAODashboard from "./dashboard/DAODashboard";
 import AirdropIndicator from "./AirdropIndicator";
 import ModelDemand from "./ModelDemand";
 import Framework from "./Framework";
-import ToPortal from "./ToPortal";
 import ClaimRewardsComponent from "./dashboard/Rewards";
 import { ProposalsTable, ProposalsBarChart } from "./dashboard/ProposalsChart";
 import NotFound from "./NotFound";
 import ChatMessage from "./ChatMessage";
-import Hero from "./Hero";
 
 export {
-  TensorlinkApplications,
-  Hero,
   ChatMessage,
-  Installation,
   NotFound,
   ProposalsTable,
   ProposalsBarChart,
-  ToPortal,
   ClaimRewardsComponent,
   DAODashboard,
   ModelDemand,
@@ -64,25 +47,17 @@ export {
   NetworkDashboard,
   NetworkSummary,
   SmartnodesOverview,
-  ApiExample,
-  Mining,
   Button,
-  Nodes,
   TensorlinkDashboard,
   SmartnodesDashboard,
-  WalletSetup,
-  Overview,
-  ModelExample,
   LaunchApp,
   NavButton,
-  GettingStarted,
   Sidebar,
   MainHero,
   ThemeButton,
   AnimatedLottie,
   Navbar,
   Opportunity,
-  Example,
   Framework,
   Footer,
   Testimonials,
@@ -90,5 +65,4 @@ export {
   ParticleBackground,
   ConnectWalletButton,
   SupplyStatsCard,
-  Community,
 };

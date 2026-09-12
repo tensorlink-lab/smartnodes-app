@@ -13,9 +13,21 @@ const initialState = {
     notification: false
 } 
 
+// No saved value yet (first-ever visit) falls back to a width check, so
+// desktop visitors still see it open by default rather than closed.
+const getInitialActiveMenu = () => {
+    const saved = localStorage.getItem("tensorlink_active_menu");
+    if (saved !== null) return saved === "true";
+    return typeof window !== "undefined" ? window.innerWidth >= 1130 : true;
+};
+
 export const ContextProvider = ({ children }) => {
-    const [activeMenu, setActiveMenu] = useState(false);
+    const [activeMenu, setActiveMenu] = useState(getInitialActiveMenu);
     const [theme, setTheme] = useState(localStorage.getItem("theme") || "dark" );
+
+    useEffect(() => {
+        localStorage.setItem("tensorlink_active_menu", String(activeMenu));
+    }, [activeMenu]);
 
     useEffect(() => {
         if (theme === "dark") {

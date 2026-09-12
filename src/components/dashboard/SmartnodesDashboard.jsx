@@ -174,7 +174,7 @@ const SmartnodesDashboard = ({
         },
         {
             id: DASHBOARD_TYPES.NETWORK,
-            name: 'Ecosystem',
+            name: 'Network',
             icon: <MdLanguage />
         },
         {

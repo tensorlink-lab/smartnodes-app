@@ -1,19 +1,10 @@
-import { TensorlinkDocs, Smartnodes, SmartnodesDocs, SmartnodesLanding, SmartnodesApp, TensorLinkLanding } from "./pages";
+import { SmartnodesDocs, SmartnodesLanding, SmartnodesApp } from "./pages";
 import { 
   Navbar, 
-  WalletSetup, 
   Footer, 
   NotFound, 
   Sidebar, 
-  Overview, 
-  Installation, 
-  ApiExample, 
   SmartnodesOverview, 
-  GettingStarted,
-  ModelExample, 
-  Nodes, 
-  Mining, 
-  Community,
 } from "./components";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -29,13 +20,8 @@ const useWindowSizeHandler = (setActiveMenu) => {
       }
     };
 
-    // Set initial state
-    handleResize();
-
-    // Add event listener
     window.addEventListener("resize", handleResize);
 
-    // Cleanup
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -59,46 +45,21 @@ const App = () => {
   return (
     <div className="relative flex-row min-h-screen bg-zinc-100 dark:bg-[#0A0D13]">
       <BrowserRouter>
-        {/* Sidebar - now properly fixed */}
         {activeMenu && <Sidebar />}
-        
-        {/* Main content area */}
         <div className={`flex flex-col min-h-screen w-full ${activeMenu ? "pl-[245px]" : ""} transition-all duration-300 ease-out`}>
-          <div className="z-40 w-full">
-            <Navbar />
-          </div>
-          
+          <div className="z-40 w-full"><Navbar /></div>
           <main className="flex-1 w-full overflow-x-hidden">
             <Routes>
-              <Route index element={<Smartnodes />} />
-              
+              <Route index element={<SmartnodesLanding />} />
               <Route path="docs" element={<SmartnodesDocs />}>
                 <Route index element={<SmartnodesOverview />} />
                 <Route path="overview" element={<SmartnodesOverview />} />
               </Route>
-
-              {/* TensorLink routes - properly nested */}
-              <Route path="tensorlink" element={<TensorLinkLanding activeMenu={activeMenu} />} />
-
-              {/* Docs routes */}
-              <Route path="tensorlink/docs" element={<TensorlinkDocs />}>
-                <Route index element={<Overview />} />
-                <Route path="overview" element={<Overview />} />
-                <Route path="start" element={<GettingStarted />} />
-                <Route path="install" element={<Installation />} />
-                <Route path="wallet" element={<WalletSetup />} />
-                <Route path="model" element={<ModelExample />} />
-                <Route path="api" element={<ApiExample />} />
-                <Route path="nodes" element={<Nodes />} />
-                <Route path="mining" element={<Mining />} />
-                <Route path="community" element={<Community />} />
-              </Route>
-
               <Route path="app" element={<SmartnodesApp activeMenu={activeMenu} />} />
-              <Route path="*" element={<NotFound />} />    
+              <Route path="*" element={<NotFound />} />
             </Routes>
-            <Footer />
           </main>
+          <Footer />
         </div>
       </BrowserRouter>
     </div>

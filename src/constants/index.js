@@ -9,90 +9,81 @@ import {
   discord,
   x,
 } from "../assets";
-import { MdHome } from "react-icons/md";
+
+import {
+  MdHome,
+  MdCode,
+  MdDescription,
+  MdDashboard,
+  MdRocketLaunch,
+  MdInfo,
+} from "react-icons/md";
+
+import {
+  FaGithub,
+  FaDiscord,
+  FaXTwitter,
+} from "react-icons/fa6";
+
 import { Cpu, Zap, Lock } from "lucide-react";
 
 export const overview = {
   info: "Smartnodes takes decentralized physical infrastructure (DePIN) to the next level by making it modular and flexible. It transforms globally distributed hardware into a programmable, composable layer for computation and data collection. Developers can securely access these shared resources through APIs and Python libraries, unlocking scalable infrastructure without needing expensive local hardware.",
 };
 
+const TENSORLINK_URL = "https://tensorlink.io";
+
 export const portals = [
-  {
-    title: "Tensorlink Docs",
-    link: "tensorlink/docs",
-    img: blocks,
-  },
-  {
-    title: "Running a Node",
-    link: "tensorlink/docs/mining",
-    img: ai,
-  },
-  // {
-  //   title: "Running a Validator",
-  //   link: "docs/validator",
-  //   img: workflow,
-  // },
-  {
-    title: "Join the Community",
-    link: "tensorlink/docs/community",
-    img: community,
-  },
+  { title: "Tensorlink Docs", link: `${TENSORLINK_URL}/docs`, img: blocks },
+  { title: "Running a Node", link: `${TENSORLINK_URL}/docs/mining`, img: ai },
+  { title: "Join the Community", link: `${TENSORLINK_URL}/docs/community`, img: community },
 ];
 
 export const sideLinks = [
   {
     title: "Smartnodes",
     links: [
-      {
-        name: "Home",
-        id: "",
-        icon: MdHome,
-      },
-      {
-        name: "Dashboard",
-        id: "app",
-        icon: MdHome,
-      },
+      { name: "About", id: "", icon: MdInfo },
+      { name: "Dashboard", id: "app", icon: MdDashboard },
       {
         name: "Documentation",
         id: "docs",
-        icon: MdHome,
-        sublinks: [{ id: "overview", name: "Overview" }],
+        icon: MdDescription,
+        sublinks: [
+          {
+            id: "overview",
+            name: "Overview",
+            icon: MdInfo,
+          },
+        ],
       },
       {
         name: "Whitepaper",
         id: "https://github.com/tensorlink-lab/smartnodes-core/blob/main/whitepaper.md",
+        icon: MdDescription,
+        external: true,
       },
     ],
   },
   {
-    title: "tensorlink",
+    title: "Tensorlink",
     links: [
       {
-        name: "Home",
-        id: "tensorlink",
-        icon: MdHome,
+        name: "About",
+        id: TENSORLINK_URL,
+        icon: MdInfo,
+        external: true,
+      },
+      {
+        name: "Launch App",
+        id: `${TENSORLINK_URL}/app`,
+        icon: MdCode,
       },
       {
         name: "Documentation",
-        id: "tensorlink/docs",
-        icon: MdHome,
-        sublinks: [
-          { id: "overview", name: "Overview" },
-          { id: "start", name: "Getting Started" },
-          { id: "install", name: "Installation" },
-          { id: "model", name: "Distributed Models" },
-          { id: "nodes", name: "Nodes" },
-          { id: "mining", name: "Running a Node" },
-          { id: "api", name: "APIs" },
-          { id: "community", name: "Community & Support" },
-          // { id: "wallet", name: "Wallet Config"},
-        ],
-      },
-      {
-        name: "localhostGPT",
-        id: "https://github.com/mattjhawken/localhostGPT",
-        icon: MdHome,
+        id: `${TENSORLINK_URL}/docs`,
+        icon: MdDescription,
+        external: true,
       },
     ],
   },
@@ -102,45 +93,30 @@ export const sideLinks = [
       {
         name: "GitHub",
         id: "https://github.com/tensorlink-lab",
-        icon: MdHome,
+        icon: FaGithub,
+        external: true,
       },
       {
         name: "X",
         id: "https://x.com/smartnodes_lab",
-        icon: MdHome,
+        icon: FaXTwitter,
+        external: true,
       },
       {
         name: "Discord",
         id: "https://discord.gg/aCW2kTNzJ2",
-        icon: MdHome,
+        icon: FaDiscord,
+        external: true,
       },
     ],
   },
 ];
 
 export const navLinks = [
-  {
-    id: "",
-    title: "Home",
-  },
-  {
-    id: "networks",
-    title: "Networks",
-    networks: [
-      {
-        network: "Tensorlink",
-        link: "tensorlink",
-      },
-    ],
-  },
-  {
-    id: "app",
-    title: "Dashboard",
-  },
-  {
-    id: "docs",
-    title: "Docs",
-  },
+  // { id: "", title: "Home" },
+  { id: "docs", title: "Docs" },
+  { id: "app", title: "Dashboard" },
+  { id: TENSORLINK_URL, title: "Tensorlink", external: true },
 ];
 
 export const features = [
@@ -183,10 +159,6 @@ export const feedback = [
     content: "",
     name: "",
     title: "",
-    // content:
-    //   "Explore the depths of space with Deepfield, a groundbreaking distributed radio telescope array positioned to be the world's largest and highest-resolution radio telescope, capturing unparalleled imaging and even potential transmission capabilities. (In Progress)",
-    // name: "The Distributed Radio Telescope",
-    // title: "Deepfield",
     img: telescope,
     blur: true,
     link: "",
@@ -196,22 +168,10 @@ export const feedback = [
     content: "",
     name: "",
     title: "",
-    // content:
-    //   "Tailored machine-human APIs for empowering decentralized and automated systems with trust-minimized workflow management and decision-making. (TBD)",
-    // name: "for dApps and Automation",
-    // title: "Collective Intelligence",
     img: job,
     blur: true,
     link: "",
   },
-  // {
-  //   id: "feedback-3",
-  //   content:
-  //     "The Chainspace vision extends to creating a global network where individuals can delegate tasks, form organizations, and collaborate on content creation.",
-  //   name: "Shaping an Inclusive Future",
-  //   title: "Decentralized Workforce",
-  //   img: job,
-  // },
 ];
 
 export const footerLinks = [
@@ -231,18 +191,6 @@ export const footerLinks = [
         icon: linkedin,
         link: "https://github.com/tensorlink-lab",
       },
-      // {
-      //   name: "Create",
-      //   link: "https://www.framework.exchange/create/",
-      // },
-      // {
-      //   name: "Explore",
-      //   link: "https://www.framework.exchange/explore/",
-      // },
-      // {
-      //   name: "Terms & Services",
-      //   link: "https://www.framework.exchange/terms-and-services/",
-      // },
     ],
   },
   {

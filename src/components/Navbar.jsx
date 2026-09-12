@@ -1,11 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { FaChevronDown } from "react-icons/fa"; // Import FaChevronDown
 import ThemeButton from "./ThemeButton";
-import { close, logo, menu, dark_logo, logo_small, logo_dark_small } from "../assets";
+import { close, logo, menu, dark_logo, logo_small } from "../assets";
 import { navLinks } from "../constants";
 import { useStateContext } from "../contexts/contextProvider";
 import { motion } from "framer-motion";
-
 
 const SIDEBAR_WIDTH = 240;
 const COMPACT_BREAKPOINT = 768;
@@ -40,8 +38,6 @@ const clampToggleTop = (top) => {
 
 // Lets the sidebar toggle be dragged up/down and remembers where the user left it
 // (stored as a fraction of viewport height so it stays sensible across screen sizes).
-// Returns the current top offset plus pointer handlers, and a click handler that only
-// fires the toggle when the interaction was a tap rather than a drag.
 const useDraggableToggle = (onTap) => {
   const [top, setTop] = useState(() => {
     const saved = typeof window !== "undefined" ? localStorage.getItem(TOGGLE_POSITION_KEY) : null;
@@ -107,12 +103,10 @@ const useDraggableToggle = (onTap) => {
   return { top, handlePointerDown, handlePointerMove, handlePointerUp, handleClick, handleDoubleClick };
 };
 
-
 const Navbar = () => {
   const [active, setActive] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [theme, setTheme] = useState("dark");
-  const [networksOpen, setNetworksOpen] = useState(false);
   const { activeMenu, setActiveMenu } = useStateContext();
   const isCompact = useIsCompactNav(activeMenu);
 
@@ -123,6 +117,7 @@ const Navbar = () => {
   }, []);
 
   const logoSrc = logo;
+  const tensorlinkLogoSrc = dark_logo;
   const smallLogoSrc = logo_small;
   const handleActiveMenu = () => setActiveMenu(!activeMenu);
   const dragToggle = useDraggableToggle(handleActiveMenu);
@@ -170,7 +165,7 @@ const Navbar = () => {
           className="flex flex-row bg-slate-300 rounded-xl px-3 py-0"
           style={{ zIndex: 100000 }}
         >
-          <img src={logoSrc} alt="task" className={`w-auto h-auto max-w-[235px] max-h-[150px] ${isCompact ? "hidden" : "block"}`} />
+          <img src={logoSrc} alt="task" className={`w-auto h-auto max-w-[235px] max-h-[150px] ${isCompact ? "hidden" : "block"}`}/>
           <img src={smallLogoSrc} alt="task" className={`w-[60px] h-[60px] ${isCompact ? "block" : "hidden"} mb-1 my-1.5`} />
         </a>
 
@@ -187,56 +182,21 @@ const Navbar = () => {
           >
             {nav.title === "GitHub" ? (
               <a href="https://github.com/tensorlink-lab">{nav.title}</a>
-            ) : nav.title === "Networks" ? (
-              <div className="relative">
-                <button
-                  className="flex items-center"
-                  onClick={() => setNetworksOpen(!networksOpen)}
-                >
-                  Networks
-                  <FaChevronDown className={`ml-2 transition-transform duration-300 ease-in-out ${networksOpen ? "rotate-180" : ""}`}/>
-                </button>
-                
-                {/* Enhanced Desktop Networks Dropdown */}
-                <div className={`
-                  absolute top-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden
-                  transform origin-top transition-all duration-300 ease-out
-                  ${networksOpen 
-                    ? "scale-y-100 opacity-100 translate-y-0 pointer-events-auto" 
-                    : "scale-y-0 opacity-0 -translate-y-2 pointer-events-none"
-                  }
-                `}>
-                  <ul className="p-1">
-                    {nav.networks.map((networkObj, idx) => (
-                      <li
-                        key={networkObj.link}
-                        className={`
-                          transform transition-all duration-200 ease-out
-                          ${networksOpen ? `translate-x-0 opacity-100` : `translate-x-2 opacity-0`}
-                        `}
-                        style={{ 
-                          transitionDelay: networksOpen ? `${idx * 50}ms` : '0ms' 
-                        }}
-                      >
-                        <a
-                          href={`/${networkObj.link}`}
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-150"
-                        >
-                          {networkObj.network}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
+            ) : nav.site ? (
+              <a
+                href={nav.link}
+                className="transition-opacity duration-200 opacity-70 font-medium hover:opacity-100"
+              >
+                {nav.title}
+              </a>
           ) : nav.title == "Dashboard" ? (
-              <a href="/app#dashboard" className="group relative inline-block rounded-lg">
-                {/* optional soft glow, only shows on hover */}
-                <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></span>
+              <a href={nav.id} className="group relative inline-block rounded-lg">
+                {/* soft glow, only shows on hover */}
+                <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 blur-md opacity-0 group-hover:opacity-20 transition-opacity duration-300"></span>
 
-                {/* the gradient itself — this becomes the "border" via padding */}
-                <span className="relative z-10 block rounded-lg p-[1.5px] bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 bg-[length:200%_200%] animate-gradient-x">
-                  {/* solid interior — swap these for black/zinc/white as you like */}
+                {/* the gradient: becomes the "border" via padding */}
+                <span className="relative z-10 block rounded-lg p-[1px] bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 bg-[length:200%_200%] animate-gradient-x">
+                  {/* solid interior */}
                   <span className="flex items-center justify-center rounded-[7px] px-4 py-2 font-semibold text-black dark:text-white bg-white dark:bg-zinc-900 transition-colors duration-300">
                     {nav.title}
                   </span>
@@ -280,53 +240,15 @@ const Navbar = () => {
               >
                 {nav.title === "GitHub" ? (
                   <a href="https://github.com/tensorlink-lab">{nav.title}</a>
-                ) : nav.title === "Networks" ? (
-                  <div className="relative">
-                    <button
-                      className="flex items-center"
-                      onClick={() => setNetworksOpen(!networksOpen)}
-                    >
-                      Networks
-                      <FaChevronDown className={`ml-2 transition-transform duration-300 ease-in-out ${networksOpen ? "rotate-180" : ""}`}/>
-                    </button>
-                    
-                    {/* Enhanced Mobile Networks Dropdown */}
-                    <div className={`
-                      ml-4 bg-gray-800 rounded-lg shadow-lg overflow-hidden
-                      transform origin-top transition-all duration-300 ease-out
-                      ${networksOpen 
-                        ? "scale-y-100 opacity-100 max-h-96 pointer-events-auto mt-4" 
-                        : "scale-y-0 opacity-0 max-h-0 pointer-events-none"
-                      }
-                    `}>
-                      <ul >
-                        {nav.networks.map((networkObj, idx) => (
-                          <li
-                            key={networkObj.link}
-                            className={`
-                              transform transition-all duration-200 ease-out
-                              ${networksOpen 
-                                ? `translate-x-0 opacity-100` 
-                                : `translate-x-4 opacity-0`
-                              }
-                            `}
-                            style={{ 
-                              transitionDelay: networksOpen ? `${idx * 75}ms` : '0ms' 
-                            }}
-                          >
-                            <a
-                              href={`/${networkObj.link}`}
-                              className="block px-4 py-2 hover:bg-gray-700 rounded-md text-white transition-colors duration-150"
-                            >
-                              {networkObj.network}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
+                ) : nav.site ? (
+                  <a
+                    href={nav.link}
+                    className="font-medium"
+                  >
+                    {nav.title}
+                  </a>
                 ) : nav.title == "Dashboard" ? (
-                  <a href="/app#dashboard">
+                  <a href={nav.id} onClick={() => console.log("dashboard clicked")}>
                     {nav.title}
                   </a>
                 ) : (
