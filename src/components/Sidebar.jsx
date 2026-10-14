@@ -52,17 +52,23 @@ const Sidebar = ({ open, close }) => {
     }, [openMenuId]);
 
 
+    const slugify = (v) => String(v).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
     return (
         <div
             className="fixed inset-y-0 left-0 w-[240px] bg-slate-100 dark:bg-zinc-900 overflow-y-auto overflow-x-hidden border-r border-gray-500"
             style={{ zIndex: 1000000 }}
+            data-testid="sidebar"
         >
             <div className="px-3 pt-6 pb-10 ml-1">
                 {sideLinks.map((item) => {
                     const isGroupOpen = openGroupTitle === item.title;
                     return (
-                    <div key={item.title} className="mb-8">
+                    <div key={item.title} className="mb-8" data-testid={`sidebar-group-${slugify(item.title)}`}>
                         <p
+                            data-testid={`sidebar-group-header-${slugify(item.title)}`}
+                            role="button"
+                            aria-expanded={isGroupOpen}
                             onClick={() => toggleGroup(item.title)}
                             className="flex items-center justify-between text-gray-400 font-poppins text-lg dark:text-gray-300 px-2 py-1 uppercase font-medium cursor-pointer select-none"
                         >
@@ -75,6 +81,8 @@ const Sidebar = ({ open, close }) => {
                             />
                         </p>
                         <div
+                            data-testid={`sidebar-group-content-${slugify(item.title)}`}
+                            data-state={isGroupOpen ? "open" : "closed"}
                             className={`
                             overflow-hidden transform origin-top transition-all duration-300 ease-in-out
                             ${isGroupOpen ? "max-h-[2000px] opacity-100 scale-y-100" : "max-h-0 opacity-0 scale-y-95"}
@@ -85,6 +93,8 @@ const Sidebar = ({ open, close }) => {
                             return (
                             <div
                                 key={link.id}
+                                data-testid={`sidebar-link-${slugify(link.id)}`}
+                                aria-current={location.pathname === `/${link.id}` ? "page" : undefined}
                                 className="mt-1 cursor-pointer"
                                 onClick={() => {
                                     if (link.sublinks && link.sublinks.length > 0) {
@@ -124,6 +134,8 @@ const Sidebar = ({ open, close }) => {
                                 
                                 {link.sublinks && (
                                     <div
+                                        data-testid={`sidebar-sublinks-${slugify(link.id)}`}
+                                        data-state={openMenuId === link.id ? "open" : "closed"}
                                         className={`
                                         ml-4 mt-1 overflow-hidden transform origin-top transition-all duration-500 ease-in-out
                                         ${openMenuId === link.id ? "max-h-96 opacity-100 scale-y-100" : "max-h-0 opacity-0 scale-y-95"}
@@ -133,6 +145,7 @@ const Sidebar = ({ open, close }) => {
                                         {link.sublinks.map((subLink) => (
                                         <Link
                                             key={subLink.id}
+                                            data-testid={`sidebar-sublink-${slugify(link.id)}-${slugify(subLink.id)}`}
                                             to={`${link.id}/${subLink.id}`}
                                             className="block px-4 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                                         >

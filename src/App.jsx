@@ -17,7 +17,7 @@ import {
 } from "./components";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useStateContext } from "./contexts/contextProvider";
+import { useStateContext } from "./contexts/ContextProvider";
 
 const excludedPages = ["/"];
 
@@ -57,18 +57,22 @@ const App = () => {
   useWindowSizeHandler(setActiveMenu);
 
   return (
-    <div className="relative flex-row min-h-screen bg-zinc-100 dark:bg-[#0A0D13]">
+    <div data-testid="app-shell" className="relative flex-row min-h-screen bg-zinc-100 dark:bg-[#0A0D13]">
       <BrowserRouter>
-        {/* Sidebar - now properly fixed */}
+        {/* Sidebar*/}
         {activeMenu && <Sidebar />}
         
         {/* Main content area */}
-        <div className={`flex flex-col min-h-screen w-full ${activeMenu ? "pl-[245px]" : ""} transition-all duration-300 ease-out`}>
+        <div 
+          data-testid="content-wrapper"
+          data-sidebar-open={activeMenu}
+          className={`flex flex-col min-h-screen w-full ${activeMenu ? "sm:pl-[245px]" : ""} transition-all duration-300 ease-out`}
+        >
           <div className="z-40 w-full">
             <Navbar />
           </div>
           
-          <main className="flex-1 w-full overflow-x-hidden">
+          <main data-testid="main-content" className="flex-1 w-full overflow-x-hidden">
             <Routes>
               <Route index element={<Smartnodes />} />
               

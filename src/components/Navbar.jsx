@@ -3,7 +3,7 @@ import { FaChevronDown } from "react-icons/fa"; // Import FaChevronDown
 import ThemeButton from "./ThemeButton";
 import { close, logo, menu, dark_logo, logo_small, logo_dark_small } from "../assets";
 import { navLinks } from "../constants";
-import { useStateContext } from "../contexts/contextProvider";
+import { useStateContext } from "../contexts/ContextProvider";
 import { motion } from "framer-motion";
 
 
@@ -143,6 +143,7 @@ const Navbar = () => {
         aria-expanded={activeMenu}
         className="fixed flex items-center justify-center w-5 h-12 rounded-r-full bg-white/30 dark:bg-white/20 backdrop-blur-md border border-l-0 border-white/30 dark:border-white/10 opacity-40 hover:opacity-100 focus-visible:opacity-100 hover:bg-white/60 dark:hover:bg-white/20 cursor-grab active:cursor-grabbing touch-none select-none transition-[left,background-color,opacity] duration-300 ease-out"
         style={{ left: activeMenu ? SIDEBAR_WIDTH : 0, top: dragToggle.top, zIndex: 100001 }}
+        data-testid="sidebar-toggle"
       >
         <span className="relative w-2.5 h-[8px] flex flex-col justify-between">
           <span
@@ -163,180 +164,225 @@ const Navbar = () => {
         </span>
       </button>
 
-      <motion.nav className="w-full flex z-20 pt-2 sm:pt-4 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}>
+      <motion.nav 
+        data-testid="navbar"
+        className="w-full flex z-20 pt-2 sm:pt-4 px-5 ml-1 md:ml-5 justify-between items-center" style={{ maxWidth: "1440px", margin: "0 auto", zIndex: 100000 }}
+      >
         {/* Logo - always visible, same size and position regardless of sidebar state */}
         <a
           href="/"
+          data-testid="navbar-logo"
           className="flex flex-row bg-slate-300 rounded-xl px-3 py-0"
           style={{ zIndex: 100000 }}
         >
-          <img src={logoSrc} alt="task" className={`w-auto h-auto max-w-[235px] max-h-[150px] ${isCompact ? "hidden" : "block"}`} />
-          <img src={smallLogoSrc} alt="task" className={`w-[60px] h-[60px] ${isCompact ? "block" : "hidden"} mb-1 my-1.5`} />
+          <img 
+            src={logoSrc} 
+            data-testid="logo-full"
+            alt="task" 
+            className={`w-auto h-auto max-w-[235px] max-h-[150px] ${isCompact ? "hidden" : "block"}`} 
+          />
+          <img 
+            src={smallLogoSrc} 
+            data-testid="logo-compact"
+            alt="task" 
+            className={`w-[60px] h-[60px] ${isCompact ? "block" : "hidden"} mb-1 my-1.5`} 
+          />
         </a>
 
-      {/* Desktop navbar */}
-      <ul className={`list-none ${isCompact ? "hidden" : "flex"} justify-end px-5 py-1 items-center flex-1`}>
-        {navLinks.map((nav, index) => (
-          <li
-            key={nav.id}
-            className={`font-poppins font-normal cursor-pointer text-[16px] ${
-              active === nav.title ? "dark:text-white text-black" : "dark:text-dimWhite text-gray-500"
-            } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"} ${nav.title === "Dashboard" ? "transition-transform duration-300 hover:scale-105" : ""}`}
-            onClick={() => setActive(nav.title)}
-            style={{ zIndex: 10000 }}
-          >
-            {nav.title === "GitHub" ? (
-              <a href="https://github.com/tensorlink-lab">{nav.title}</a>
-            ) : nav.title === "Networks" ? (
-              <div className="relative">
-                <button
-                  className="flex items-center"
-                  onClick={() => setNetworksOpen(!networksOpen)}
-                >
-                  Networks
-                  <FaChevronDown className={`ml-2 transition-transform duration-300 ease-in-out ${networksOpen ? "rotate-180" : ""}`}/>
-                </button>
-                
-                {/* Enhanced Desktop Networks Dropdown */}
-                <div className={`
-                  absolute top-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden
-                  transform origin-top transition-all duration-300 ease-out
-                  ${networksOpen 
-                    ? "scale-y-100 opacity-100 translate-y-0 pointer-events-auto" 
-                    : "scale-y-0 opacity-0 -translate-y-2 pointer-events-none"
-                  }
-                `}>
-                  <ul className="p-1">
-                    {nav.networks.map((networkObj, idx) => (
-                      <li
-                        key={networkObj.link}
-                        className={`
-                          transform transition-all duration-200 ease-out
-                          ${networksOpen ? `translate-x-0 opacity-100` : `translate-x-2 opacity-0`}
-                        `}
-                        style={{ 
-                          transitionDelay: networksOpen ? `${idx * 50}ms` : '0ms' 
-                        }}
-                      >
-                        <a
-                          href={`/${networkObj.link}`}
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-150"
-                        >
-                          {networkObj.network}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-          ) : nav.title == "Dashboard" ? (
-              <a href="/app#dashboard" className="group relative inline-block rounded-lg">
-                {/* optional soft glow, only shows on hover */}
-                <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></span>
-
-                {/* the gradient itself — this becomes the "border" via padding */}
-                <span className="relative z-10 block rounded-lg p-[1.5px] bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 bg-[length:200%_200%] animate-gradient-x">
-                  {/* solid interior — swap these for black/zinc/white as you like */}
-                  <span className="flex items-center justify-center rounded-[7px] px-4 py-2 font-semibold text-black dark:text-white bg-white dark:bg-zinc-900 transition-colors duration-300">
-                    {nav.title}
-                  </span>
-                </span>
-              </a>
-            ) : (
-              <a href={`/${nav.id}`}>{nav.title}</a>
-            )}
-          </li>
-        ))}
-        {/* <div className="ml-5" style={{ zIndex: 100000 }}>
-          <ThemeButton className="px-20" />
-        </div> */}
-      </ul>
-
-      {/* Mobile menu */}
-      <div className={`${isCompact ? "flex" : "hidden"} flex-1 px-5 justify-end items-center`} style={{ zIndex: 100000000 }}>
-        <img
-          src={toggle ? close : menu}
-          alt="menu"
-          className="w-[24px] h-[24px] object-contain cursor-pointer"
-          onClick={() => setToggle(!toggle)}
-        />
-        <div
-          className={`
-            absolute top-16 right-0 mx-4 mt-4 min-w-[140px]
-            border border-gray-300 p-6 dark:bg-zinc-700 bg-slate-200
-            rounded-xl shadow-xl z-30
-            transform origin-top transition-all duration-300 ease-out
-            ${toggle ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0 pointer-events-none"}
-          `}
+        {/* Desktop navbar */}
+        <ul 
+          className={`list-none ${isCompact ? "hidden" : "flex"} justify-end px-5 py-1 items-center flex-1`}
+          data-testid="nav-desktop"
         >
-          <ul className="list-none flex flex-col items-start">
-            {navLinks.map((nav) => (
-              <li
-                key={nav.id}
-                className={`font-poppins font-medium cursor-pointer text-[16px] ${
-                  active === nav.title ? "dark:text-white" : "dark:text-dimWhite"
-                } mb-4 z-50`}
-                onClick={() => setActive(nav.title)}
-              >
-                {nav.title === "GitHub" ? (
-                  <a href="https://github.com/tensorlink-lab">{nav.title}</a>
-                ) : nav.title === "Networks" ? (
-                  <div className="relative">
-                    <button
-                      className="flex items-center"
-                      onClick={() => setNetworksOpen(!networksOpen)}
-                    >
-                      Networks
-                      <FaChevronDown className={`ml-2 transition-transform duration-300 ease-in-out ${networksOpen ? "rotate-180" : ""}`}/>
-                    </button>
-                    
-                    {/* Enhanced Mobile Networks Dropdown */}
-                    <div className={`
-                      ml-4 bg-gray-800 rounded-lg shadow-lg overflow-hidden
+          {navLinks.map((nav, index) => (
+            <li
+              key={nav.id}
+              data-testid={`nav-link-${nav.id}`}
+              className={`font-poppins font-normal cursor-pointer text-[16px] ${
+                active === nav.title ? "dark:text-white text-black" : "dark:text-dimWhite text-gray-500"
+              } ${index === navLinks.length - 1 ? "mr-0" : "mr-10"} ${nav.title === "Dashboard" ? "transition-transform duration-300 hover:scale-105" : ""}`}
+              onClick={() => setActive(nav.title)}
+              style={{ zIndex: 10000 }}
+            >
+              {nav.title === "GitHub" ? (
+                <a data-testid="github-link" href="https://github.com/tensorlink-lab">{nav.title}</a>
+              ) : nav.title === "Networks" ? (
+                <div className="relative">
+                  <button
+                    className="flex items-center"
+                    data-testid="networks-toggle"
+                    aria-expanded={networksOpen}
+                    onClick={() => setNetworksOpen(!networksOpen)}
+                  >
+                    Networks
+                    <FaChevronDown className={`ml-2 transition-transform duration-300 ease-in-out ${networksOpen ? "rotate-180" : ""}`}/>
+                  </button>
+                  
+                  {/* Enhanced Desktop Networks Dropdown */}
+                  <div 
+                    className={`
+                      absolute top-full mt-2 bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden
                       transform origin-top transition-all duration-300 ease-out
                       ${networksOpen 
-                        ? "scale-y-100 opacity-100 max-h-96 pointer-events-auto mt-4" 
-                        : "scale-y-0 opacity-0 max-h-0 pointer-events-none"
+                        ? "scale-y-100 opacity-100 translate-y-0 pointer-events-auto" 
+                        : "scale-y-0 opacity-0 -translate-y-2 pointer-events-none"
                       }
-                    `}>
-                      <ul >
-                        {nav.networks.map((networkObj, idx) => (
-                          <li
-                            key={networkObj.link}
-                            className={`
-                              transform transition-all duration-200 ease-out
-                              ${networksOpen 
-                                ? `translate-x-0 opacity-100` 
-                                : `translate-x-4 opacity-0`
-                              }
-                            `}
-                            style={{ 
-                              transitionDelay: networksOpen ? `${idx * 75}ms` : '0ms' 
-                            }}
+                    `}
+                    data-testid="networks-dropdown" 
+                    data-state={networksOpen ? "open" : "closed"}
+                  >
+                    <ul className="p-1">
+                      {nav.networks.map((networkObj, idx) => (
+                        <li
+                          key={networkObj.link}
+                          className={`
+                            transform transition-all duration-200 ease-out
+                            ${networksOpen ? `translate-x-0 opacity-100` : `translate-x-2 opacity-0`}
+                          `}
+                          style={{ 
+                            transitionDelay: networksOpen ? `${idx * 50}ms` : '0ms' 
+                          }}
+                        >
+                          <a
+                            href={`/${networkObj.link}`}
+                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-150"
+                            data-testid={`network-link-${networkObj.link}`}
                           >
-                            <a
-                              href={`/${networkObj.link}`}
-                              className="block px-4 py-2 hover:bg-gray-700 rounded-md text-white transition-colors duration-150"
-                            >
-                              {networkObj.network}
-                            </a>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                            {networkObj.network}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                ) : nav.title == "Dashboard" ? (
-                  <a href="/app#dashboard">
-                    {nav.title}
-                  </a>
-                ) : (
-                  <a href={`/${nav.id}`}>{nav.title}</a>
-                )}
-              </li>
-            ))}
-          </ul>
+                </div>
+            ) : nav.title == "Dashboard" ? (
+                <a 
+                  href="/app#dashboard" className="group relative inline-block rounded-lg"
+                  data-testid="nav-dashboard"
+                >
+                  {/* optional soft glow, only shows on hover */}
+                  <span className="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 blur-md opacity-0 group-hover:opacity-60 transition-opacity duration-300"></span>
+
+                  {/* the gradient itself — this becomes the "border" via padding */}
+                  <span className="relative z-10 block rounded-lg p-[1.5px] bg-gradient-to-r from-purple-500 via-blue-500 to-pink-500 bg-[length:200%_200%] animate-gradient-x">
+                    {/* solid interior — swap these for black/zinc/white as you like */}
+                    <span className="flex items-center justify-center rounded-[7px] px-4 py-2 font-semibold text-black dark:text-white bg-white dark:bg-zinc-900 transition-colors duration-300">
+                      {nav.title}
+                    </span>
+                  </span>
+                </a>
+              ) : (
+                <a href={`/${nav.id}`}>{nav.title}</a>
+              )}
+            </li>
+          ))}
+          {/* <div className="ml-5" style={{ zIndex: 100000 }}>
+            <ThemeButton className="px-20" />
+          </div> */}
+        </ul>
+
+        {/* Mobile menu */}
+        <div 
+          className={`${isCompact ? "flex" : "hidden"} flex-1 px-5 justify-end items-center`} 
+          style={{ zIndex: 100000000 }}
+          data-testid="nav-mobile"
+        >
+          <img
+            src={toggle ? close : menu}
+            alt="menu"
+            className="w-[24px] h-[24px] object-contain cursor-pointer"
+            onClick={() => setToggle(!toggle)}
+            data-testid="mobile-menu-button"
+            role="button"
+            aria-expanded={toggle}
+          />
+          <div
+            className={`
+              absolute top-16 right-0 mx-4 mt-4 min-w-[140px]
+              border border-gray-300 p-6 dark:bg-zinc-700 bg-slate-200
+              rounded-xl shadow-xl z-30
+              transform origin-top transition-all duration-300 ease-out
+              ${toggle ? "scale-y-100 opacity-100 pointer-events-auto" : "scale-y-0 opacity-0 pointer-events-none"}
+            `}
+            data-testid="mobile-menu-panel"
+            data-state={toggle ? "open" : "closed"}
+          >
+            <ul className="list-none flex flex-col items-start">
+              {navLinks.map((nav) => (
+                <li
+                  key={nav.id}
+                  className={`font-poppins font-medium cursor-pointer text-[16px] ${
+                    active === nav.title ? "dark:text-white" : "dark:text-dimWhite"
+                  } mb-4 z-50`}
+                  onClick={() => setActive(nav.title)}
+                  data-testid={`mobile-nav-link-${nav.id}`}
+                >
+                  {nav.title === "GitHub" ? (
+                    <a href="https://github.com/tensorlink-lab">{nav.title}</a>
+                  ) : nav.title === "Networks" ? (
+                    <div className="relative">
+                      <button
+                        className="flex items-center"
+                        onClick={() => setNetworksOpen(!networksOpen)}
+                        data-testid="mobile-networks-toggle"
+                        aria-expanded={networksOpen}
+                      >
+                        Networks
+                        <FaChevronDown className={`ml-2 transition-transform duration-300 ease-in-out ${networksOpen ? "rotate-180" : ""}`}/>
+                      </button>
+                      
+                      {/* Enhanced Mobile Networks Dropdown */}
+                      <div 
+                        className={`
+                          ml-4 bg-gray-800 rounded-lg shadow-lg overflow-hidden
+                          transform origin-top transition-all duration-300 ease-out
+                          ${networksOpen 
+                            ? "scale-y-100 opacity-100 max-h-96 pointer-events-auto mt-4" 
+                            : "scale-y-0 opacity-0 max-h-0 pointer-events-none"
+                          }
+                        `}
+                        data-testid="mobile-networks-dropdown" 
+                        data-state={networksOpen ? "open" : "closed"}
+                      >
+                        <ul >
+                          {nav.networks.map((networkObj, idx) => (
+                            <li
+                              key={networkObj.link}
+                              className={`
+                                transform transition-all duration-200 ease-out
+                                ${networksOpen 
+                                  ? `translate-x-0 opacity-100` 
+                                  : `translate-x-4 opacity-0`
+                                }
+                              `}
+                              style={{ 
+                                transitionDelay: networksOpen ? `${idx * 75}ms` : '0ms' 
+                              }}
+                            >
+                              <a
+                                href={`/${networkObj.link}`}
+                                className="block px-4 py-2 hover:bg-gray-700 rounded-md text-white transition-colors duration-150"
+                                data-testid={`mobile-network-link-${networkObj.link}`}
+                              >
+                                {networkObj.network}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  ) : nav.title == "Dashboard" ? (
+                    <a href="/app#dashboard" data-testid="mobile-dashboard">
+                      {nav.title}
+                    </a>
+                  ) : (
+                    <a href={`/${nav.id}`}>{nav.title}</a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </div>
       </motion.nav>
     </>
   );
