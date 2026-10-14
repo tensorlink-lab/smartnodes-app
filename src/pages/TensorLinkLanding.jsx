@@ -1,5 +1,5 @@
 import styles from "../style";
-import { useStateContext } from "../contexts/contextProvider";
+import { useStateContext } from "../contexts/ContextProvider";
 import { Example, Hero, ToPortal, TensorlinkApplications } from "../components";
 import { Helmet } from "react-helmet-async";
 

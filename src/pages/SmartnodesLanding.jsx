@@ -1,6 +1,6 @@
 import styles from "../style";
 import React, { useEffect } from "react";
-import { useStateContext } from "../contexts/contextProvider";
+import { useStateContext } from "../contexts/ContextProvider";
 import { Testimonials, LaunchApp, MainHero, MainHero2, Opportunity, ParticleBackground, Framework } from '../components';
 
 const SmartnodesLanding = () => {

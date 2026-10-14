@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { Routes, Outlet, Route } from "react-router-dom";
 import { SmartnodesOverview } from "../components";
-import { useStateContext } from "../contexts/contextProvider";
+import { useStateContext } from "../contexts/ContextProvider";
 
 const SmartnodesDocs = () => {
   const { setActiveMenu } = useStateContext();

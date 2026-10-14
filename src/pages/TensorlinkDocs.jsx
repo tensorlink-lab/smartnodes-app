@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Outlet, Route } from "react-router-dom";
 import { Overview, WalletSetup, Installation, ApiExample, Community, Mining, GettingStarted, ModelExample, Nodes } from "../components";
-import { useStateContext } from "../contexts/contextProvider";
+import { useStateContext } from "../contexts/ContextProvider";
 import { Helmet } from "react-helmet-async";
 
 const TensorlinkDocs = () => {
